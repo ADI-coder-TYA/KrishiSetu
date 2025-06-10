@@ -1,0 +1,21 @@
+{
+  "resourceName": "s3d70dfea9",
+  "policyUUID": "d70dfea9",
+  "bucketName": "krishisetu-crop-images",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [],
+  "groupAccess": {
+    "FarmerGroup": [
+      "CREATE_AND_UPDATE",
+      "READ",
+      "DELETE"
+    ],
+    "BuyerGroup": [
+      "READ"
+    ],
+    "DeliveryGroup": [
+      "READ"
+    ]
+  }
+}

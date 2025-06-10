@@ -1,0 +1,35 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-krishisetu-dev-b2611-authRole",
+      "UnauthRoleArn": "arn:aws:iam::462816944471:role/amplify-krishisetu-dev-b2611-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::462816944471:role/amplify-krishisetu-dev-b2611-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-krishisetu-dev-b2611-deployment",
+      "UnauthRoleName": "amplify-krishisetu-dev-b2611-unauthRole",
+      "StackName": "amplify-krishisetu-dev-b2611",
+      "StackId": "arn:aws:cloudformation:ap-south-1:462816944471:stack/amplify-krishisetu-dev-b2611/ee54a070-2e45-11f0-a662-0647b68b4cb1",
+      "AmplifyAppId": "dh2dbjy62a79g",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-krishisetu-dev-b2611-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "krishisetua1ec4305": {},
+        "userPoolGroups": {}
+      },
+      "storage": {
+        "s3d70dfea9": {}
+      },
+      "api": {
+        "KrishiSetuAPI": {}
+      },
+      "function": {
+        "krishisetua1ec4305PostConfirmation": {
+          "GROUP": "FarmerGroup",
+          "deploymentBucketName": "amplify-krishisetu-dev-b2611-deployment",
+          "s3Key": "amplify-builds/krishisetua1ec4305PostConfirmation-6a762b6e414f44686271-build.zip"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "groupName": "FarmerGroup",
+    "precedence": 1
+  },
+  {
+    "groupName": "BuyerGroup",
+    "precedence": 2
+  },
+  {
+    "groupName": "DeliveryGroup",
+    "precedence": 3
+  }
+]

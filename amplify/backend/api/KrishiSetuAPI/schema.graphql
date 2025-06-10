@@ -1,0 +1,190 @@
+enum UserRole {
+  FARMER
+  BUYER
+  DELIVERY_AGENT
+}
+
+enum DeliveryStatus {
+  PENDING
+  IN_PROGRESS
+  DELIVERED
+}
+
+type User @model
+  @auth(rules: [
+    { allow: private, provider: userPools, operations: [create] },
+    { allow: owner, ownerField: "ownerID", identityClaim: "sub", operations: [create, read, update, delete] },
+    { allow: groups, groups: ["FarmerGroup","BuyerGroup","DeliveryGroup"], operations: [read] }
+  ]) {
+  id: ID!
+  name: String!
+  email: AWSEmail!
+  phone: AWSPhone
+  ownerID: ID!
+
+  # Index to query users by role
+  role: UserRole!
+    @index(name: "byRole", queryField: "usersByRole")
+
+  # A farmer’s crops
+  crops: [Crop]
+    @hasMany(indexName: "byFarmer", fields: ["id"])
+
+  # A buyer’s purchases
+  purchases: [Purchase]
+    @hasMany(indexName: "byBuyer", fields: ["id"])
+
+  # A buyer’s cart (1:1)
+  cart: Cart
+    @hasOne(fields: ["id"])
+
+  # An agent's deliveries
+  deliveriesAssigned: [Delivery]
+    @hasMany(indexName: "deliveriesByAgent", fields: ["id"])
+
+  sentMessages: [Message] @hasMany(indexName: "messagesBySender", fields: ["id"])
+  receivedMessages: [Message] @hasMany(indexName: "messagesByReceiver", fields: ["id"])
+}
+
+type Crop @model @searchable
+  @auth(rules: [
+    { allow: owner, ownerField: "farmerID", identityClaim: "sub", operations: [create, read, update, delete] },
+    { allow: groups, groups: ["BuyerGroup","DeliveryGroup", "FarmerGroup"], operations: [read] }
+  ]) {
+  id: ID!
+  title: String!
+  description: String
+  price: Float!
+  quantityAvailable: Int!
+  imageUrl: String
+  location: String
+
+  # Back-refs for items and purchases
+  cartItems: [CartItem]
+    @hasMany(indexName: "byCrop", fields: ["id"])
+  purchases: [Purchase]
+    @hasMany(indexName: "byCropPurchase", fields: ["id"])
+
+  # Who listed this crop
+  farmerID: ID!
+    @index(name: "byFarmer", sortKeyFields: ["createdAt"], queryField: "cropsByFarmer")
+  farmer: User
+    @belongsTo(fields: ["farmerID"])
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Cart @model
+  @auth(rules: [
+    { allow: owner, ownerField: "buyerID", identityClaim: "sub", operations: [read, create, update, delete] }
+  ]) {
+  id: ID!
+  buyerID: ID!
+    @index(name: "cartByBuyer", queryField: "getCartByBuyer")
+  buyer: User
+    @belongsTo(fields: ["buyerID"])
+  items: [CartItem]
+    @hasMany(indexName: "byCart", fields: ["id"])
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type CartItem @model
+  @auth(rules: [
+    # This rule now works correctly because buyerID is on the model
+    { allow: owner, ownerField: "buyerID", identityClaim: "sub", operations: [read, create, update, delete] }
+  ]) {
+  id: ID!
+
+  # Add the owner's ID directly to the CartItem
+  buyerID: ID!
+
+  # Add buyerID to the index key for more efficient queries
+  cartID: ID!
+    @index(name: "byCart", sortKeyFields: ["buyerID", "addedAt"], queryField: "itemsByCart")
+  cart: Cart
+    @belongsTo(fields: ["cartID"])
+
+  cropID: ID!
+    @index(name: "byCrop", queryField: "itemsByCrop")
+  crop: Crop
+    @belongsTo(fields: ["cropID"])
+
+  quantity: Int!
+  priceAtAdd: Float!
+  addedAt: AWSDateTime!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Purchase @model
+  @auth(rules: [
+    { allow: owner, ownerField: "buyerID", identityClaim: "sub", operations: [read, create] },
+    { allow: groups, groups: ["FarmerGroup"], operations: [read] }
+  ]) {
+  id: ID!
+  buyerID: ID!
+    @index(name: "byBuyer", sortKeyFields: ["createdAt"], queryField: "purchasesByBuyer")
+  buyer: User
+    @belongsTo(fields: ["buyerID"])
+  farmerID: ID!
+    @index(name: "byFarmer", sortKeyFields: ["createdAt"], queryField: "purchasesByFarmer")
+  farmer: User
+    @belongsTo(fields: ["farmerID"])
+  cropID: ID!
+    @index(name: "byCropPurchase", queryField: "purchasesByCrop")
+  crop: Crop
+    @belongsTo(fields: ["cropID"])
+  delivery: Delivery
+    @hasOne(fields: ["id"])
+  quantity: Int!
+  totalAmount: Float!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Delivery @model
+  @auth(rules: [
+    { allow: owner, ownerField: "agentID", identityClaim: "sub", operations: [read, update] },
+    { allow: groups, groups: ["BuyerGroup","FarmerGroup"], operations: [read] }
+  ]) {
+  id: ID!
+  purchaseID: ID!
+    @index(name: "deliveriesByPurchase", queryField: "deliveriesByPurchase")
+  purchase: Purchase
+    @belongsTo(fields: ["purchaseID"])
+  agentID: ID!
+    @index(name: "deliveriesByAgent", sortKeyFields: ["createdAt"], queryField: "deliveriesByAgent")
+  agent: User
+    @belongsTo(fields: ["agentID"])
+  deliveryAddress: String!
+  deliveryStatus: DeliveryStatus!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Message @model
+  @auth(rules: [
+    { allow: owner, ownerField: "senderID", identityClaim: "sub", operations: [create, read, update, delete] },
+    { allow: private, provider: userPools, operations: [read] }
+  ]) {
+  id: ID!
+
+  # Who sent this message
+  senderID: ID!
+    @index(name: "messagesBySender", sortKeyFields: ["createdAt"], queryField: "messagesBySender")
+  sender: User @belongsTo(fields: ["senderID"])
+
+  # Who received it
+  receiverID: ID!
+    @index(name: "messagesByReceiver", sortKeyFields: ["createdAt"], queryField: "messagesByReceiver")
+  receiver: User @belongsTo(fields: ["receiverID"])
+
+  content: String!
+  isRead: Boolean! @default(value: "false")
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}

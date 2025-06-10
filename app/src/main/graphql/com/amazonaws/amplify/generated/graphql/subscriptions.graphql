@@ -1,0 +1,2641 @@
+# this is an auto generated file. This will be overwritten
+
+subscription OnCreateUser(
+  $filter: ModelSubscriptionUserFilterInput
+  $ownerID: String
+) {
+  onCreateUser(filter: $filter, ownerID: $ownerID) {
+    id
+    name
+    email
+    phone
+    ownerID
+    role
+    crops {
+      items {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveriesAssigned {
+      items {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    sentMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    receivedMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnUpdateUser(
+  $filter: ModelSubscriptionUserFilterInput
+  $ownerID: String
+) {
+  onUpdateUser(filter: $filter, ownerID: $ownerID) {
+    id
+    name
+    email
+    phone
+    ownerID
+    role
+    crops {
+      items {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveriesAssigned {
+      items {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    sentMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    receivedMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnDeleteUser(
+  $filter: ModelSubscriptionUserFilterInput
+  $ownerID: String
+) {
+  onDeleteUser(filter: $filter, ownerID: $ownerID) {
+    id
+    name
+    email
+    phone
+    ownerID
+    role
+    crops {
+      items {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveriesAssigned {
+      items {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    sentMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    receivedMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnCreateCrop($filter: ModelSubscriptionCropFilterInput) {
+  onCreateCrop(filter: $filter) {
+    id
+    title
+    description
+    price
+    quantityAvailable
+    imageUrl
+    location
+    cartItems {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnUpdateCrop($filter: ModelSubscriptionCropFilterInput) {
+  onUpdateCrop(filter: $filter) {
+    id
+    title
+    description
+    price
+    quantityAvailable
+    imageUrl
+    location
+    cartItems {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnDeleteCrop($filter: ModelSubscriptionCropFilterInput) {
+  onDeleteCrop(filter: $filter) {
+    id
+    title
+    description
+    price
+    quantityAvailable
+    imageUrl
+    location
+    cartItems {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnCreateCart(
+  $filter: ModelSubscriptionCartFilterInput
+  $buyerID: String
+) {
+  onCreateCart(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    items {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnUpdateCart(
+  $filter: ModelSubscriptionCartFilterInput
+  $buyerID: String
+) {
+  onUpdateCart(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    items {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnDeleteCart(
+  $filter: ModelSubscriptionCartFilterInput
+  $buyerID: String
+) {
+  onDeleteCart(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    items {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnCreateCartItem(
+  $filter: ModelSubscriptionCartItemFilterInput
+  $buyerID: String
+) {
+  onCreateCartItem(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    cartID
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    priceAtAdd
+    addedAt
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnUpdateCartItem(
+  $filter: ModelSubscriptionCartItemFilterInput
+  $buyerID: String
+) {
+  onUpdateCartItem(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    cartID
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    priceAtAdd
+    addedAt
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnDeleteCartItem(
+  $filter: ModelSubscriptionCartItemFilterInput
+  $buyerID: String
+) {
+  onDeleteCartItem(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    cartID
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    priceAtAdd
+    addedAt
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnCreatePurchase(
+  $filter: ModelSubscriptionPurchaseFilterInput
+  $buyerID: String
+) {
+  onCreatePurchase(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    delivery {
+      id
+      purchaseID
+      purchase {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      agentID
+      agent {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveryAddress
+      deliveryStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    totalAmount
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnUpdatePurchase(
+  $filter: ModelSubscriptionPurchaseFilterInput
+  $buyerID: String
+) {
+  onUpdatePurchase(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    delivery {
+      id
+      purchaseID
+      purchase {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      agentID
+      agent {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveryAddress
+      deliveryStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    totalAmount
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnDeletePurchase(
+  $filter: ModelSubscriptionPurchaseFilterInput
+  $buyerID: String
+) {
+  onDeletePurchase(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    delivery {
+      id
+      purchaseID
+      purchase {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      agentID
+      agent {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveryAddress
+      deliveryStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    totalAmount
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnCreateDelivery(
+  $filter: ModelSubscriptionDeliveryFilterInput
+  $agentID: String
+) {
+  onCreateDelivery(filter: $filter, agentID: $agentID) {
+    id
+    purchaseID
+    purchase {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      cropID
+      crop {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      delivery {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      quantity
+      totalAmount
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    agentID
+    agent {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveryAddress
+    deliveryStatus
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnUpdateDelivery(
+  $filter: ModelSubscriptionDeliveryFilterInput
+  $agentID: String
+) {
+  onUpdateDelivery(filter: $filter, agentID: $agentID) {
+    id
+    purchaseID
+    purchase {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      cropID
+      crop {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      delivery {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      quantity
+      totalAmount
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    agentID
+    agent {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveryAddress
+    deliveryStatus
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnDeleteDelivery(
+  $filter: ModelSubscriptionDeliveryFilterInput
+  $agentID: String
+) {
+  onDeleteDelivery(filter: $filter, agentID: $agentID) {
+    id
+    purchaseID
+    purchase {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      cropID
+      crop {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      delivery {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      quantity
+      totalAmount
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    agentID
+    agent {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveryAddress
+    deliveryStatus
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnCreateMessage(
+  $filter: ModelSubscriptionMessageFilterInput
+  $senderID: String
+) {
+  onCreateMessage(filter: $filter, senderID: $senderID) {
+    id
+    senderID
+    sender {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    receiverID
+    receiver {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    content
+    isRead
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnUpdateMessage(
+  $filter: ModelSubscriptionMessageFilterInput
+  $senderID: String
+) {
+  onUpdateMessage(filter: $filter, senderID: $senderID) {
+    id
+    senderID
+    sender {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    receiverID
+    receiver {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    content
+    isRead
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+subscription OnDeleteMessage(
+  $filter: ModelSubscriptionMessageFilterInput
+  $senderID: String
+) {
+  onDeleteMessage(filter: $filter, senderID: $senderID) {
+    id
+    senderID
+    sender {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    receiverID
+    receiver {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    content
+    isRead
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}

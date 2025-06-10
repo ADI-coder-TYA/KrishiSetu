@@ -1,0 +1,2650 @@
+# this is an auto generated file. This will be overwritten
+
+mutation CreateUser(
+  $input: CreateUserInput!
+  $condition: ModelUserConditionInput
+) {
+  createUser(input: $input, condition: $condition) {
+    id
+    name
+    email
+    phone
+    ownerID
+    role
+    crops {
+      items {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveriesAssigned {
+      items {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    sentMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    receivedMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation UpdateUser(
+  $input: UpdateUserInput!
+  $condition: ModelUserConditionInput
+) {
+  updateUser(input: $input, condition: $condition) {
+    id
+    name
+    email
+    phone
+    ownerID
+    role
+    crops {
+      items {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveriesAssigned {
+      items {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    sentMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    receivedMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation DeleteUser(
+  $input: DeleteUserInput!
+  $condition: ModelUserConditionInput
+) {
+  deleteUser(input: $input, condition: $condition) {
+    id
+    name
+    email
+    phone
+    ownerID
+    role
+    crops {
+      items {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveriesAssigned {
+      items {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    sentMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    receivedMessages {
+      items {
+        id
+        senderID
+        receiverID
+        content
+        isRead
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation CreateCrop(
+  $input: CreateCropInput!
+  $condition: ModelCropConditionInput
+) {
+  createCrop(input: $input, condition: $condition) {
+    id
+    title
+    description
+    price
+    quantityAvailable
+    imageUrl
+    location
+    cartItems {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation UpdateCrop(
+  $input: UpdateCropInput!
+  $condition: ModelCropConditionInput
+) {
+  updateCrop(input: $input, condition: $condition) {
+    id
+    title
+    description
+    price
+    quantityAvailable
+    imageUrl
+    location
+    cartItems {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation DeleteCrop(
+  $input: DeleteCropInput!
+  $condition: ModelCropConditionInput
+) {
+  deleteCrop(input: $input, condition: $condition) {
+    id
+    title
+    description
+    price
+    quantityAvailable
+    imageUrl
+    location
+    cartItems {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    purchases {
+      items {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation CreateCart(
+  $input: CreateCartInput!
+  $condition: ModelCartConditionInput
+) {
+  createCart(input: $input, condition: $condition) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    items {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation UpdateCart(
+  $input: UpdateCartInput!
+  $condition: ModelCartConditionInput
+) {
+  updateCart(input: $input, condition: $condition) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    items {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation DeleteCart(
+  $input: DeleteCartInput!
+  $condition: ModelCartConditionInput
+) {
+  deleteCart(input: $input, condition: $condition) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    items {
+      items {
+        id
+        buyerID
+        cartID
+        cropID
+        quantity
+        priceAtAdd
+        addedAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation CreateCartItem(
+  $input: CreateCartItemInput!
+  $condition: ModelCartItemConditionInput
+) {
+  createCartItem(input: $input, condition: $condition) {
+    id
+    buyerID
+    cartID
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    priceAtAdd
+    addedAt
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation UpdateCartItem(
+  $input: UpdateCartItemInput!
+  $condition: ModelCartItemConditionInput
+) {
+  updateCartItem(input: $input, condition: $condition) {
+    id
+    buyerID
+    cartID
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    priceAtAdd
+    addedAt
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation DeleteCartItem(
+  $input: DeleteCartItemInput!
+  $condition: ModelCartItemConditionInput
+) {
+  deleteCartItem(input: $input, condition: $condition) {
+    id
+    buyerID
+    cartID
+    cart {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      items {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    priceAtAdd
+    addedAt
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation CreatePurchase(
+  $input: CreatePurchaseInput!
+  $condition: ModelPurchaseConditionInput
+) {
+  createPurchase(input: $input, condition: $condition) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    delivery {
+      id
+      purchaseID
+      purchase {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      agentID
+      agent {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveryAddress
+      deliveryStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    totalAmount
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation UpdatePurchase(
+  $input: UpdatePurchaseInput!
+  $condition: ModelPurchaseConditionInput
+) {
+  updatePurchase(input: $input, condition: $condition) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    delivery {
+      id
+      purchaseID
+      purchase {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      agentID
+      agent {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveryAddress
+      deliveryStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    totalAmount
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation DeletePurchase(
+  $input: DeletePurchaseInput!
+  $condition: ModelPurchaseConditionInput
+) {
+  deletePurchase(input: $input, condition: $condition) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      cartItems {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    delivery {
+      id
+      purchaseID
+      purchase {
+        id
+        buyerID
+        farmerID
+        cropID
+        quantity
+        totalAmount
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      agentID
+      agent {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveryAddress
+      deliveryStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    quantity
+    totalAmount
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation CreateDelivery(
+  $input: CreateDeliveryInput!
+  $condition: ModelDeliveryConditionInput
+) {
+  createDelivery(input: $input, condition: $condition) {
+    id
+    purchaseID
+    purchase {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      cropID
+      crop {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      delivery {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      quantity
+      totalAmount
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    agentID
+    agent {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveryAddress
+    deliveryStatus
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation UpdateDelivery(
+  $input: UpdateDeliveryInput!
+  $condition: ModelDeliveryConditionInput
+) {
+  updateDelivery(input: $input, condition: $condition) {
+    id
+    purchaseID
+    purchase {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      cropID
+      crop {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      delivery {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      quantity
+      totalAmount
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    agentID
+    agent {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveryAddress
+    deliveryStatus
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation DeleteDelivery(
+  $input: DeleteDeliveryInput!
+  $condition: ModelDeliveryConditionInput
+) {
+  deleteDelivery(input: $input, condition: $condition) {
+    id
+    purchaseID
+    purchase {
+      id
+      buyerID
+      buyer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      farmerID
+      farmer {
+        id
+        name
+        email
+        phone
+        ownerID
+        role
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      cropID
+      crop {
+        id
+        title
+        description
+        price
+        quantityAvailable
+        imageUrl
+        location
+        farmerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      delivery {
+        id
+        purchaseID
+        agentID
+        deliveryAddress
+        deliveryStatus
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      quantity
+      totalAmount
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    agentID
+    agent {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    deliveryAddress
+    deliveryStatus
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation CreateMessage(
+  $input: CreateMessageInput!
+  $condition: ModelMessageConditionInput
+) {
+  createMessage(input: $input, condition: $condition) {
+    id
+    senderID
+    sender {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    receiverID
+    receiver {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    content
+    isRead
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation UpdateMessage(
+  $input: UpdateMessageInput!
+  $condition: ModelMessageConditionInput
+) {
+  updateMessage(input: $input, condition: $condition) {
+    id
+    senderID
+    sender {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    receiverID
+    receiver {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    content
+    isRead
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+
+mutation DeleteMessage(
+  $input: DeleteMessageInput!
+  $condition: ModelMessageConditionInput
+) {
+  deleteMessage(input: $input, condition: $condition) {
+    id
+    senderID
+    sender {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    receiverID
+    receiver {
+      id
+      name
+      email
+      phone
+      ownerID
+      role
+      crops {
+        nextToken
+        startedAt
+        __typename
+      }
+      purchases {
+        nextToken
+        startedAt
+        __typename
+      }
+      cart {
+        id
+        buyerID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      deliveriesAssigned {
+        nextToken
+        startedAt
+        __typename
+      }
+      sentMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      receivedMessages {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    content
+    isRead
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
