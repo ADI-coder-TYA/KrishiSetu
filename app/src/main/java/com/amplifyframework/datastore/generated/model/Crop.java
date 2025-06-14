@@ -25,7 +25,7 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 /** This is an auto generated class representing the Crop type in your schema. */
 @SuppressWarnings("all")
 @ModelConfig(pluralName = "Crops", type = Model.Type.USER, version = 1, authRules = {
-  @AuthRule(allow = AuthStrategy.OWNER, ownerField = "farmerID", identityClaim = "sub", provider = "userPools", operations = { ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE }),
+  @AuthRule(allow = AuthStrategy.OWNER, ownerField = "farmerID", identityClaim = "sub", provider = "userPools", operations = { ModelOperation.CREATE, ModelOperation.READ, ModelOperation.UPDATE, ModelOperation.DELETE }),
   @AuthRule(allow = AuthStrategy.GROUPS, groupClaim = "cognito:groups", groups = { "BuyerGroup", "DeliveryGroup", "FarmerGroup" }, provider = "userPools", operations = { ModelOperation.READ })
 })
 @Index(name = "byFarmer", fields = {"farmerID","createdAt"})
@@ -49,6 +49,7 @@ public final class Crop implements Model {
   private final @ModelField(targetType="String") String location;
   private final @ModelField(targetType="CartItem") @HasMany(associatedWith = "crop", type = CartItem.class) List<CartItem> cartItems = null;
   private final @ModelField(targetType="Purchase") @HasMany(associatedWith = "crop", type = Purchase.class) List<Purchase> purchases = null;
+  private final @ModelField(targetType="Order") @HasMany(associatedWith = "crop", type = Order.class) List<Order> orders = null;
   private final @ModelField(targetType="User") @BelongsTo(targetName = "farmerID", targetNames = {"farmerID"}, type = User.class) User farmer;
   private final @ModelField(targetType="AWSDateTime", isRequired = true) Temporal.DateTime createdAt;
   private final @ModelField(targetType="AWSDateTime", isRequired = true) Temporal.DateTime updatedAt;
@@ -92,6 +93,10 @@ public final class Crop implements Model {
   
   public List<Purchase> getPurchases() {
       return purchases;
+  }
+  
+  public List<Order> getOrders() {
+      return orders;
   }
   
   public User getFarmer() {

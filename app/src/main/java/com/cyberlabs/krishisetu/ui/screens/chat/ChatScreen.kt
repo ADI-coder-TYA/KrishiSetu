@@ -1,7 +1,10 @@
 package com.cyberlabs.krishisetu.ui.screens.chat
 
+import android.content.Intent
+import android.util.Log
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -44,16 +46,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.cyberlabs.krishisetu.R
 import com.cyberlabs.krishisetu.chat.ChatViewModel
 import com.cyberlabs.krishisetu.util.users.userNameFlow
+import com.cyberlabs.krishisetu.util.users.userPhoneFlow
+import com.cyberlabs.krishisetu.util.users.userProfilePicUrlFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,10 +68,14 @@ fun ChatScreen(
     chatViewModel: ChatViewModel,
     navController: NavController
 ) {
+    val context = LocalContext.current
     val messages by chatViewModel.messages.collectAsState()
     val currentUserId = chatViewModel.currentUserId
     val chatPartnerId = chatViewModel.chatPartnerId
     val partnerName by userNameFlow(chatPartnerId).collectAsState(initial = null)
+    val profilePicUrl by userProfilePicUrlFlow(chatPartnerId).collectAsState(initial = null)
+    Log.i("ChatViewModel", "Profile Pic Url in composable: $profilePicUrl")
+    val phoneNumber by userPhoneFlow(chatPartnerId).collectAsState(initial = null)
 
 
     // For scrolling to the bottom when new messages arrive
@@ -80,27 +91,23 @@ fun ChatScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    //TODO: Change to Chat's profile pic
                     Row(
                         modifier = Modifier.Companion.fillMaxHeight(),
                         verticalAlignment = Alignment.Companion.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Image(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .clip(CircleShape),
-                            contentDescription = "Profile Picture",
-                            painter = painterResource(R.drawable.baseline_account_circle_24),
-                        )
-                        //TODO: Load profile image via coil
-                        /*AsyncImage(
+                        AsyncImage(
                             model = profilePicUrl,
                             contentDescription = "Profile Picture",
                             modifier = Modifier
                                 .size(28.dp)
-                                .clip(CircleShape)
-                        )*/
+                                .clip(CircleShape),
+                            placeholder = painterResource(R.drawable.baseline_account_circle_24),
+                            error = painterResource(R.drawable.baseline_account_circle_24),
+                            onError = { error ->
+                                Log.e("ChatScreen", "Error loading profile picture: ${error.result.throwable.cause?.message}", error.result.throwable)
+                            }
+                        )
                         Text(
                             text = partnerName ?: "Loading...",
                             fontSize = 18.sp
@@ -122,7 +129,21 @@ fun ChatScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            //TODO: Make call to Buyer/Farmer
+                            val sanitizedNumber = phoneNumber?.trim()
+                            sanitizedNumber?.let {
+                                if (Patterns.PHONE.matcher(it).matches()) {
+                                    val intent = Intent(Intent.ACTION_DIAL).apply {
+                                        data = "tel:$it".toUri()
+                                    }
+                                    context.startActivity(intent)
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Invalid phone number",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
                         }
                     ) {
                         Icon(
@@ -137,7 +158,6 @@ fun ChatScreen(
         Column(
             modifier = Modifier
                 .imePadding()
-                .navigationBarsPadding()
                 .padding(innerPadding)
         ) {
             LazyColumn(

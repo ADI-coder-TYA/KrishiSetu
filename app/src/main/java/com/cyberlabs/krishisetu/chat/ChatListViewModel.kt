@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.amplifyframework.core.Amplify
@@ -23,11 +24,15 @@ data class ChatListDataItem(
     val userId: String,
     val name: String,
     val role: UserRole,          // from your generated enum
-    val avatarRes: Int? = null   // optional local fallback
+    val profilePicUrl: String? = null   // optional local fallback
 )
 
 @HiltViewModel
-class ChatListViewModel @Inject constructor() : ViewModel() {
+class ChatListViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    val role = savedStateHandle.get<String>("role")
 
     var chatList by mutableStateOf<List<ChatListDataItem>>(emptyList())
         private set
@@ -71,7 +76,8 @@ class ChatListViewModel @Inject constructor() : ViewModel() {
                         ChatListDataItem(
                             userId = user.id,
                             name = user.name,
-                            role = user.role
+                            role = user.role,
+                            profilePicUrl = user.profilePicture
                         )
                     }
                 }

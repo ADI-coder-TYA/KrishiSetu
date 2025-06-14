@@ -1,8 +1,6 @@
 package com.cyberlabs.krishisetu.ui.screens.shopping.cart
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,10 +22,12 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,21 +38,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -67,11 +61,11 @@ fun CartScreen(
     navController: NavController,
     vm: CartViewModel
 ) {
-    val cart by vm.userCart
-    val totalPrice by vm.totalPrice
+    val cartItems by vm.cartItems.collectAsState()
+    val totalPrice by vm.totalPrice.collectAsState()
     val urls by vm.imageUrls.collectAsState()
     val isLoading by vm.isLoading
-    val errorMsg by vm.errorMsg
+    val buyerId by vm.buyerId.collectAsState()
 
     Scaffold(
         topBar = {
@@ -142,24 +136,7 @@ fun CartScreen(
                 }
             }
 
-            errorMsg != null -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                ) {
-                    Text(
-                        text = errorMsg ?: "",
-                        color = Color.Red,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(16.dp),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-
-            cart == null || cart!!.items.isEmpty() -> {
+            cartItems.isEmpty() -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -182,15 +159,16 @@ fun CartScreen(
                     Text(
                         text = "Your Cart",
                         fontSize = 21.sp,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(16.dp),
+                        fontWeight = FontWeight.Bold
                     )
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f)
                     ) {
-                        items(cart!!.items.size) { index ->
-                            val item = cart!!.items[index]
+                        items(cartItems.size) { index ->
+                            val item = cartItems[index]
                             val imageUrl = urls[item.crop.id]
                             if (imageUrl == null) {
                                 vm.loadImage(item.crop)
@@ -217,7 +195,9 @@ fun CartScreen(
                             )
                         }
                     }
-                    TotalPriceCard(totalPrice)
+                    TotalPriceCard(totalPrice) {
+                        navController.navigate("checkout/${buyerId}")
+                    }
                 }
             }
         }
@@ -237,8 +217,6 @@ fun CartItemCard(
     onDecrease: () -> Unit,
     onDelete: () -> Unit
 ) {
-    var showDelete by remember { mutableStateOf(false) }
-
     Card(
         onClick = onClick,
         shape = RectangleShape,
@@ -252,16 +230,6 @@ fun CartItemCard(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onLongPress = {
-                        showDelete = true
-                    },
-                    onTap = {
-                        showDelete = false
-                    }
-                )
-            }
     ) {
         Spacer(Modifier.height(12.dp))
         Row(
@@ -311,13 +279,30 @@ fun CartItemCard(
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    IconButton(
+                        onClick = onDelete,
+                        modifier = Modifier
+                            .size(18.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            tint = Color.DarkGray,
+                            contentDescription = "Delete"
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -357,65 +342,22 @@ fun CartItemCard(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-
                     Text(
                         text = "₹${price * quantity}",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF388E3C) // Flipkart-style green
                     )
-
-                    if (showDelete) {
-                        ElevatedCard(
-                            shape = RectangleShape,
-                            elevation = CardDefaults.elevatedCardElevation(
-                                defaultElevation = 200.dp
-                            ),
-                            modifier = Modifier.padding(start = 12.dp),
-                            colors = CardDefaults.elevatedCardColors().copy(
-                                containerColor = Color.White
-                            )
-                        ) {
-                            IconButton(
-                                onClick = onDelete,
-                                modifier = Modifier
-                                    .border(0.5.dp, Color.Black)
-                                    .size(24.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    tint = Color.DarkGray,
-                                    contentDescription = "Delete"
-                                )
-                            }
-                        }
-                    }
                 }
             }
         }
     }
 }
 
-@Preview
-@Composable
-fun CartItemPreview() {
-    CartItemCard(
-        title = "Sample Product",
-        description = "This is a sample product description. Please talk to the farmer before buying to make sure that you get the best negotiated price.",
-        quantity = 2,
-        price = 100,
-        imageUrl = null,
-        location = "Delhi, New Delhi, 110010",
-        onClick = {},
-        onIncrease = {},
-        onDecrease = {},
-        onDelete = {}
-    )
-}
-
 @Composable
 private fun TotalPriceCard(
-    totalPrice: Int
+    totalPrice: Int,
+    onCheckout: () -> Unit = {}
 ) {
     ElevatedCard(
         shape = RectangleShape,
@@ -428,25 +370,38 @@ private fun TotalPriceCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Total Price",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "₹$totalPrice",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF388E3C) // Flipkart-style green
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = "Total Price: ",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "₹$totalPrice",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF388E3C) // Flipkart-style green
+                )
+            }
+            ElevatedButton(
+                onClick = onCheckout,
+                colors = ButtonDefaults.elevatedButtonColors().copy(
+                    containerColor = Color(0xFFF9631B),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(
+                    text = "Checkout",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
-}
-
-@Preview
-@Composable
-private fun TotalPriceCardPreview() {
-    TotalPriceCard(totalPrice = 1200)
 }

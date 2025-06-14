@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedCard
@@ -45,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.cyberlabs.krishisetu.R
+import com.cyberlabs.krishisetu.authentication.AuthViewModel
 import com.cyberlabs.krishisetu.shopping.cropListing.cropSearch.SearchViewModel
 import com.cyberlabs.krishisetu.util.navigation.BuyerBottomBar
 
@@ -53,7 +55,8 @@ import com.cyberlabs.krishisetu.util.navigation.BuyerBottomBar
 @Composable
 fun BuyerHomeScreen(
     vm: SearchViewModel = hiltViewModel(),
-    navController: NavController = rememberNavController()
+    navController: NavController = rememberNavController(),
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
     Scaffold(
         containerColor = Color.White,
@@ -206,6 +209,17 @@ fun BuyerHomeScreen(
                         )
                     }
                 }
+            }
+            Button(
+                onClick = {
+                    authViewModel.signOut()
+                    navController.navigate("signIn")
+                }
+            ) {
+                Text(
+                    text = "Sign Out",
+                    color = Color.Black
+                )
             }
         }
     }

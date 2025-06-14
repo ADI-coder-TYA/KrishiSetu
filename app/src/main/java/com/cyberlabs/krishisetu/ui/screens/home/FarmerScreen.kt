@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -63,6 +64,7 @@ import androidx.navigation.compose.rememberNavController
 import com.cyberlabs.krishisetu.R
 import com.cyberlabs.krishisetu.ai.AiChatMessage
 import com.cyberlabs.krishisetu.ai.GeminiChatViewModel
+import com.cyberlabs.krishisetu.authentication.AuthViewModel
 import com.cyberlabs.krishisetu.util.navigation.FarmerBottomBar
 import kotlinx.coroutines.launch
 
@@ -71,7 +73,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun FarmerHomeScreen(
     navController: NavController = rememberNavController(),
-    geminiChatViewModel: GeminiChatViewModel = hiltViewModel()
+    geminiChatViewModel: GeminiChatViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
 
     val sheetState =
@@ -133,6 +136,7 @@ fun FarmerHomeScreen(
                         IconButton(
                             onClick = {
                                 //TODO: Navigate to profile
+                                navController.navigate("profile")
                             }
                         ) {
                             Icon(
@@ -162,7 +166,19 @@ fun FarmerHomeScreen(
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
-        ) { }
+        ) {
+            Button(
+                onClick = {
+                    authViewModel.signOut()
+                    navController.navigate("signIn")
+                }
+            ) {
+                Text(
+                    text = "Sign Out",
+                    color = Color.Black
+                )
+            }
+        }
         if (showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = { showBottomSheet = false }, // Hide sheet when dismissed

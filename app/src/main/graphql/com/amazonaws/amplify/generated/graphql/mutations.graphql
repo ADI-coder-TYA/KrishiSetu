@@ -1,5 +1,185 @@
 # this is an auto generated file. This will be overwritten
 
+mutation CreateOrder(
+  $input: CreateOrderInput!
+  $condition: ModelOrderConditionInput
+) {
+  createOrder(input: $input, condition: $condition) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      farmerID
+      createdAt
+      updatedAt
+      __typename
+    }
+    quantity
+    bargainedPrice
+    realPrice
+    deliveryAddress
+    deliveryPhone
+    deliveryPincode
+    orderStatus
+    createdAt
+    updatedAt
+    expiresAt
+    __typename
+  }
+}
+
+mutation UpdateOrder(
+  $input: UpdateOrderInput!
+  $condition: ModelOrderConditionInput
+) {
+  updateOrder(input: $input, condition: $condition) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      farmerID
+      createdAt
+      updatedAt
+      __typename
+    }
+    quantity
+    bargainedPrice
+    realPrice
+    deliveryAddress
+    deliveryPhone
+    deliveryPincode
+    orderStatus
+    createdAt
+    updatedAt
+    expiresAt
+    __typename
+  }
+}
+
+mutation DeleteOrder(
+  $input: DeleteOrderInput!
+  $condition: ModelOrderConditionInput
+) {
+  deleteOrder(input: $input, condition: $condition) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      farmerID
+      createdAt
+      updatedAt
+      __typename
+    }
+    quantity
+    bargainedPrice
+    realPrice
+    deliveryAddress
+    deliveryPhone
+    deliveryPincode
+    orderStatus
+    createdAt
+    updatedAt
+    expiresAt
+    __typename
+  }
+}
+
 mutation CreateUser(
   $input: CreateUserInput!
   $condition: ModelUserConditionInput
@@ -10,135 +190,42 @@ mutation CreateUser(
     email
     phone
     ownerID
+    profilePicture
     role
     crops {
-      items {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
-    cart {
-      id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+    cartItems {
+      nextToken
+      __typename
+    }
+    ordersPlaced {
+      nextToken
+      __typename
+    }
+    ordersTaken {
+      nextToken
       __typename
     }
     deliveriesAssigned {
-      items {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     sentMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     receivedMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -153,135 +240,42 @@ mutation UpdateUser(
     email
     phone
     ownerID
+    profilePicture
     role
     crops {
-      items {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
-    cart {
-      id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+    cartItems {
+      nextToken
+      __typename
+    }
+    ordersPlaced {
+      nextToken
+      __typename
+    }
+    ordersTaken {
+      nextToken
       __typename
     }
     deliveriesAssigned {
-      items {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     sentMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     receivedMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -296,135 +290,42 @@ mutation DeleteUser(
     email
     phone
     ownerID
+    profilePicture
     role
     crops {
-      items {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
-    cart {
-      id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+    cartItems {
+      nextToken
+      __typename
+    }
+    ordersPlaced {
+      nextToken
+      __typename
+    }
+    ordersTaken {
+      nextToken
       __typename
     }
     deliveriesAssigned {
-      items {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     sentMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     receivedMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -442,42 +343,15 @@ mutation CreateCrop(
     imageUrl
     location
     cartItems {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
+      __typename
+    }
+    orders {
+      nextToken
       __typename
     }
     farmerID
@@ -487,54 +361,14 @@ mutation CreateCrop(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -552,42 +386,15 @@ mutation UpdateCrop(
     imageUrl
     location
     cartItems {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
+      __typename
+    }
+    orders {
+      nextToken
       __typename
     }
     farmerID
@@ -597,54 +404,14 @@ mutation UpdateCrop(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -662,42 +429,15 @@ mutation DeleteCrop(
     imageUrl
     location
     cartItems {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
+      __typename
+    }
+    orders {
+      nextToken
       __typename
     }
     farmerID
@@ -707,309 +447,14 @@ mutation DeleteCrop(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-
-mutation CreateCart(
-  $input: CreateCartInput!
-  $condition: ModelCartConditionInput
-) {
-  createCart(input: $input, condition: $condition) {
-    id
-    buyerID
-    buyer {
-      id
-      name
-      email
-      phone
-      ownerID
-      role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    items {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      nextToken
-      startedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-
-mutation UpdateCart(
-  $input: UpdateCartInput!
-  $condition: ModelCartConditionInput
-) {
-  updateCart(input: $input, condition: $condition) {
-    id
-    buyerID
-    buyer {
-      id
-      name
-      email
-      phone
-      ownerID
-      role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    items {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      nextToken
-      startedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-
-mutation DeleteCart(
-  $input: DeleteCartInput!
-  $condition: ModelCartConditionInput
-) {
-  deleteCart(input: $input, condition: $condition) {
-    id
-    buyerID
-    buyer {
-      id
-      name
-      email
-      phone
-      ownerID
-      role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    items {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      nextToken
-      startedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1020,35 +465,17 @@ mutation CreateCartItem(
 ) {
   createCartItem(input: $input, condition: $condition) {
     id
-    buyerID
-    cartID
-    cart {
+    userID
+    user {
       id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1060,36 +487,9 @@ mutation CreateCartItem(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
@@ -1097,9 +497,6 @@ mutation CreateCartItem(
     addedAt
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1110,35 +507,17 @@ mutation UpdateCartItem(
 ) {
   updateCartItem(input: $input, condition: $condition) {
     id
-    buyerID
-    cartID
-    cart {
+    userID
+    user {
       id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1150,36 +529,9 @@ mutation UpdateCartItem(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
@@ -1187,9 +539,6 @@ mutation UpdateCartItem(
     addedAt
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1200,35 +549,17 @@ mutation DeleteCartItem(
 ) {
   deleteCartItem(input: $input, condition: $condition) {
     id
-    buyerID
-    cartID
-    cart {
+    userID
+    user {
       id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1240,36 +571,9 @@ mutation DeleteCartItem(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
@@ -1277,9 +581,6 @@ mutation DeleteCartItem(
     addedAt
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1297,47 +598,10 @@ mutation CreatePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     farmerID
@@ -1347,47 +611,10 @@ mutation CreatePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1399,86 +626,29 @@ mutation CreatePurchase(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     delivery {
       id
       purchaseID
-      purchase {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      farmerID
       agentID
-      agent {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
       deliveryAddress
       deliveryStatus
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
     totalAmount
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1496,47 +666,10 @@ mutation UpdatePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     farmerID
@@ -1546,47 +679,10 @@ mutation UpdatePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1598,86 +694,29 @@ mutation UpdatePurchase(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     delivery {
       id
       purchaseID
-      purchase {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      farmerID
       agentID
-      agent {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
       deliveryAddress
       deliveryStatus
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
     totalAmount
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1695,47 +734,10 @@ mutation DeletePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     farmerID
@@ -1745,47 +747,10 @@ mutation DeletePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1797,86 +762,29 @@ mutation DeletePurchase(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     delivery {
       id
       purchaseID
-      purchase {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      farmerID
       agentID
-      agent {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
       deliveryAddress
       deliveryStatus
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
     totalAmount
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1891,72 +799,25 @@ mutation CreateDelivery(
     purchase {
       id
       buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       totalAmount
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
       __typename
     }
     agentID
@@ -1966,56 +827,19 @@ mutation CreateDelivery(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
+    personalAgentName
+    personalAgentPhone
+    personalAgentEmail
     deliveryAddress
     deliveryStatus
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -2030,72 +854,25 @@ mutation UpdateDelivery(
     purchase {
       id
       buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       totalAmount
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
       __typename
     }
     agentID
@@ -2105,56 +882,19 @@ mutation UpdateDelivery(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
+    personalAgentName
+    personalAgentPhone
+    personalAgentEmail
     deliveryAddress
     deliveryStatus
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -2169,72 +909,25 @@ mutation DeleteDelivery(
     purchase {
       id
       buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       totalAmount
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
       __typename
     }
     agentID
@@ -2244,56 +937,19 @@ mutation DeleteDelivery(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
+    personalAgentName
+    personalAgentPhone
+    personalAgentEmail
     deliveryAddress
     deliveryStatus
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -2311,47 +967,10 @@ mutation CreateMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     receiverID
@@ -2361,56 +980,16 @@ mutation CreateMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     content
     isRead
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -2428,47 +1007,10 @@ mutation UpdateMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     receiverID
@@ -2478,56 +1020,16 @@ mutation UpdateMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     content
     isRead
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -2545,47 +1047,10 @@ mutation DeleteMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     receiverID
@@ -2595,56 +1060,16 @@ mutation DeleteMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     content
     isRead
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }

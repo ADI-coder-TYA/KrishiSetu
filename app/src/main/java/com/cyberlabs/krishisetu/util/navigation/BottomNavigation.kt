@@ -53,7 +53,9 @@ fun BuyerBottomBar(navController: NavController, selectedIndex: Int = 0) {
                         .weight(1f),
                     selected = selectedOption == item.first
                 ) { route ->
-                    navController.navigate(route.lowercase())
+                    if (route.lowercase() == "chat") navController.navigate("chat/buyer")
+                    else if (route.lowercase() == "delivery") navController.navigate("buyer_delivery")
+                    else navController.navigate(route.lowercase())
                     selectedOption = route
                 }
             }
@@ -89,7 +91,8 @@ fun FarmerBottomBar(navController: NavController, selectedIndex: Int = 0) {
                         .weight(1f),
                     selected = selectedOption == item.first
                 ) { route ->
-                    navController.navigate(route.lowercase())
+                    if (route.lowercase() == "chat") navController.navigate("chat/farmer")
+                    else navController.navigate(route.lowercase())
                     selectedOption = route
                 }
             }

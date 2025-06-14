@@ -7,11 +7,7 @@
       "mode": "AMAZON_COGNITO_USER_POOLS",
       "cognitoUserPoolId": "authkrishisetua1ec4305"
     },
-    "conflictResolution": {
-      "defaultResolutionStrategy": {
-        "type": "AUTOMERGE"
-      }
-    },
+    "conflictResolution": {},
     "additionalAuthTypes": [
       {
         "mode": "API_KEY",

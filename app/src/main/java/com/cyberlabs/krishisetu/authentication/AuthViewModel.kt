@@ -107,6 +107,7 @@ class AuthViewModel @Inject constructor(
                                                 .role(it.role)
                                                 .phone("+91${it.phone}")
                                                 .id(cognitoId)
+                                                .profilePicture(null)
                                                 .build()
                                         }
 

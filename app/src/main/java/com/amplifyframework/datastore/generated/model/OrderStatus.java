@@ -1,11 +1,10 @@
 package com.amplifyframework.datastore.generated.model;
 /** Auto generated enum from GraphQL schema. */
 @SuppressWarnings("all")
-public enum DeliveryStatus {
+public enum OrderStatus {
   PENDING,
-  PREPARED,
-  SHIPPED,
-  OUT_FOR_DELIVERY,
-  DELIVERED,
-  CANCELLED
+  ACCEPTED,
+  IN_DELIVERY,
+  CANCELLED,
+  REJECTED
 }

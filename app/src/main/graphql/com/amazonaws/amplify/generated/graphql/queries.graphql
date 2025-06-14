@@ -24,36 +24,9 @@ query SearchCrops(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
@@ -78,6 +51,91 @@ query SearchCrops(
   }
 }
 
+query GetOrder($id: ID!) {
+  getOrder(id: $id) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      farmerID
+      createdAt
+      updatedAt
+      __typename
+    }
+    quantity
+    bargainedPrice
+    realPrice
+    deliveryAddress
+    deliveryPhone
+    deliveryPincode
+    orderStatus
+    createdAt
+    updatedAt
+    expiresAt
+    __typename
+  }
+}
+
+query ListOrders(
+  $filter: ModelOrderFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listOrders(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      buyerID
+      farmerID
+      cropID
+      quantity
+      bargainedPrice
+      realPrice
+      deliveryAddress
+      deliveryPhone
+      deliveryPincode
+      orderStatus
+      createdAt
+      updatedAt
+      expiresAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
 query GetUser($id: ID!) {
   getUser(id: $id) {
     id
@@ -85,135 +143,42 @@ query GetUser($id: ID!) {
     email
     phone
     ownerID
+    profilePicture
     role
     crops {
-      items {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
-    cart {
-      id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+    cartItems {
+      nextToken
+      __typename
+    }
+    ordersPlaced {
+      nextToken
+      __typename
+    }
+    ordersTaken {
+      nextToken
       __typename
     }
     deliveriesAssigned {
-      items {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     sentMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     receivedMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -230,118 +195,13 @@ query ListUsers(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
-    __typename
-  }
-}
-
-query SyncUsers(
-  $filter: ModelUserFilterInput
-  $limit: Int
-  $nextToken: String
-  $lastSync: AWSTimestamp
-) {
-  syncUsers(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-    lastSync: $lastSync
-  ) {
-    items {
-      id
-      name
-      email
-      phone
-      ownerID
-      role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
     __typename
   }
 }
@@ -356,42 +216,15 @@ query GetCrop($id: ID!) {
     imageUrl
     location
     cartItems {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
+      __typename
+    }
+    orders {
+      nextToken
       __typename
     }
     farmerID
@@ -401,54 +234,14 @@ query GetCrop($id: ID!) {
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -467,268 +260,12 @@ query ListCrops(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
-    __typename
-  }
-}
-
-query SyncCrops(
-  $filter: ModelCropFilterInput
-  $limit: Int
-  $nextToken: String
-  $lastSync: AWSTimestamp
-) {
-  syncCrops(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-    lastSync: $lastSync
-  ) {
-    items {
-      id
-      title
-      description
-      price
-      quantityAvailable
-      imageUrl
-      location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
-    __typename
-  }
-}
-
-query GetCart($id: ID!) {
-  getCart(id: $id) {
-    id
-    buyerID
-    buyer {
-      id
-      name
-      email
-      phone
-      ownerID
-      role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    items {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      nextToken
-      startedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-
-query ListCarts(
-  $filter: ModelCartFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listCarts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
-    __typename
-  }
-}
-
-query SyncCarts(
-  $filter: ModelCartFilterInput
-  $limit: Int
-  $nextToken: String
-  $lastSync: AWSTimestamp
-) {
-  syncCarts(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-    lastSync: $lastSync
-  ) {
-    items {
-      id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
     __typename
   }
 }
@@ -736,35 +273,17 @@ query SyncCarts(
 query GetCartItem($id: ID!) {
   getCartItem(id: $id) {
     id
-    buyerID
-    cartID
-    cart {
+    userID
+    user {
       id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -776,36 +295,9 @@ query GetCartItem($id: ID!) {
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
@@ -813,9 +305,6 @@ query GetCartItem($id: ID!) {
     addedAt
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -828,106 +317,16 @@ query ListCartItems(
   listCartItems(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      buyerID
-      cartID
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      userID
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       priceAtAdd
       addedAt
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
-    __typename
-  }
-}
-
-query SyncCartItems(
-  $filter: ModelCartItemFilterInput
-  $limit: Int
-  $nextToken: String
-  $lastSync: AWSTimestamp
-) {
-  syncCartItems(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-    lastSync: $lastSync
-  ) {
-    items {
-      id
-      buyerID
-      cartID
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      quantity
-      priceAtAdd
-      addedAt
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
     __typename
   }
 }
@@ -942,47 +341,10 @@ query GetPurchase($id: ID!) {
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     farmerID
@@ -992,47 +354,10 @@ query GetPurchase($id: ID!) {
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1044,86 +369,29 @@ query GetPurchase($id: ID!) {
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     delivery {
       id
       purchaseID
-      purchase {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      farmerID
       agentID
-      agent {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
       deliveryAddress
       deliveryStatus
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
     totalAmount
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1137,165 +405,15 @@ query ListPurchases(
     items {
       id
       buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       totalAmount
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
-    __typename
-  }
-}
-
-query SyncPurchases(
-  $filter: ModelPurchaseFilterInput
-  $limit: Int
-  $nextToken: String
-  $lastSync: AWSTimestamp
-) {
-  syncPurchases(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-    lastSync: $lastSync
-  ) {
-    items {
-      id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      quantity
-      totalAmount
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
     __typename
   }
 }
@@ -1307,72 +425,25 @@ query GetDelivery($id: ID!) {
     purchase {
       id
       buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       totalAmount
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
       __typename
     }
     agentID
@@ -1382,56 +453,19 @@ query GetDelivery($id: ID!) {
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
+    personalAgentName
+    personalAgentPhone
+    personalAgentEmail
     deliveryAddress
     deliveryStatus
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1445,105 +479,18 @@ query ListDeliveries(
     items {
       id
       purchaseID
-      purchase {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      farmerID
       agentID
-      agent {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
       deliveryAddress
       deliveryStatus
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
-    __typename
-  }
-}
-
-query SyncDeliveries(
-  $filter: ModelDeliveryFilterInput
-  $limit: Int
-  $nextToken: String
-  $lastSync: AWSTimestamp
-) {
-  syncDeliveries(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-    lastSync: $lastSync
-  ) {
-    items {
-      id
-      purchaseID
-      purchase {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      agentID
-      agent {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveryAddress
-      deliveryStatus
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
     __typename
   }
 }
@@ -1558,47 +505,10 @@ query GetMessage($id: ID!) {
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     receiverID
@@ -1608,56 +518,16 @@ query GetMessage($id: ID!) {
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     content
     isRead
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1671,105 +541,126 @@ query ListMessages(
     items {
       id
       senderID
-      sender {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       receiverID
-      receiver {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       content
       isRead
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
     __typename
   }
 }
 
-query SyncMessages(
-  $filter: ModelMessageFilterInput
+query OrdersByBuyer(
+  $buyerID: ID!
+  $createdAt: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelOrderFilterInput
   $limit: Int
   $nextToken: String
-  $lastSync: AWSTimestamp
 ) {
-  syncMessages(
+  ordersByBuyer(
+    buyerID: $buyerID
+    createdAt: $createdAt
+    sortDirection: $sortDirection
     filter: $filter
     limit: $limit
     nextToken: $nextToken
-    lastSync: $lastSync
   ) {
     items {
       id
-      senderID
-      sender {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      receiverID
-      receiver {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      content
-      isRead
+      buyerID
+      farmerID
+      cropID
+      quantity
+      bargainedPrice
+      realPrice
+      deliveryAddress
+      deliveryPhone
+      deliveryPincode
+      orderStatus
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      expiresAt
       __typename
     }
     nextToken
-    startedAt
+    __typename
+  }
+}
+
+query OrdersByFarmer(
+  $farmerID: ID!
+  $createdAt: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelOrderFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  ordersByFarmer(
+    farmerID: $farmerID
+    createdAt: $createdAt
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      buyerID
+      farmerID
+      cropID
+      quantity
+      bargainedPrice
+      realPrice
+      deliveryAddress
+      deliveryPhone
+      deliveryPincode
+      orderStatus
+      createdAt
+      updatedAt
+      expiresAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
+query OrdersByCrop(
+  $cropID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelOrderFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  ordersByCrop(
+    cropID: $cropID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      buyerID
+      farmerID
+      cropID
+      quantity
+      bargainedPrice
+      realPrice
+      deliveryAddress
+      deliveryPhone
+      deliveryPincode
+      orderStatus
+      createdAt
+      updatedAt
+      expiresAt
+      __typename
+    }
+    nextToken
     __typename
   }
 }
@@ -1794,51 +685,13 @@ query UsersByRole(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
     __typename
   }
 }
@@ -1867,104 +720,27 @@ query CropsByFarmer(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
     __typename
   }
 }
 
-query GetCartByBuyer(
-  $buyerID: ID!
-  $sortDirection: ModelSortDirection
-  $filter: ModelCartFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  getCartByBuyer(
-    buyerID: $buyerID
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
-    __typename
-  }
-}
-
-query ItemsByCart(
-  $cartID: ID!
-  $buyerIDAddedAt: ModelCartItemByCartCompositeKeyConditionInput
+query CartItemsByUser(
+  $userID: ID!
+  $addedAt: ModelStringKeyConditionInput
   $sortDirection: ModelSortDirection
   $filter: ModelCartItemFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  itemsByCart(
-    cartID: $cartID
-    buyerIDAddedAt: $buyerIDAddedAt
+  cartItemsByUser(
+    userID: $userID
+    addedAt: $addedAt
     sortDirection: $sortDirection
     filter: $filter
     limit: $limit
@@ -1972,59 +748,28 @@ query ItemsByCart(
   ) {
     items {
       id
-      buyerID
-      cartID
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      userID
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       priceAtAdd
       addedAt
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
     __typename
   }
 }
 
-query ItemsByCrop(
+query CartItemsByCrop(
   $cropID: ID!
   $sortDirection: ModelSortDirection
   $filter: ModelCartItemFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  itemsByCrop(
+  cartItemsByCrop(
     cropID: $cropID
     sortDirection: $sortDirection
     filter: $filter
@@ -2033,47 +778,16 @@ query ItemsByCrop(
   ) {
     items {
       id
-      buyerID
-      cartID
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      userID
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       priceAtAdd
       addedAt
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
     __typename
   }
 }
@@ -2097,76 +811,15 @@ query PurchasesByBuyer(
     items {
       id
       buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       totalAmount
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
     __typename
   }
 }
@@ -2190,76 +843,15 @@ query PurchasesByFarmer(
     items {
       id
       buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       totalAmount
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
     __typename
   }
 }
@@ -2281,76 +873,15 @@ query PurchasesByCrop(
     items {
       id
       buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       totalAmount
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
     __typename
   }
 }
@@ -2372,46 +903,51 @@ query DeliveriesByPurchase(
     items {
       id
       purchaseID
-      purchase {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      farmerID
       agentID
-      agent {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
       deliveryAddress
       deliveryStatus
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
+    __typename
+  }
+}
+
+query DeliveriesByFarmer(
+  $farmerID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelDeliveryFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  deliveriesByFarmer(
+    farmerID: $farmerID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      purchaseID
+      farmerID
+      agentID
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
+      deliveryAddress
+      deliveryStatus
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
     __typename
   }
 }
@@ -2435,46 +971,18 @@ query DeliveriesByAgent(
     items {
       id
       purchaseID
-      purchase {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      farmerID
       agentID
-      agent {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
       deliveryAddress
       deliveryStatus
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
     __typename
   }
 }
@@ -2498,46 +1006,14 @@ query MessagesBySender(
     items {
       id
       senderID
-      sender {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       receiverID
-      receiver {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       content
       isRead
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
     __typename
   }
 }
@@ -2561,46 +1037,14 @@ query MessagesByReceiver(
     items {
       id
       senderID
-      sender {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       receiverID
-      receiver {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       content
       isRead
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     nextToken
-    startedAt
     __typename
   }
 }

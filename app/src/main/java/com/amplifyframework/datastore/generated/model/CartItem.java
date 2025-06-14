@@ -24,14 +24,13 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 /** This is an auto generated class representing the CartItem type in your schema. */
 @SuppressWarnings("all")
 @ModelConfig(pluralName = "CartItems", type = Model.Type.USER, version = 1, authRules = {
-  @AuthRule(allow = AuthStrategy.OWNER, ownerField = "buyerID", identityClaim = "sub", provider = "userPools", operations = { ModelOperation.READ, ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE })
+  @AuthRule(allow = AuthStrategy.OWNER, ownerField = "userID", identityClaim = "sub", provider = "userPools", operations = { ModelOperation.READ, ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE })
 })
-@Index(name = "byCart", fields = {"cartID","buyerID","addedAt"})
+@Index(name = "byUser", fields = {"userID","addedAt"})
 @Index(name = "byCrop", fields = {"cropID"})
 public final class CartItem implements Model {
   public static final QueryField ID = field("CartItem", "id");
-  public static final QueryField BUYER_ID = field("CartItem", "buyerID");
-  public static final QueryField CART = field("CartItem", "cartID");
+  public static final QueryField USER = field("CartItem", "userID");
   public static final QueryField CROP = field("CartItem", "cropID");
   public static final QueryField QUANTITY = field("CartItem", "quantity");
   public static final QueryField PRICE_AT_ADD = field("CartItem", "priceAtAdd");
@@ -39,8 +38,7 @@ public final class CartItem implements Model {
   public static final QueryField CREATED_AT = field("CartItem", "createdAt");
   public static final QueryField UPDATED_AT = field("CartItem", "updatedAt");
   private final @ModelField(targetType="ID", isRequired = true) String id;
-  private final @ModelField(targetType="ID", isRequired = true) String buyerID;
-  private final @ModelField(targetType="Cart") @BelongsTo(targetName = "cartID", targetNames = {"cartID"}, type = Cart.class) Cart cart;
+  private final @ModelField(targetType="User") @BelongsTo(targetName = "userID", targetNames = {"userID"}, type = User.class) User user;
   private final @ModelField(targetType="Crop") @BelongsTo(targetName = "cropID", targetNames = {"cropID"}, type = Crop.class) Crop crop;
   private final @ModelField(targetType="Int", isRequired = true) Integer quantity;
   private final @ModelField(targetType="Float", isRequired = true) Double priceAtAdd;
@@ -57,12 +55,8 @@ public final class CartItem implements Model {
       return id;
   }
   
-  public String getBuyerId() {
-      return buyerID;
-  }
-  
-  public Cart getCart() {
-      return cart;
+  public User getUser() {
+      return user;
   }
   
   public Crop getCrop() {
@@ -89,10 +83,9 @@ public final class CartItem implements Model {
       return updatedAt;
   }
   
-  private CartItem(String id, String buyerID, Cart cart, Crop crop, Integer quantity, Double priceAtAdd, Temporal.DateTime addedAt, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+  private CartItem(String id, User user, Crop crop, Integer quantity, Double priceAtAdd, Temporal.DateTime addedAt, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
     this.id = id;
-    this.buyerID = buyerID;
-    this.cart = cart;
+    this.user = user;
     this.crop = crop;
     this.quantity = quantity;
     this.priceAtAdd = priceAtAdd;
@@ -110,8 +103,7 @@ public final class CartItem implements Model {
       } else {
       CartItem cartItem = (CartItem) obj;
       return ObjectsCompat.equals(getId(), cartItem.getId()) &&
-              ObjectsCompat.equals(getBuyerId(), cartItem.getBuyerId()) &&
-              ObjectsCompat.equals(getCart(), cartItem.getCart()) &&
+              ObjectsCompat.equals(getUser(), cartItem.getUser()) &&
               ObjectsCompat.equals(getCrop(), cartItem.getCrop()) &&
               ObjectsCompat.equals(getQuantity(), cartItem.getQuantity()) &&
               ObjectsCompat.equals(getPriceAtAdd(), cartItem.getPriceAtAdd()) &&
@@ -125,8 +117,7 @@ public final class CartItem implements Model {
    public int hashCode() {
     return new StringBuilder()
       .append(getId())
-      .append(getBuyerId())
-      .append(getCart())
+      .append(getUser())
       .append(getCrop())
       .append(getQuantity())
       .append(getPriceAtAdd())
@@ -142,8 +133,7 @@ public final class CartItem implements Model {
     return new StringBuilder()
       .append("CartItem {")
       .append("id=" + String.valueOf(getId()) + ", ")
-      .append("buyerID=" + String.valueOf(getBuyerId()) + ", ")
-      .append("cart=" + String.valueOf(getCart()) + ", ")
+      .append("user=" + String.valueOf(getUser()) + ", ")
       .append("crop=" + String.valueOf(getCrop()) + ", ")
       .append("quantity=" + String.valueOf(getQuantity()) + ", ")
       .append("priceAtAdd=" + String.valueOf(getPriceAtAdd()) + ", ")
@@ -154,7 +144,7 @@ public final class CartItem implements Model {
       .toString();
   }
   
-  public static BuyerIdStep builder() {
+  public static QuantityStep builder() {
       return new Builder();
   }
   
@@ -175,15 +165,13 @@ public final class CartItem implements Model {
       null,
       null,
       null,
-      null,
       null
     );
   }
   
   public CopyOfBuilder copyOfBuilder() {
     return new CopyOfBuilder(id,
-      buyerID,
-      cart,
+      user,
       crop,
       quantity,
       priceAtAdd,
@@ -191,11 +179,6 @@ public final class CartItem implements Model {
       createdAt,
       updatedAt);
   }
-  public interface BuyerIdStep {
-    QuantityStep buyerId(String buyerId);
-  }
-  
-
   public interface QuantityStep {
     PriceAtAddStep quantity(Integer quantity);
   }
@@ -224,29 +207,27 @@ public final class CartItem implements Model {
   public interface BuildStep {
     CartItem build();
     BuildStep id(String id);
-    BuildStep cart(Cart cart);
+    BuildStep user(User user);
     BuildStep crop(Crop crop);
   }
   
 
-  public static class Builder implements BuyerIdStep, QuantityStep, PriceAtAddStep, AddedAtStep, CreatedAtStep, UpdatedAtStep, BuildStep {
+  public static class Builder implements QuantityStep, PriceAtAddStep, AddedAtStep, CreatedAtStep, UpdatedAtStep, BuildStep {
     private String id;
-    private String buyerID;
     private Integer quantity;
     private Double priceAtAdd;
     private Temporal.DateTime addedAt;
     private Temporal.DateTime createdAt;
     private Temporal.DateTime updatedAt;
-    private Cart cart;
+    private User user;
     private Crop crop;
     public Builder() {
       
     }
     
-    private Builder(String id, String buyerID, Cart cart, Crop crop, Integer quantity, Double priceAtAdd, Temporal.DateTime addedAt, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+    private Builder(String id, User user, Crop crop, Integer quantity, Double priceAtAdd, Temporal.DateTime addedAt, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
       this.id = id;
-      this.buyerID = buyerID;
-      this.cart = cart;
+      this.user = user;
       this.crop = crop;
       this.quantity = quantity;
       this.priceAtAdd = priceAtAdd;
@@ -261,21 +242,13 @@ public final class CartItem implements Model {
         
         return new CartItem(
           id,
-          buyerID,
-          cart,
+          user,
           crop,
           quantity,
           priceAtAdd,
           addedAt,
           createdAt,
           updatedAt);
-    }
-    
-    @Override
-     public QuantityStep buyerId(String buyerId) {
-        Objects.requireNonNull(buyerId);
-        this.buyerID = buyerId;
-        return this;
     }
     
     @Override
@@ -314,8 +287,8 @@ public final class CartItem implements Model {
     }
     
     @Override
-     public BuildStep cart(Cart cart) {
-        this.cart = cart;
+     public BuildStep user(User user) {
+        this.user = user;
         return this;
     }
     
@@ -337,19 +310,13 @@ public final class CartItem implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String buyerId, Cart cart, Crop crop, Integer quantity, Double priceAtAdd, Temporal.DateTime addedAt, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
-      super(id, buyerID, cart, crop, quantity, priceAtAdd, addedAt, createdAt, updatedAt);
-      Objects.requireNonNull(buyerID);
+    private CopyOfBuilder(String id, User user, Crop crop, Integer quantity, Double priceAtAdd, Temporal.DateTime addedAt, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+      super(id, user, crop, quantity, priceAtAdd, addedAt, createdAt, updatedAt);
       Objects.requireNonNull(quantity);
       Objects.requireNonNull(priceAtAdd);
       Objects.requireNonNull(addedAt);
       Objects.requireNonNull(createdAt);
       Objects.requireNonNull(updatedAt);
-    }
-    
-    @Override
-     public CopyOfBuilder buyerId(String buyerId) {
-      return (CopyOfBuilder) super.buyerId(buyerId);
     }
     
     @Override
@@ -378,8 +345,8 @@ public final class CartItem implements Model {
     }
     
     @Override
-     public CopyOfBuilder cart(Cart cart) {
-      return (CopyOfBuilder) super.cart(cart);
+     public CopyOfBuilder user(User user) {
+      return (CopyOfBuilder) super.user(user);
     }
     
     @Override

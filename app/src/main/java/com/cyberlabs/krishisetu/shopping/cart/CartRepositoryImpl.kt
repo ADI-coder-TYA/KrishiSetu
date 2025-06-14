@@ -5,269 +5,191 @@ import com.amplifyframework.api.graphql.model.ModelMutation
 import com.amplifyframework.api.graphql.model.ModelQuery
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.core.model.temporal.Temporal
-import com.amplifyframework.datastore.generated.model.Cart
 import com.amplifyframework.datastore.generated.model.CartItem
-import com.amplifyframework.datastore.generated.model.Crop
-import com.amplifyframework.datastore.generated.model.User
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.time.OffsetDateTime
-import java.util.UUID
 import javax.inject.Inject
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class CartRepositoryImpl @Inject constructor() : CartRepository {
 
-    override suspend fun getCart(userId: String): Cart = suspendCoroutine { cont ->
-        Amplify.API.query(
-            ModelQuery.list(Cart::class.java, Cart.BUYER.eq(userId)),
-            { resp ->
-                when {
-                    resp.hasErrors() -> {
-                        cont.resumeWithException(RuntimeException(resp.errors.joinToString { it.message }))
-                    }
+    private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
+    override val cartItems: StateFlow<List<CartItem>> get() = _cartItems
 
-                    resp.hasData() -> {
-                        val carts = resp.data.items
-                        if (carts.count() > 0) {
-                            Log.i("CartRepository", "Cart found: $carts")
-                            Log.i("CartRepository", "Cart first found: ${carts.first()}")
-                            Log.i("CartRepository", "Cart Items: ${carts.first().items.toList()}")
-                            cont.resume(carts.first())
-                        } else {
-                            // No cart → fetch the user object
-                            Amplify.API.query(
-                                ModelQuery[User::class.java, userId],
-                                { userResp ->
-                                    when {
-                                        userResp.hasErrors() ->
-                                            cont.resumeWithException(RuntimeException(userResp.errors.joinToString { it.message }))
-
-                                        userResp.data != null -> {
-                                            val newCart = Cart.builder()
-                                                .createdAt(
-                                                    Temporal.DateTime(
-                                                        OffsetDateTime.now().toString()
-                                                    )
-                                                )
-                                                .updatedAt(
-                                                    Temporal.DateTime(
-                                                        OffsetDateTime.now().toString()
-                                                    )
-                                                )
-                                                .buyer(userResp.data)       // or .buyer(userId) if your schema wants a string
-                                                .id(UUID.randomUUID().toString())
-                                                .build()
-                                            // create the new cart
-                                            Amplify.API.mutate(
-                                                ModelMutation.create(newCart),
-                                                { mResp ->
-                                                    if (mResp.hasErrors())
-                                                        cont.resumeWithException(
-                                                            RuntimeException(
-                                                                mResp.errors.joinToString { it.message })
-                                                        )
-                                                    else if (mResp.data != null)
-                                                        cont.resume(mResp.data)
-                                                    else
-                                                        cont.resumeWithException(RuntimeException("Create returned no data"))
-                                                },
-                                                { err -> cont.resumeWithException(err) }
-                                            )
-                                        }
-
-                                        else -> {
-                                            cont.resumeWithException(RuntimeException("User not found"))
-                                        }
-                                    }
-                                },
-                                { apiErr -> cont.resumeWithException(apiErr) }
-                            )
-                        }
-                    }
-
-                    else -> {
-                        cont.resumeWithException(RuntimeException("Unexpected: no data & no errors"))
-                    }
-                }
-            },
-            { err -> cont.resumeWithException(err) }
-        )
-    }
-
-    override suspend fun addItemToCart(
-        cart: Cart,
-        item: Crop,
-        quantity: Int
-    ): Boolean {
-        return try {
-            val existingCartItem = getCartItemByCrop(cart, item)
-            if (existingCartItem != null) {
-                increaseQuantity(existingCartItem, quantity)
-            } else {
-                val now = Temporal.DateTime(OffsetDateTime.now().toString())
-                val cartItem = CartItem.builder()
-                    .buyerId(cart.buyer.id)
-                    .quantity(quantity)
-                    .priceAtAdd(item.price)
-                    .addedAt(now)
-                    .createdAt(now)
-                    .updatedAt(now)
-                    .cart(cart)
-                    .crop(item)
-                    .id(UUID.randomUUID().toString())
-                    .build()
-
-                Log.i("CartRepository", "Adding new item to cart: $cartItem") //Log correct values, no null fields
-
-                suspendCoroutine { continuation ->
-                    Amplify.API.mutate(
-                        ModelMutation.create(cartItem),
-                        { response ->
-                            if (response.hasErrors()) {
-                                Log.e("CartRepository", "Error adding item: ${response.errors}")
-                                continuation.resume(false)
-                            } else if (response.hasData()) {
-                                Log.i("CartRepository", "Item added to cart successfully")
-                                continuation.resume(true)
-                            }
-                        },
-                        { apiError ->
-                            Log.e("CartRepository", "API error in addItemToCart", apiError)
-                            continuation.resumeWithException(apiError)
-                        }
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("CartRepository", "Exception in addItemToCart", e)
-            false
-        }
-    }
-
-
-    override suspend fun removeItemFromCart(item: CartItem): Boolean =
-        suspendCoroutine { continuation ->
-            Amplify.API.mutate(
-                ModelMutation.delete(item),
-                { response ->
-                    if (response.hasErrors()) {
-                        Log.e(
-                            "CartRepository",
-                            "Response error: ${response.errors.joinToString { it.message }}",
-                        )
-                        continuation.resumeWithException(RuntimeException("Response error in deleting item"))
-                    } else if (response.hasData()) {
-                        Log.i("CartRepository", "Item removed from cart successfully")
-                        continuation.resume(true)
-                    } else {
-                        Log.e("CartRepository", "No item data and no errors (unexplained)")
-                        continuation.resume(false)
-                    }
-                }, { apiError ->
-                    Log.e("CartRepository", "API error in deleting item", apiError)
-                    continuation.resumeWithException(apiError)
-                }
+    override suspend fun fetchCartItems(buyerId: String) {
+        try {
+            val request = ModelQuery.list(
+                CartItem::class.java,
+                CartItem.USER.eq(buyerId)
             )
-        }
 
-    suspend fun getCartItemByCrop(cart: Cart, crop: Crop): CartItem? {
-        return suspendCoroutine { continuation ->
-            val predicate = CartItem.CART.eq(cart.id).and(CartItem.CROP.eq(crop.id))
-            Amplify.API.query(
-                ModelQuery.list(CartItem::class.java, predicate),
-                { response ->
-                    val item = response.data.firstOrNull()
-                    Log.i("CartRepository", "Existing item check: $item")
-                    continuation.resume(item)
-                },
-                { apiError ->
-                    Log.e("CartRepository", "API error fetching cart item by crop", apiError)
-                    continuation.resumeWithException(apiError)
-                }
-            )
-        }
-    }
-
-    override suspend fun increaseQuantity(cartItem: CartItem, quantityToAdd: Int): Boolean {
-        val updatedItem = cartItem.copyOfBuilder()
-            .quantity(cartItem.quantity + quantityToAdd)
-            .updatedAt(Temporal.DateTime(OffsetDateTime.now().toString()))
-            .build()
-
-        Log.i("CartRepository", "Updating quantity: $updatedItem")
-
-        return suspendCoroutine { continuation ->
-            Amplify.API.mutate(
-                ModelMutation.update(updatedItem),
-                { response ->
-                    if (response.hasErrors()) {
-                        Log.e("CartRepository", "Error updating item: ${response.errors}")
-                        continuation.resume(false)
-
-                    } else {
-                        Log.i("CartRepository", "Quantity updated successfully")
-                        continuation.resume(true)
-                    }
-                },
-                { apiError ->
-                    Log.e("CartRepository", "API error in increaseQuantity()", apiError)
-                    continuation.resumeWithException(apiError)
-                }
-            )
-        }
-    }
-
-    override suspend fun decreaseQuantity(cartItem: CartItem, quantityToDecrease: Int): Boolean {
-        val newQuantity = cartItem.quantity - quantityToDecrease
-
-        return if (newQuantity <= 0) {
-            Log.i("CartRepository", "Quantity is zero or less, removing item: $cartItem")
-            suspendCoroutine { continuation ->
-                Amplify.API.mutate(
-                    ModelMutation.delete(cartItem),
+            val items = suspendCoroutine<List<CartItem>> { continuation ->
+                Amplify.API.query(
+                    request,
                     { response ->
-                        if (response.hasData()) {
-                            Log.i("CartRepository", "Item removed from cart successfully")
-                            continuation.resume(true)
+                        if (response.hasErrors()) {
+                            Log.e("CartRepository", "Error fetching cart items: ${response.errors}")
+                            continuation.resume(emptyList())
+                        } else if (response.hasData()) {
+                            val result = response.data.items.toList()
+                            continuation.resume(result)
                         } else {
-                            Log.e("CartRepository", "Error removing item: ${response.errors}")
-                            continuation.resume(false)
+                            Log.e("CartRepository", "No data and no errors")
+                            continuation.resume(emptyList())
                         }
                     },
-                    { apiError ->
-                        Log.e("CartRepository", "API error on delete", apiError)
-                        continuation.resumeWithException(apiError)
+                    { error ->
+                        Log.e("CartRepository", "API error in fetchCartItems", error)
+                        continuation.resume(emptyList())
                     }
                 )
             }
-        } else {
-            val updatedItem = cartItem.copyOfBuilder()
-                .quantity(newQuantity)
+
+            _cartItems.value = items
+        } catch (e: Exception) {
+            Log.e("CartRepository", "Exception fetching cart items", e)
+        }
+    }
+
+    override suspend fun addCartItem(item: CartItem) {
+        try {
+            suspendCoroutine<Unit> { continuation ->
+                val request = ModelMutation.create(item)
+                Amplify.API.mutate(
+                    request,
+                    { response ->
+                        if (response.hasErrors()) {
+                            Log.e("CartRepository", "Error adding cart item: ${response.errors}")
+                        } else if (response.hasData()) {
+                            Log.i("CartRepository", "Item added: ${response.data}")
+                        } else {
+                            Log.e("CartRepository", "Add failed: No data, no errors")
+                        }
+                        continuation.resume(Unit)
+                    },
+                    { error ->
+                        Log.e("CartRepository", "API error adding cart item", error)
+                        continuation.resume(Unit)
+                    }
+                )
+            }
+
+            fetchCartItems(item.user.id)
+        } catch (e: Exception) {
+            Log.e("CartRepository", "Exception adding cart item", e)
+        }
+    }
+
+    override suspend fun deleteCartItem(item: CartItem) {
+        try {
+            suspendCoroutine<Unit> { continuation ->
+                val request = ModelMutation.delete(item)
+                Amplify.API.mutate(
+                    request,
+                    { response ->
+                        if (response.hasErrors()) {
+                            Log.e("CartRepository", "Error deleting cart item: ${response.errors}")
+                        } else if (response.hasData()) {
+                            Log.i("CartRepository", "Item deleted: ${response.data}")
+                        } else {
+                            Log.e("CartRepository", "Delete failed: No data, no errors")
+                        }
+                        continuation.resume(Unit)
+                    },
+                    { error ->
+                        Log.e("CartRepository", "API error deleting cart item", error)
+                        continuation.resume(Unit)
+                    }
+                )
+            }
+
+            fetchCartItems(item.user.id)
+        } catch (e: Exception) {
+            Log.e("CartRepository", "Exception deleting cart item", e)
+        }
+    }
+
+    override suspend fun clearCart(buyerId: String) {
+        try {
+            val currentItems = cartItems.value.filter { it.user.id == buyerId }
+            for (item in currentItems) {
+                deleteCartItem(item)
+            }
+        } catch (e: Exception) {
+            Log.e("CartRepository", "Exception clearing cart", e)
+        }
+    }
+
+    override suspend fun increaseQuantity(item: CartItem, delta: Int) {
+        try {
+            val updated = item.copyOfBuilder()
+                .quantity(item.quantity + delta)
                 .updatedAt(Temporal.DateTime(OffsetDateTime.now().toString()))
                 .build()
 
-            Log.i("CartRepository", "Decreasing quantity: $updatedItem")
-
-            suspendCoroutine { continuation ->
+            suspendCoroutine<Unit> { continuation ->
                 Amplify.API.mutate(
-                    ModelMutation.update(updatedItem),
+                    ModelMutation.update(updated),
                     { response ->
-                        if (response.hasData()) {
-                            Log.i("CartRepository", "Quantity decreased successfully")
-                            continuation.resume(true)
+                        if (response.hasErrors()) {
+                            Log.e("CartRepo", "Increase qty errors: ${response.errors}")
+                        } else if (response.hasData()) {
+                            Log.i("CartRepo", "Quantity increased: ${response.data}")
                         } else {
-                            Log.e("CartRepository", "Error decreasing quantity: ${response.errors}")
-                            continuation.resume(false)
+                            Log.e("CartRepo", "Increase failed: No data, no errors")
                         }
+                        continuation.resume(Unit)
                     },
-                    { apiError ->
-                        Log.e("CartRepository", "API error on decreaseQuantity()", apiError)
-                        continuation.resumeWithException(apiError)
+                    { error ->
+                        Log.e("CartRepo", "API error increasing quantity", error)
+                        continuation.resume(Unit)
                     }
                 )
             }
+
+            fetchCartItems(item.user.id)
+        } catch (e: Exception) {
+            Log.e("CartRepository", "Exception increasing quantity", e)
         }
     }
 
+    override suspend fun decreaseQuantity(item: CartItem, delta: Int) {
+        try {
+            val newQty = item.quantity - delta
+            if (newQty <= 0) {
+                deleteCartItem(item)
+            } else {
+                val updated = item.copyOfBuilder()
+                    .quantity(newQty)
+                    .updatedAt(Temporal.DateTime(OffsetDateTime.now().toString()))
+                    .build()
+
+                suspendCoroutine<Unit> { continuation ->
+                    Amplify.API.mutate(
+                        ModelMutation.update(updated),
+                        { response ->
+                            if (response.hasErrors()) {
+                                Log.e("CartRepo", "Decrease qty errors: ${response.errors}")
+                            } else if (response.hasData()) {
+                                Log.i("CartRepo", "Quantity decreased: ${response.data}")
+                            } else {
+                                Log.e("CartRepo", "Decrease failed: No data, no errors")
+                            }
+                            continuation.resume(Unit)
+                        },
+                        { error ->
+                            Log.e("CartRepo", "API error decreasing quantity", error)
+                            continuation.resume(Unit)
+                        }
+                    )
+                }
+
+                fetchCartItems(item.user.id)
+            }
+        } catch (e: Exception) {
+            Log.e("CartRepository", "Exception decreasing quantity", e)
+        }
+    }
 }

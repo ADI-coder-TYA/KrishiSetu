@@ -1,5 +1,7 @@
 package com.cyberlabs.krishisetu.util.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -12,9 +14,12 @@ import com.cyberlabs.krishisetu.chat.ChatListViewModel
 import com.cyberlabs.krishisetu.chat.ChatViewModel
 import com.cyberlabs.krishisetu.crops.CropUploadViewModel
 import com.cyberlabs.krishisetu.crops.CropViewModel
+import com.cyberlabs.krishisetu.profile.ProfileViewModel
 import com.cyberlabs.krishisetu.shopping.cart.CartViewModel
 import com.cyberlabs.krishisetu.shopping.cropListing.cropSearch.SearchViewModel
 import com.cyberlabs.krishisetu.shopping.cropListing.cropShop.CropShopViewModel
+import com.cyberlabs.krishisetu.shopping.order.CheckoutViewModel
+import com.cyberlabs.krishisetu.shopping.order.OrdersViewModel
 import com.cyberlabs.krishisetu.ui.screens.authentication.ConfirmScreen
 import com.cyberlabs.krishisetu.ui.screens.authentication.SignInScreen
 import com.cyberlabs.krishisetu.ui.screens.authentication.SignUpScreen
@@ -23,13 +28,26 @@ import com.cyberlabs.krishisetu.ui.screens.chat.ChatScreen
 import com.cyberlabs.krishisetu.ui.screens.crops.CropUploadScreen
 import com.cyberlabs.krishisetu.ui.screens.crops.CropsScreen
 import com.cyberlabs.krishisetu.ui.screens.home.HomeScreen
+import com.cyberlabs.krishisetu.ui.screens.profile.ProfileScreen
 import com.cyberlabs.krishisetu.ui.screens.shopping.cart.CartScreen
 import com.cyberlabs.krishisetu.ui.screens.shopping.cropListing.CropSearchListScreen
 import com.cyberlabs.krishisetu.ui.screens.shopping.cropListing.CropShopScreen
+import com.cyberlabs.krishisetu.ui.screens.shopping.order.BuyerOrderScreen
+import com.cyberlabs.krishisetu.ui.screens.shopping.order.CheckoutScreen
+import com.cyberlabs.krishisetu.ui.screens.shopping.order.delivery.BuyerDeliveryScreen
 
 @Composable
-fun AppNavHost(vm: AuthViewModel, nav: NavHostController) {
-    NavHost(nav, startDestination = "signUp") {
+fun AppNavHost(vm: AuthViewModel, nav: NavHostController, startDestination: String = "signUp") {
+    NavHost(
+        navController = nav,
+        startDestination = startDestination,
+        enterTransition = {
+            EnterTransition.None
+        },
+        exitTransition = {
+            ExitTransition.None
+        }
+    ) {
         composable("signUp") {
             SignUpScreen(
                 vm,
@@ -45,13 +63,40 @@ fun AppNavHost(vm: AuthViewModel, nav: NavHostController) {
                 onSignedIn = { nav.navigate("home") })
         }
         composable("home") { HomeScreen(vm, nav) }
-        composable("chat") {
+        composable("profile") {
+            val profileViewModel: ProfileViewModel = hiltViewModel()
+            ProfileScreen(profileViewModel)
+        }
+        composable(
+            route = "chat/{role}",
+            arguments = listOf(
+                navArgument("role") { type = NavType.StringType }
+            )
+        ) {
             val viewModel: ChatListViewModel = hiltViewModel()
             ChatListScreen(nav, viewModel)
         }
         composable("cart") {
             val viewModel: CartViewModel = hiltViewModel()
             CartScreen(nav, viewModel)
+        }
+        composable(
+            route = "checkout/{buyerId}",
+            arguments = listOf(
+                navArgument("buyerId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val viewModel: CartViewModel = hiltViewModel()
+            val buyerId = backStackEntry.arguments?.getString("buyerId")
+            val checkoutViewModel: CheckoutViewModel = hiltViewModel()
+            CheckoutScreen(nav, buyerId ?: "", viewModel, checkoutViewModel)
+        }
+        composable("buyer_delivery") {
+            BuyerDeliveryScreen(nav)
+        }
+        composable("buyer_orders") {
+            val ordersViewModel: OrdersViewModel = hiltViewModel()
+            BuyerOrderScreen(ordersViewModel)
         }
         composable(
             route = "chatList/{currentUserId}/{chatPartnerId}",

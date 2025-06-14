@@ -1,5 +1,6 @@
 package com.cyberlabs.krishisetu.ui.screens.shopping.cropListing
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -277,7 +278,9 @@ fun CropShopScreen(
                                         .fillMaxWidth()
                                         .weight(1f),
                                     onClick = {
-                                        cartViewModel.addItemToCart(cropData.cropId, 1)
+                                        cartViewModel.buyerId.value?.let {
+                                            cartViewModel.addItemToCart(it, cropData.cropId, 1, cropData.price)
+                                        }
                                     }
                                 ) {
                                     Row(

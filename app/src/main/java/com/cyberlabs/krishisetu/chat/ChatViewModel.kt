@@ -1,11 +1,13 @@
 package com.cyberlabs.krishisetu.chat
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.amplifyframework.api.graphql.GraphQLOperation
 import com.amplifyframework.api.graphql.model.ModelMutation
 import com.amplifyframework.api.graphql.model.ModelQuery
@@ -14,16 +16,19 @@ import com.amplifyframework.core.Amplify
 import com.amplifyframework.core.model.temporal.Temporal
 import com.amplifyframework.datastore.generated.model.Message
 import com.amplifyframework.datastore.generated.model.User
+import com.cyberlabs.krishisetu.profile.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.time.OffsetDateTime
 import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
     val currentUserId: String = savedStateHandle["currentUserId"]!!
     val chatPartnerId: String = savedStateHandle["chatPartnerId"]!!

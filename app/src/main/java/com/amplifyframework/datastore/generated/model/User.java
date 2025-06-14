@@ -1,7 +1,6 @@
 package com.amplifyframework.datastore.generated.model;
 
 import com.amplifyframework.core.model.annotations.HasMany;
-import com.amplifyframework.core.model.annotations.HasOne;
 import com.amplifyframework.core.model.temporal.Temporal;
 import com.amplifyframework.core.model.ModelIdentifier;
 
@@ -36,16 +35,20 @@ public final class User implements Model {
   public static final QueryField EMAIL = field("User", "email");
   public static final QueryField PHONE = field("User", "phone");
   public static final QueryField OWNER_ID = field("User", "ownerID");
+  public static final QueryField PROFILE_PICTURE = field("User", "profilePicture");
   public static final QueryField ROLE = field("User", "role");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String", isRequired = true) String name;
   private final @ModelField(targetType="AWSEmail", isRequired = true) String email;
   private final @ModelField(targetType="AWSPhone") String phone;
   private final @ModelField(targetType="ID", isRequired = true) String ownerID;
+  private final @ModelField(targetType="String") String profilePicture;
   private final @ModelField(targetType="UserRole", isRequired = true) UserRole role;
   private final @ModelField(targetType="Crop") @HasMany(associatedWith = "farmer", type = Crop.class) List<Crop> crops = null;
   private final @ModelField(targetType="Purchase") @HasMany(associatedWith = "buyer", type = Purchase.class) List<Purchase> purchases = null;
-  private final @ModelField(targetType="Cart") @HasOne(associatedWith = "buyer", type = Cart.class) Cart cart = null;
+  private final @ModelField(targetType="CartItem") @HasMany(associatedWith = "user", type = CartItem.class) List<CartItem> cartItems = null;
+  private final @ModelField(targetType="Order") @HasMany(associatedWith = "buyer", type = Order.class) List<Order> ordersPlaced = null;
+  private final @ModelField(targetType="Order") @HasMany(associatedWith = "farmer", type = Order.class) List<Order> ordersTaken = null;
   private final @ModelField(targetType="Delivery") @HasMany(associatedWith = "agent", type = Delivery.class) List<Delivery> deliveriesAssigned = null;
   private final @ModelField(targetType="Message") @HasMany(associatedWith = "sender", type = Message.class) List<Message> sentMessages = null;
   private final @ModelField(targetType="Message") @HasMany(associatedWith = "receiver", type = Message.class) List<Message> receivedMessages = null;
@@ -77,6 +80,10 @@ public final class User implements Model {
       return ownerID;
   }
   
+  public String getProfilePicture() {
+      return profilePicture;
+  }
+  
   public UserRole getRole() {
       return role;
   }
@@ -89,8 +96,16 @@ public final class User implements Model {
       return purchases;
   }
   
-  public Cart getCart() {
-      return cart;
+  public List<CartItem> getCartItems() {
+      return cartItems;
+  }
+  
+  public List<Order> getOrdersPlaced() {
+      return ordersPlaced;
+  }
+  
+  public List<Order> getOrdersTaken() {
+      return ordersTaken;
   }
   
   public List<Delivery> getDeliveriesAssigned() {
@@ -113,12 +128,13 @@ public final class User implements Model {
       return updatedAt;
   }
   
-  private User(String id, String name, String email, String phone, String ownerID, UserRole role) {
+  private User(String id, String name, String email, String phone, String ownerID, String profilePicture, UserRole role) {
     this.id = id;
     this.name = name;
     this.email = email;
     this.phone = phone;
     this.ownerID = ownerID;
+    this.profilePicture = profilePicture;
     this.role = role;
   }
   
@@ -135,6 +151,7 @@ public final class User implements Model {
               ObjectsCompat.equals(getEmail(), user.getEmail()) &&
               ObjectsCompat.equals(getPhone(), user.getPhone()) &&
               ObjectsCompat.equals(getOwnerId(), user.getOwnerId()) &&
+              ObjectsCompat.equals(getProfilePicture(), user.getProfilePicture()) &&
               ObjectsCompat.equals(getRole(), user.getRole()) &&
               ObjectsCompat.equals(getCreatedAt(), user.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), user.getUpdatedAt());
@@ -149,6 +166,7 @@ public final class User implements Model {
       .append(getEmail())
       .append(getPhone())
       .append(getOwnerId())
+      .append(getProfilePicture())
       .append(getRole())
       .append(getCreatedAt())
       .append(getUpdatedAt())
@@ -165,6 +183,7 @@ public final class User implements Model {
       .append("email=" + String.valueOf(getEmail()) + ", ")
       .append("phone=" + String.valueOf(getPhone()) + ", ")
       .append("ownerID=" + String.valueOf(getOwnerId()) + ", ")
+      .append("profilePicture=" + String.valueOf(getProfilePicture()) + ", ")
       .append("role=" + String.valueOf(getRole()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
@@ -191,6 +210,7 @@ public final class User implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
@@ -201,6 +221,7 @@ public final class User implements Model {
       email,
       phone,
       ownerID,
+      profilePicture,
       role);
   }
   public interface NameStep {
@@ -227,6 +248,7 @@ public final class User implements Model {
     User build();
     BuildStep id(String id);
     BuildStep phone(String phone);
+    BuildStep profilePicture(String profilePicture);
   }
   
 
@@ -237,16 +259,18 @@ public final class User implements Model {
     private String ownerID;
     private UserRole role;
     private String phone;
+    private String profilePicture;
     public Builder() {
       
     }
     
-    private Builder(String id, String name, String email, String phone, String ownerID, UserRole role) {
+    private Builder(String id, String name, String email, String phone, String ownerID, String profilePicture, UserRole role) {
       this.id = id;
       this.name = name;
       this.email = email;
       this.phone = phone;
       this.ownerID = ownerID;
+      this.profilePicture = profilePicture;
       this.role = role;
     }
     
@@ -260,6 +284,7 @@ public final class User implements Model {
           email,
           phone,
           ownerID,
+          profilePicture,
           role);
     }
     
@@ -297,6 +322,12 @@ public final class User implements Model {
         return this;
     }
     
+    @Override
+     public BuildStep profilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+        return this;
+    }
+    
     /**
      * @param id id
      * @return Current Builder instance, for fluent method chaining
@@ -309,8 +340,8 @@ public final class User implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String name, String email, String phone, String ownerId, UserRole role) {
-      super(id, name, email, phone, ownerID, role);
+    private CopyOfBuilder(String id, String name, String email, String phone, String ownerId, String profilePicture, UserRole role) {
+      super(id, name, email, phone, ownerID, profilePicture, role);
       Objects.requireNonNull(name);
       Objects.requireNonNull(email);
       Objects.requireNonNull(ownerID);
@@ -340,6 +371,11 @@ public final class User implements Model {
     @Override
      public CopyOfBuilder phone(String phone) {
       return (CopyOfBuilder) super.phone(phone);
+    }
+    
+    @Override
+     public CopyOfBuilder profilePicture(String profilePicture) {
+      return (CopyOfBuilder) super.profilePicture(profilePicture);
     }
   }
   

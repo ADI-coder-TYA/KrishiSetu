@@ -1,5 +1,185 @@
 # this is an auto generated file. This will be overwritten
 
+subscription OnCreateOrder(
+  $filter: ModelSubscriptionOrderFilterInput
+  $buyerID: String
+) {
+  onCreateOrder(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      farmerID
+      createdAt
+      updatedAt
+      __typename
+    }
+    quantity
+    bargainedPrice
+    realPrice
+    deliveryAddress
+    deliveryPhone
+    deliveryPincode
+    orderStatus
+    createdAt
+    updatedAt
+    expiresAt
+    __typename
+  }
+}
+
+subscription OnUpdateOrder(
+  $filter: ModelSubscriptionOrderFilterInput
+  $buyerID: String
+) {
+  onUpdateOrder(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      farmerID
+      createdAt
+      updatedAt
+      __typename
+    }
+    quantity
+    bargainedPrice
+    realPrice
+    deliveryAddress
+    deliveryPhone
+    deliveryPincode
+    orderStatus
+    createdAt
+    updatedAt
+    expiresAt
+    __typename
+  }
+}
+
+subscription OnDeleteOrder(
+  $filter: ModelSubscriptionOrderFilterInput
+  $buyerID: String
+) {
+  onDeleteOrder(filter: $filter, buyerID: $buyerID) {
+    id
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    cropID
+    crop {
+      id
+      title
+      description
+      price
+      quantityAvailable
+      imageUrl
+      location
+      farmerID
+      createdAt
+      updatedAt
+      __typename
+    }
+    quantity
+    bargainedPrice
+    realPrice
+    deliveryAddress
+    deliveryPhone
+    deliveryPincode
+    orderStatus
+    createdAt
+    updatedAt
+    expiresAt
+    __typename
+  }
+}
+
 subscription OnCreateUser(
   $filter: ModelSubscriptionUserFilterInput
   $ownerID: String
@@ -10,135 +190,42 @@ subscription OnCreateUser(
     email
     phone
     ownerID
+    profilePicture
     role
     crops {
-      items {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
-    cart {
-      id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+    cartItems {
+      nextToken
+      __typename
+    }
+    ordersPlaced {
+      nextToken
+      __typename
+    }
+    ordersTaken {
+      nextToken
       __typename
     }
     deliveriesAssigned {
-      items {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     sentMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     receivedMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -153,135 +240,42 @@ subscription OnUpdateUser(
     email
     phone
     ownerID
+    profilePicture
     role
     crops {
-      items {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
-    cart {
-      id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+    cartItems {
+      nextToken
+      __typename
+    }
+    ordersPlaced {
+      nextToken
+      __typename
+    }
+    ordersTaken {
+      nextToken
       __typename
     }
     deliveriesAssigned {
-      items {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     sentMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     receivedMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -296,141 +290,51 @@ subscription OnDeleteUser(
     email
     phone
     ownerID
+    profilePicture
     role
     crops {
-      items {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
-    cart {
-      id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+    cartItems {
+      nextToken
+      __typename
+    }
+    ordersPlaced {
+      nextToken
+      __typename
+    }
+    ordersTaken {
+      nextToken
       __typename
     }
     deliveriesAssigned {
-      items {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     sentMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     receivedMessages {
-      items {
-        id
-        senderID
-        receiverID
-        content
-        isRead
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
 
-subscription OnCreateCrop($filter: ModelSubscriptionCropFilterInput) {
-  onCreateCrop(filter: $filter) {
+subscription OnCreateCrop(
+  $filter: ModelSubscriptionCropFilterInput
+  $farmerID: String
+) {
+  onCreateCrop(filter: $filter, farmerID: $farmerID) {
     id
     title
     description
@@ -439,42 +343,15 @@ subscription OnCreateCrop($filter: ModelSubscriptionCropFilterInput) {
     imageUrl
     location
     cartItems {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
+      __typename
+    }
+    orders {
+      nextToken
       __typename
     }
     farmerID
@@ -484,60 +361,23 @@ subscription OnCreateCrop($filter: ModelSubscriptionCropFilterInput) {
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
 
-subscription OnUpdateCrop($filter: ModelSubscriptionCropFilterInput) {
-  onUpdateCrop(filter: $filter) {
+subscription OnUpdateCrop(
+  $filter: ModelSubscriptionCropFilterInput
+  $farmerID: String
+) {
+  onUpdateCrop(filter: $filter, farmerID: $farmerID) {
     id
     title
     description
@@ -546,42 +386,15 @@ subscription OnUpdateCrop($filter: ModelSubscriptionCropFilterInput) {
     imageUrl
     location
     cartItems {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
+      __typename
+    }
+    orders {
+      nextToken
       __typename
     }
     farmerID
@@ -591,60 +404,23 @@ subscription OnUpdateCrop($filter: ModelSubscriptionCropFilterInput) {
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
 
-subscription OnDeleteCrop($filter: ModelSubscriptionCropFilterInput) {
-  onDeleteCrop(filter: $filter) {
+subscription OnDeleteCrop(
+  $filter: ModelSubscriptionCropFilterInput
+  $farmerID: String
+) {
+  onDeleteCrop(filter: $filter, farmerID: $farmerID) {
     id
     title
     description
@@ -653,42 +429,15 @@ subscription OnDeleteCrop($filter: ModelSubscriptionCropFilterInput) {
     imageUrl
     location
     cartItems {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
       __typename
     }
     purchases {
-      items {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       nextToken
-      startedAt
+      __typename
+    }
+    orders {
+      nextToken
       __typename
     }
     farmerID
@@ -698,348 +447,35 @@ subscription OnDeleteCrop($filter: ModelSubscriptionCropFilterInput) {
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-
-subscription OnCreateCart(
-  $filter: ModelSubscriptionCartFilterInput
-  $buyerID: String
-) {
-  onCreateCart(filter: $filter, buyerID: $buyerID) {
-    id
-    buyerID
-    buyer {
-      id
-      name
-      email
-      phone
-      ownerID
-      role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    items {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      nextToken
-      startedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-
-subscription OnUpdateCart(
-  $filter: ModelSubscriptionCartFilterInput
-  $buyerID: String
-) {
-  onUpdateCart(filter: $filter, buyerID: $buyerID) {
-    id
-    buyerID
-    buyer {
-      id
-      name
-      email
-      phone
-      ownerID
-      role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    items {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      nextToken
-      startedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-
-subscription OnDeleteCart(
-  $filter: ModelSubscriptionCartFilterInput
-  $buyerID: String
-) {
-  onDeleteCart(filter: $filter, buyerID: $buyerID) {
-    id
-    buyerID
-    buyer {
-      id
-      name
-      email
-      phone
-      ownerID
-      role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    items {
-      items {
-        id
-        buyerID
-        cartID
-        cropID
-        quantity
-        priceAtAdd
-        addedAt
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      nextToken
-      startedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
 
 subscription OnCreateCartItem(
   $filter: ModelSubscriptionCartItemFilterInput
-  $buyerID: String
+  $userID: String
 ) {
-  onCreateCartItem(filter: $filter, buyerID: $buyerID) {
+  onCreateCartItem(filter: $filter, userID: $userID) {
     id
-    buyerID
-    cartID
-    cart {
+    userID
+    user {
       id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1051,36 +487,9 @@ subscription OnCreateCartItem(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
@@ -1088,48 +497,27 @@ subscription OnCreateCartItem(
     addedAt
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
 
 subscription OnUpdateCartItem(
   $filter: ModelSubscriptionCartItemFilterInput
-  $buyerID: String
+  $userID: String
 ) {
-  onUpdateCartItem(filter: $filter, buyerID: $buyerID) {
+  onUpdateCartItem(filter: $filter, userID: $userID) {
     id
-    buyerID
-    cartID
-    cart {
+    userID
+    user {
       id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1141,36 +529,9 @@ subscription OnUpdateCartItem(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
@@ -1178,48 +539,27 @@ subscription OnUpdateCartItem(
     addedAt
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
 
 subscription OnDeleteCartItem(
   $filter: ModelSubscriptionCartItemFilterInput
-  $buyerID: String
+  $userID: String
 ) {
-  onDeleteCartItem(filter: $filter, buyerID: $buyerID) {
+  onDeleteCartItem(filter: $filter, userID: $userID) {
     id
-    buyerID
-    cartID
-    cart {
+    userID
+    user {
       id
-      buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      items {
-        nextToken
-        startedAt
-        __typename
-      }
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1231,36 +571,9 @@ subscription OnDeleteCartItem(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
@@ -1268,9 +581,6 @@ subscription OnDeleteCartItem(
     addedAt
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1288,47 +598,10 @@ subscription OnCreatePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     farmerID
@@ -1338,47 +611,10 @@ subscription OnCreatePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1390,86 +626,29 @@ subscription OnCreatePurchase(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     delivery {
       id
       purchaseID
-      purchase {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      farmerID
       agentID
-      agent {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
       deliveryAddress
       deliveryStatus
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
     totalAmount
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1487,47 +666,10 @@ subscription OnUpdatePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     farmerID
@@ -1537,47 +679,10 @@ subscription OnUpdatePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1589,86 +694,29 @@ subscription OnUpdatePurchase(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     delivery {
       id
       purchaseID
-      purchase {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      farmerID
       agentID
-      agent {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
       deliveryAddress
       deliveryStatus
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
     totalAmount
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -1686,47 +734,10 @@ subscription OnDeletePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     farmerID
@@ -1736,47 +747,10 @@ subscription OnDeletePurchase(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     cropID
@@ -1788,166 +762,62 @@ subscription OnDeletePurchase(
       quantityAvailable
       imageUrl
       location
-      cartItems {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     delivery {
       id
       purchaseID
-      purchase {
-        id
-        buyerID
-        farmerID
-        cropID
-        quantity
-        totalAmount
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      farmerID
       agentID
-      agent {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
       deliveryAddress
       deliveryStatus
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     quantity
     totalAmount
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
 
 subscription OnCreateDelivery(
   $filter: ModelSubscriptionDeliveryFilterInput
-  $agentID: String
+  $farmerID: String
 ) {
-  onCreateDelivery(filter: $filter, agentID: $agentID) {
+  onCreateDelivery(filter: $filter, farmerID: $farmerID) {
     id
     purchaseID
     purchase {
       id
       buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       totalAmount
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
       __typename
     }
     agentID
@@ -1957,136 +827,52 @@ subscription OnCreateDelivery(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
+    personalAgentName
+    personalAgentPhone
+    personalAgentEmail
     deliveryAddress
     deliveryStatus
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
 
 subscription OnUpdateDelivery(
   $filter: ModelSubscriptionDeliveryFilterInput
-  $agentID: String
+  $farmerID: String
 ) {
-  onUpdateDelivery(filter: $filter, agentID: $agentID) {
+  onUpdateDelivery(filter: $filter, farmerID: $farmerID) {
     id
     purchaseID
     purchase {
       id
       buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       totalAmount
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
       __typename
     }
     agentID
@@ -2096,136 +882,52 @@ subscription OnUpdateDelivery(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
+    personalAgentName
+    personalAgentPhone
+    personalAgentEmail
     deliveryAddress
     deliveryStatus
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
 
 subscription OnDeleteDelivery(
   $filter: ModelSubscriptionDeliveryFilterInput
-  $agentID: String
+  $farmerID: String
 ) {
-  onDeleteDelivery(filter: $filter, agentID: $agentID) {
+  onDeleteDelivery(filter: $filter, farmerID: $farmerID) {
     id
     purchaseID
     purchase {
       id
       buyerID
-      buyer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       farmerID
-      farmer {
-        id
-        name
-        email
-        phone
-        ownerID
-        role
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       cropID
-      crop {
-        id
-        title
-        description
-        price
-        quantityAvailable
-        imageUrl
-        location
-        farmerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      delivery {
-        id
-        purchaseID
-        agentID
-        deliveryAddress
-        deliveryStatus
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
       quantity
       totalAmount
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      __typename
+    }
+    farmerID
+    farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
       __typename
     }
     agentID
@@ -2235,56 +937,19 @@ subscription OnDeleteDelivery(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
+    personalAgentName
+    personalAgentPhone
+    personalAgentEmail
     deliveryAddress
     deliveryStatus
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -2302,47 +967,10 @@ subscription OnCreateMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     receiverID
@@ -2352,56 +980,16 @@ subscription OnCreateMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     content
     isRead
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -2419,47 +1007,10 @@ subscription OnUpdateMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     receiverID
@@ -2469,56 +1020,16 @@ subscription OnUpdateMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     content
     isRead
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }
@@ -2536,47 +1047,10 @@ subscription OnDeleteMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     receiverID
@@ -2586,56 +1060,16 @@ subscription OnDeleteMessage(
       email
       phone
       ownerID
+      profilePicture
       role
-      crops {
-        nextToken
-        startedAt
-        __typename
-      }
-      purchases {
-        nextToken
-        startedAt
-        __typename
-      }
-      cart {
-        id
-        buyerID
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        __typename
-      }
-      deliveriesAssigned {
-        nextToken
-        startedAt
-        __typename
-      }
-      sentMessages {
-        nextToken
-        startedAt
-        __typename
-      }
-      receivedMessages {
-        nextToken
-        startedAt
-        __typename
-      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
     content
     isRead
     createdAt
     updatedAt
-    _version
-    _deleted
-    _lastChangedAt
     __typename
   }
 }

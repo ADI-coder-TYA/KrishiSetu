@@ -4,11 +4,48 @@ enum UserRole {
   DELIVERY_AGENT
 }
 
-enum DeliveryStatus {
-  PENDING
-  IN_PROGRESS
-  DELIVERED
+enum OrderStatus {
+    PENDING
+    ACCEPTED
+    REJECTED
 }
+
+enum DeliveryStatus {
+    PENDING
+    PREPARED
+    SHIPPED
+    OUT_FOR_DELIVERY
+    DELIVERED
+    CANCELLED
+}
+
+type Order @model
+  @auth(rules: [
+    { allow: owner, ownerField: "buyerID", identityClaim: "sub", operations: [create, read, update] },
+    { allow: private, provider: userPools, operations: [read, update]}
+    ]) {
+    id: ID!
+    buyerID: ID!
+        @index(name: "byBuyerOrders", sortKeyFields: ["createdAt"], queryField: "ordersByBuyer")
+    buyer: User @belongsTo(fields: ["buyerID"])
+    farmerID: ID!
+        @index(name: "byFarmerOrders", sortKeyFields: ["createdAt"], queryField: "ordersByFarmer")
+    farmer: User @belongsTo(fields: ["farmerID"])
+    cropID: ID!
+        @index(name: "byCropOrders", queryField: "ordersByCrop")
+    crop: Crop @belongsTo(fields: ["cropID"])
+    quantity: Int!
+    bargainedPrice: Int!
+    realPrice: Int!
+    deliveryAddress: String!
+    deliveryPhone: AWSPhone!
+    deliveryPincode: String!
+    orderStatus: OrderStatus!
+    createdAt: AWSDateTime!
+    updatedAt: AWSDateTime!
+    # 24 hours more than createdAt, if not accepted it expires.
+    expiresAt: AWSDateTime!
+  }
 
 type User @model
   @auth(rules: [
@@ -21,6 +58,7 @@ type User @model
   email: AWSEmail!
   phone: AWSPhone
   ownerID: ID!
+  profilePicture: String
 
   # Index to query users by role
   role: UserRole!
@@ -34,9 +72,14 @@ type User @model
   purchases: [Purchase]
     @hasMany(indexName: "byBuyer", fields: ["id"])
 
-  # A buyer’s cart (1:1)
-  cart: Cart
-    @hasOne(fields: ["id"])
+  # A buyer's cart items
+  cartItems: [CartItem] @hasMany(indexName: "byUser", fields: ["id"])
+
+  # A buyer's orders
+  ordersPlaced: [Order] @hasMany(indexName: "byBuyerOrders", fields: ["id"])
+
+  # A farmer's order
+  ordersTaken: [Order] @hasMany(indexName: "byFarmerOrders", fields: ["id"])
 
   # An agent's deliveries
   deliveriesAssigned: [Delivery]
@@ -59,11 +102,13 @@ type Crop @model @searchable
   imageUrl: String
   location: String
 
-  # Back-refs for items and purchases
+  # Back-refs for items, purchases and orders
   cartItems: [CartItem]
     @hasMany(indexName: "byCrop", fields: ["id"])
   purchases: [Purchase]
     @hasMany(indexName: "byCropPurchase", fields: ["id"])
+  orders: [Order]
+    @hasMany(indexName: "byCropOrders", fields: ["id"])
 
   # Who listed this crop
   farmerID: ID!
@@ -75,46 +120,22 @@ type Crop @model @searchable
   updatedAt: AWSDateTime!
 }
 
-type Cart @model
-  @auth(rules: [
-    { allow: owner, ownerField: "buyerID", identityClaim: "sub", operations: [read, create, update, delete] }
-  ]) {
-  id: ID!
-  buyerID: ID!
-    @index(name: "cartByBuyer", queryField: "getCartByBuyer")
-  buyer: User
-    @belongsTo(fields: ["buyerID"])
-  items: [CartItem]
-    @hasMany(indexName: "byCart", fields: ["id"])
-
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
-}
-
 type CartItem @model
   @auth(rules: [
-    # This rule now works correctly because buyerID is on the model
-    { allow: owner, ownerField: "buyerID", identityClaim: "sub", operations: [read, create, update, delete] }
+    { allow: owner, ownerField: "userID", identityClaim: "sub", operations: [read, create, update, delete] }
   ]) {
   id: ID!
 
-  # Add the owner's ID directly to the CartItem
-  buyerID: ID!
+  userID: ID! @index(name: "byUser", sortKeyFields: ["addedAt"], queryField: "cartItemsByUser")
+  user: User @belongsTo(fields: ["userID"])
 
-  # Add buyerID to the index key for more efficient queries
-  cartID: ID!
-    @index(name: "byCart", sortKeyFields: ["buyerID", "addedAt"], queryField: "itemsByCart")
-  cart: Cart
-    @belongsTo(fields: ["cartID"])
-
-  cropID: ID!
-    @index(name: "byCrop", queryField: "itemsByCrop")
-  crop: Crop
-    @belongsTo(fields: ["cropID"])
+  cropID: ID! @index(name: "byCrop", queryField: "cartItemsByCrop")
+  crop: Crop @belongsTo(fields: ["cropID"])
 
   quantity: Int!
   priceAtAdd: Float!
   addedAt: AWSDateTime!
+
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
@@ -147,20 +168,36 @@ type Purchase @model
 
 type Delivery @model
   @auth(rules: [
-    { allow: owner, ownerField: "agentID", identityClaim: "sub", operations: [read, update] },
-    { allow: groups, groups: ["BuyerGroup","FarmerGroup"], operations: [read] }
+    # Farmer is the owner (can create, read, update, delete)
+    { allow: owner, ownerField: "farmerID", identityClaim: "sub", operations: [create, read, update] },
+    # Buyer groups can read and edit (cancel delivery)
+    { allow: groups, groups:["BuyerGroup"], operations: [read, update] }
+    # Delivery, Farmer groups can read
+    { allow: groups, groups: ["FarmerGroup", "DeliveryGroup"], operations: [read] }
   ]) {
   id: ID!
   purchaseID: ID!
     @index(name: "deliveriesByPurchase", queryField: "deliveriesByPurchase")
-  purchase: Purchase
-    @belongsTo(fields: ["purchaseID"])
-  agentID: ID!
+  purchase: Purchase @belongsTo(fields: ["purchaseID"])
+
+  # Farmer is now the owner
+  farmerID: ID!
+    @index(name: "deliveriesByFarmer", queryField: "deliveriesByFarmer")
+  farmer: User @belongsTo(fields: ["farmerID"])
+
+  # Optional agent
+  agentID: ID
     @index(name: "deliveriesByAgent", sortKeyFields: ["createdAt"], queryField: "deliveriesByAgent")
-  agent: User
-    @belongsTo(fields: ["agentID"])
+  agent: User @belongsTo(fields: ["agentID"])
+
+  # Optional fallback info for personal delivery agents
+  personalAgentName: String
+  personalAgentPhone: AWSPhone
+  personalAgentEmail: AWSEmail
+
   deliveryAddress: String!
   deliveryStatus: DeliveryStatus!
+
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }

@@ -1,5 +1,6 @@
 package com.cyberlabs.krishisetu.ui.screens.chat
 
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -39,8 +40,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.cyberlabs.krishisetu.R
 import com.cyberlabs.krishisetu.chat.ChatListViewModel
+import com.cyberlabs.krishisetu.util.navigation.BuyerBottomBar
 import com.cyberlabs.krishisetu.util.navigation.FarmerBottomBar
 
 @Preview
@@ -48,6 +51,7 @@ import com.cyberlabs.krishisetu.util.navigation.FarmerBottomBar
 fun ChatListItem(
     role: String = "Farmer",
     name: String = "Aditya Jaiswal",
+    profilePicUrl: String? = null,
     onClick: () -> Unit = {}
 ) {
     Surface(
@@ -65,10 +69,12 @@ fun ChatListItem(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(R.drawable.baseline_account_circle_24),
+            AsyncImage(
+                model = profilePicUrl,
                 contentDescription = "Profile Pic",
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(64.dp).clip(CircleShape),
+                placeholder = painterResource(R.drawable.baseline_account_circle_24),
+                error = painterResource(R.drawable.baseline_account_circle_24)
             )
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
@@ -96,6 +102,8 @@ fun ChatListScreen(
     chatListViewModel: ChatListViewModel
 ) {
     val chatList = chatListViewModel.chatList
+    val role = chatListViewModel.role
+
     Scaffold(
         topBar = {
             ElevatedCard(
@@ -127,6 +135,7 @@ fun ChatListScreen(
                         IconButton(
                             onClick = {
                                 //TODO: Navigate to profile
+                                navController.navigate("profile")
                             }
                         ) {
                             Icon(
@@ -151,7 +160,11 @@ fun ChatListScreen(
             }
         },
         bottomBar = {
-            FarmerBottomBar(navController, selectedIndex = 1)
+            if (role == "farmer") {
+                FarmerBottomBar(navController, selectedIndex = 1)
+            } else if (role == "buyer") {
+                BuyerBottomBar(navController, selectedIndex = 1)
+            }
         }
     ) { innerPadding ->
         LazyColumn(
@@ -165,6 +178,7 @@ fun ChatListScreen(
                 ChatListItem(
                     role = partner.role.name,
                     name = partner.name,
+                    profilePicUrl = partner.profilePicUrl,
                     onClick = {
                         //TODO: Navigate to Chat Screen Passing partnerID and currentUserID
                         if (chatListViewModel.currentUserId != null) {

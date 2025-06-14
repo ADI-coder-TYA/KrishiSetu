@@ -24,22 +24,32 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 /** This is an auto generated class representing the Delivery type in your schema. */
 @SuppressWarnings("all")
 @ModelConfig(pluralName = "Deliveries", type = Model.Type.USER, version = 1, authRules = {
-  @AuthRule(allow = AuthStrategy.OWNER, ownerField = "agentID", identityClaim = "sub", provider = "userPools", operations = { ModelOperation.READ, ModelOperation.UPDATE }),
-  @AuthRule(allow = AuthStrategy.GROUPS, groupClaim = "cognito:groups", groups = { "BuyerGroup", "FarmerGroup" }, provider = "userPools", operations = { ModelOperation.READ })
+  @AuthRule(allow = AuthStrategy.OWNER, ownerField = "farmerID", identityClaim = "sub", provider = "userPools", operations = { ModelOperation.CREATE, ModelOperation.READ, ModelOperation.UPDATE }),
+  @AuthRule(allow = AuthStrategy.GROUPS, groupClaim = "cognito:groups", groups = { "BuyerGroup" }, provider = "userPools", operations = { ModelOperation.READ, ModelOperation.UPDATE }),
+  @AuthRule(allow = AuthStrategy.GROUPS, groupClaim = "cognito:groups", groups = { "FarmerGroup", "DeliveryGroup" }, provider = "userPools", operations = { ModelOperation.READ })
 })
 @Index(name = "deliveriesByPurchase", fields = {"purchaseID"})
+@Index(name = "deliveriesByFarmer", fields = {"farmerID"})
 @Index(name = "deliveriesByAgent", fields = {"agentID","createdAt"})
 public final class Delivery implements Model {
   public static final QueryField ID = field("Delivery", "id");
   public static final QueryField PURCHASE = field("Delivery", "purchaseID");
+  public static final QueryField FARMER = field("Delivery", "farmerID");
   public static final QueryField AGENT = field("Delivery", "agentID");
+  public static final QueryField PERSONAL_AGENT_NAME = field("Delivery", "personalAgentName");
+  public static final QueryField PERSONAL_AGENT_PHONE = field("Delivery", "personalAgentPhone");
+  public static final QueryField PERSONAL_AGENT_EMAIL = field("Delivery", "personalAgentEmail");
   public static final QueryField DELIVERY_ADDRESS = field("Delivery", "deliveryAddress");
   public static final QueryField DELIVERY_STATUS = field("Delivery", "deliveryStatus");
   public static final QueryField CREATED_AT = field("Delivery", "createdAt");
   public static final QueryField UPDATED_AT = field("Delivery", "updatedAt");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="Purchase") @BelongsTo(targetName = "purchaseID", targetNames = {"purchaseID"}, type = Purchase.class) Purchase purchase;
+  private final @ModelField(targetType="User") @BelongsTo(targetName = "farmerID", targetNames = {"farmerID"}, type = User.class) User farmer;
   private final @ModelField(targetType="User") @BelongsTo(targetName = "agentID", targetNames = {"agentID"}, type = User.class) User agent;
+  private final @ModelField(targetType="String") String personalAgentName;
+  private final @ModelField(targetType="AWSPhone") String personalAgentPhone;
+  private final @ModelField(targetType="AWSEmail") String personalAgentEmail;
   private final @ModelField(targetType="String", isRequired = true) String deliveryAddress;
   private final @ModelField(targetType="DeliveryStatus", isRequired = true) DeliveryStatus deliveryStatus;
   private final @ModelField(targetType="AWSDateTime", isRequired = true) Temporal.DateTime createdAt;
@@ -58,8 +68,24 @@ public final class Delivery implements Model {
       return purchase;
   }
   
+  public User getFarmer() {
+      return farmer;
+  }
+  
   public User getAgent() {
       return agent;
+  }
+  
+  public String getPersonalAgentName() {
+      return personalAgentName;
+  }
+  
+  public String getPersonalAgentPhone() {
+      return personalAgentPhone;
+  }
+  
+  public String getPersonalAgentEmail() {
+      return personalAgentEmail;
   }
   
   public String getDeliveryAddress() {
@@ -78,10 +104,14 @@ public final class Delivery implements Model {
       return updatedAt;
   }
   
-  private Delivery(String id, Purchase purchase, User agent, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+  private Delivery(String id, Purchase purchase, User farmer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
     this.id = id;
     this.purchase = purchase;
+    this.farmer = farmer;
     this.agent = agent;
+    this.personalAgentName = personalAgentName;
+    this.personalAgentPhone = personalAgentPhone;
+    this.personalAgentEmail = personalAgentEmail;
     this.deliveryAddress = deliveryAddress;
     this.deliveryStatus = deliveryStatus;
     this.createdAt = createdAt;
@@ -98,7 +128,11 @@ public final class Delivery implements Model {
       Delivery delivery = (Delivery) obj;
       return ObjectsCompat.equals(getId(), delivery.getId()) &&
               ObjectsCompat.equals(getPurchase(), delivery.getPurchase()) &&
+              ObjectsCompat.equals(getFarmer(), delivery.getFarmer()) &&
               ObjectsCompat.equals(getAgent(), delivery.getAgent()) &&
+              ObjectsCompat.equals(getPersonalAgentName(), delivery.getPersonalAgentName()) &&
+              ObjectsCompat.equals(getPersonalAgentPhone(), delivery.getPersonalAgentPhone()) &&
+              ObjectsCompat.equals(getPersonalAgentEmail(), delivery.getPersonalAgentEmail()) &&
               ObjectsCompat.equals(getDeliveryAddress(), delivery.getDeliveryAddress()) &&
               ObjectsCompat.equals(getDeliveryStatus(), delivery.getDeliveryStatus()) &&
               ObjectsCompat.equals(getCreatedAt(), delivery.getCreatedAt()) &&
@@ -111,7 +145,11 @@ public final class Delivery implements Model {
     return new StringBuilder()
       .append(getId())
       .append(getPurchase())
+      .append(getFarmer())
       .append(getAgent())
+      .append(getPersonalAgentName())
+      .append(getPersonalAgentPhone())
+      .append(getPersonalAgentEmail())
       .append(getDeliveryAddress())
       .append(getDeliveryStatus())
       .append(getCreatedAt())
@@ -126,7 +164,11 @@ public final class Delivery implements Model {
       .append("Delivery {")
       .append("id=" + String.valueOf(getId()) + ", ")
       .append("purchase=" + String.valueOf(getPurchase()) + ", ")
+      .append("farmer=" + String.valueOf(getFarmer()) + ", ")
       .append("agent=" + String.valueOf(getAgent()) + ", ")
+      .append("personalAgentName=" + String.valueOf(getPersonalAgentName()) + ", ")
+      .append("personalAgentPhone=" + String.valueOf(getPersonalAgentPhone()) + ", ")
+      .append("personalAgentEmail=" + String.valueOf(getPersonalAgentEmail()) + ", ")
       .append("deliveryAddress=" + String.valueOf(getDeliveryAddress()) + ", ")
       .append("deliveryStatus=" + String.valueOf(getDeliveryStatus()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
@@ -155,6 +197,10 @@ public final class Delivery implements Model {
       null,
       null,
       null,
+      null,
+      null,
+      null,
+      null,
       null
     );
   }
@@ -162,7 +208,11 @@ public final class Delivery implements Model {
   public CopyOfBuilder copyOfBuilder() {
     return new CopyOfBuilder(id,
       purchase,
+      farmer,
       agent,
+      personalAgentName,
+      personalAgentPhone,
+      personalAgentEmail,
       deliveryAddress,
       deliveryStatus,
       createdAt,
@@ -192,7 +242,11 @@ public final class Delivery implements Model {
     Delivery build();
     BuildStep id(String id);
     BuildStep purchase(Purchase purchase);
+    BuildStep farmer(User farmer);
     BuildStep agent(User agent);
+    BuildStep personalAgentName(String personalAgentName);
+    BuildStep personalAgentPhone(String personalAgentPhone);
+    BuildStep personalAgentEmail(String personalAgentEmail);
   }
   
 
@@ -203,15 +257,23 @@ public final class Delivery implements Model {
     private Temporal.DateTime createdAt;
     private Temporal.DateTime updatedAt;
     private Purchase purchase;
+    private User farmer;
     private User agent;
+    private String personalAgentName;
+    private String personalAgentPhone;
+    private String personalAgentEmail;
     public Builder() {
       
     }
     
-    private Builder(String id, Purchase purchase, User agent, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+    private Builder(String id, Purchase purchase, User farmer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
       this.id = id;
       this.purchase = purchase;
+      this.farmer = farmer;
       this.agent = agent;
+      this.personalAgentName = personalAgentName;
+      this.personalAgentPhone = personalAgentPhone;
+      this.personalAgentEmail = personalAgentEmail;
       this.deliveryAddress = deliveryAddress;
       this.deliveryStatus = deliveryStatus;
       this.createdAt = createdAt;
@@ -225,7 +287,11 @@ public final class Delivery implements Model {
         return new Delivery(
           id,
           purchase,
+          farmer,
           agent,
+          personalAgentName,
+          personalAgentPhone,
+          personalAgentEmail,
           deliveryAddress,
           deliveryStatus,
           createdAt,
@@ -267,8 +333,32 @@ public final class Delivery implements Model {
     }
     
     @Override
+     public BuildStep farmer(User farmer) {
+        this.farmer = farmer;
+        return this;
+    }
+    
+    @Override
      public BuildStep agent(User agent) {
         this.agent = agent;
+        return this;
+    }
+    
+    @Override
+     public BuildStep personalAgentName(String personalAgentName) {
+        this.personalAgentName = personalAgentName;
+        return this;
+    }
+    
+    @Override
+     public BuildStep personalAgentPhone(String personalAgentPhone) {
+        this.personalAgentPhone = personalAgentPhone;
+        return this;
+    }
+    
+    @Override
+     public BuildStep personalAgentEmail(String personalAgentEmail) {
+        this.personalAgentEmail = personalAgentEmail;
         return this;
     }
     
@@ -284,8 +374,8 @@ public final class Delivery implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, Purchase purchase, User agent, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
-      super(id, purchase, agent, deliveryAddress, deliveryStatus, createdAt, updatedAt);
+    private CopyOfBuilder(String id, Purchase purchase, User farmer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+      super(id, purchase, farmer, agent, personalAgentName, personalAgentPhone, personalAgentEmail, deliveryAddress, deliveryStatus, createdAt, updatedAt);
       Objects.requireNonNull(deliveryAddress);
       Objects.requireNonNull(deliveryStatus);
       Objects.requireNonNull(createdAt);
@@ -318,8 +408,28 @@ public final class Delivery implements Model {
     }
     
     @Override
+     public CopyOfBuilder farmer(User farmer) {
+      return (CopyOfBuilder) super.farmer(farmer);
+    }
+    
+    @Override
      public CopyOfBuilder agent(User agent) {
       return (CopyOfBuilder) super.agent(agent);
+    }
+    
+    @Override
+     public CopyOfBuilder personalAgentName(String personalAgentName) {
+      return (CopyOfBuilder) super.personalAgentName(personalAgentName);
+    }
+    
+    @Override
+     public CopyOfBuilder personalAgentPhone(String personalAgentPhone) {
+      return (CopyOfBuilder) super.personalAgentPhone(personalAgentPhone);
+    }
+    
+    @Override
+     public CopyOfBuilder personalAgentEmail(String personalAgentEmail) {
+      return (CopyOfBuilder) super.personalAgentEmail(personalAgentEmail);
     }
   }
   
