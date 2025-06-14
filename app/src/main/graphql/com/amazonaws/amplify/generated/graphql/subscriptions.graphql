@@ -635,6 +635,7 @@ subscription OnCreatePurchase(
       id
       purchaseID
       farmerID
+      buyerID
       agentID
       personalAgentName
       personalAgentPhone
@@ -703,6 +704,7 @@ subscription OnUpdatePurchase(
       id
       purchaseID
       farmerID
+      buyerID
       agentID
       personalAgentName
       personalAgentPhone
@@ -771,6 +773,7 @@ subscription OnDeletePurchase(
       id
       purchaseID
       farmerID
+      buyerID
       agentID
       personalAgentName
       personalAgentPhone
@@ -809,6 +812,19 @@ subscription OnCreateDelivery(
     }
     farmerID
     farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    buyerID
+    buyer {
       id
       name
       email
@@ -875,6 +891,19 @@ subscription OnUpdateDelivery(
       updatedAt
       __typename
     }
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
     agentID
     agent {
       id
@@ -919,6 +948,19 @@ subscription OnDeleteDelivery(
     }
     farmerID
     farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    buyerID
+    buyer {
       id
       name
       email

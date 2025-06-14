@@ -378,6 +378,7 @@ query GetPurchase($id: ID!) {
       id
       purchaseID
       farmerID
+      buyerID
       agentID
       personalAgentName
       personalAgentPhone
@@ -446,6 +447,19 @@ query GetDelivery($id: ID!) {
       updatedAt
       __typename
     }
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
     agentID
     agent {
       id
@@ -480,6 +494,7 @@ query ListDeliveries(
       id
       purchaseID
       farmerID
+      buyerID
       agentID
       personalAgentName
       personalAgentPhone
@@ -904,6 +919,7 @@ query DeliveriesByPurchase(
       id
       purchaseID
       farmerID
+      buyerID
       agentID
       personalAgentName
       personalAgentPhone
@@ -937,6 +953,41 @@ query DeliveriesByFarmer(
       id
       purchaseID
       farmerID
+      buyerID
+      agentID
+      personalAgentName
+      personalAgentPhone
+      personalAgentEmail
+      deliveryAddress
+      deliveryStatus
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+
+query DeliveriesByBuyer(
+  $buyerID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelDeliveryFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  deliveriesByBuyer(
+    buyerID: $buyerID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      purchaseID
+      farmerID
+      buyerID
       agentID
       personalAgentName
       personalAgentPhone
@@ -972,6 +1023,7 @@ query DeliveriesByAgent(
       id
       purchaseID
       farmerID
+      buyerID
       agentID
       personalAgentName
       personalAgentPhone

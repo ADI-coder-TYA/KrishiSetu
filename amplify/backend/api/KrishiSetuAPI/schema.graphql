@@ -8,6 +8,7 @@ enum OrderStatus {
     PENDING
     ACCEPTED
     REJECTED
+    CANCELLED
 }
 
 enum DeliveryStatus {
@@ -143,7 +144,7 @@ type CartItem @model
 type Purchase @model
   @auth(rules: [
     { allow: owner, ownerField: "buyerID", identityClaim: "sub", operations: [read, create] },
-    { allow: groups, groups: ["FarmerGroup"], operations: [read] }
+    { allow: groups, groups: ["FarmerGroup"], operations: [read, create] }
   ]) {
   id: ID!
   buyerID: ID!
@@ -184,6 +185,11 @@ type Delivery @model
   farmerID: ID!
     @index(name: "deliveriesByFarmer", queryField: "deliveriesByFarmer")
   farmer: User @belongsTo(fields: ["farmerID"])
+
+  # Buyer is the co-owner
+  buyerID: ID!
+    @index(name: "deliveriesByBuyer", queryField: "deliveriesByBuyer")
+  buyer: User @belongsTo(fields: ["buyerID"])
 
   # Optional agent
   agentID: ID

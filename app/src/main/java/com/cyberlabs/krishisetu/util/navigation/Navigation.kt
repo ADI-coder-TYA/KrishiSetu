@@ -19,6 +19,7 @@ import com.cyberlabs.krishisetu.shopping.cart.CartViewModel
 import com.cyberlabs.krishisetu.shopping.cropListing.cropSearch.SearchViewModel
 import com.cyberlabs.krishisetu.shopping.cropListing.cropShop.CropShopViewModel
 import com.cyberlabs.krishisetu.shopping.order.CheckoutViewModel
+import com.cyberlabs.krishisetu.shopping.order.FarmerOrdersViewModel
 import com.cyberlabs.krishisetu.shopping.order.OrdersViewModel
 import com.cyberlabs.krishisetu.ui.screens.authentication.ConfirmScreen
 import com.cyberlabs.krishisetu.ui.screens.authentication.SignInScreen
@@ -34,7 +35,9 @@ import com.cyberlabs.krishisetu.ui.screens.shopping.cropListing.CropSearchListSc
 import com.cyberlabs.krishisetu.ui.screens.shopping.cropListing.CropShopScreen
 import com.cyberlabs.krishisetu.ui.screens.shopping.order.BuyerOrderScreen
 import com.cyberlabs.krishisetu.ui.screens.shopping.order.CheckoutScreen
+import com.cyberlabs.krishisetu.ui.screens.shopping.order.FarmerOrderScreen
 import com.cyberlabs.krishisetu.ui.screens.shopping.order.delivery.BuyerDeliveryScreen
+import com.cyberlabs.krishisetu.ui.screens.shopping.order.delivery.FarmerDeliveryScreen
 
 @Composable
 fun AppNavHost(vm: AuthViewModel, nav: NavHostController, startDestination: String = "signUp") {
@@ -65,7 +68,8 @@ fun AppNavHost(vm: AuthViewModel, nav: NavHostController, startDestination: Stri
         composable("home") { HomeScreen(vm, nav) }
         composable("profile") {
             val profileViewModel: ProfileViewModel = hiltViewModel()
-            ProfileScreen(profileViewModel)
+            val authViewModel: AuthViewModel = hiltViewModel()
+            ProfileScreen(profileViewModel, authViewModel, nav)
         }
         composable(
             route = "chat/{role}",
@@ -96,7 +100,14 @@ fun AppNavHost(vm: AuthViewModel, nav: NavHostController, startDestination: Stri
         }
         composable("buyer_orders") {
             val ordersViewModel: OrdersViewModel = hiltViewModel()
-            BuyerOrderScreen(ordersViewModel)
+            BuyerOrderScreen(nav, ordersViewModel)
+        }
+        composable("farmer_delivery") {
+            FarmerDeliveryScreen(nav)
+        }
+        composable("farmer_orders") {
+            val farmerOrdersViewModel: FarmerOrdersViewModel = hiltViewModel()
+            FarmerOrderScreen(nav, farmerOrdersViewModel)
         }
         composable(
             route = "chatList/{currentUserId}/{chatPartnerId}",

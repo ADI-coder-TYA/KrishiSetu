@@ -57,111 +57,148 @@ class FarmerOrdersViewModel @Inject constructor(
         isPersonal: Boolean,
         personalDetails: PersonalDeliveryAgentDetails?
     ) {
-        viewModelScope.launch {
-            // Implement logic to accept the order
-            val updatedOrder = order.copyOfBuilder()
-                .orderStatus(OrderStatus.ACCEPTED)
-                .build()
-            val newPurchase = Purchase.builder()
-                .quantity(order.quantity)
-                .totalAmount(order.bargainedPrice.toDouble())
-                .createdAt(Temporal.DateTime(OffsetDateTime.now().toString()))
-                .updatedAt(Temporal.DateTime(OffsetDateTime.now().toString()))
-                .farmer(order.farmer)
-                .id(UUID.randomUUID().toString())
-                .buyer(order.buyer)
-                .crop(order.crop)
-                .build()
-            val newDelivery = if (isPersonal) {
-                Delivery.builder()
-                    .deliveryAddress(order.deliveryAddress)
-                    .deliveryStatus(DeliveryStatus.PENDING)
+        if (order.crop.quantityAvailable - order.quantity >= 0) {
+            viewModelScope.launch {
+                // Implement logic to accept the order
+                val updatedOrder = order.copyOfBuilder()
+                    .orderStatus(OrderStatus.ACCEPTED)
+                    .build()
+                val newPurchase = Purchase.builder()
+                    .quantity(order.quantity)
+                    .totalAmount(order.bargainedPrice.toDouble())
                     .createdAt(Temporal.DateTime(OffsetDateTime.now().toString()))
                     .updatedAt(Temporal.DateTime(OffsetDateTime.now().toString()))
-                    .personalAgentName(personalDetails!!.name)
-                    .personalAgentPhone(personalDetails.phone)
-                    .personalAgentEmail(personalDetails.email)
+                    .farmer(order.farmer)
                     .id(UUID.randomUUID().toString())
-                    .farmer(newPurchase.farmer)
-                    .purchase(newPurchase)
+                    .buyer(order.buyer)
+                    .crop(order.crop)
                     .build()
-            } else {
-                val agent = queryAgentByEmail(deliveryAgentEmail!!)
-                if (agent != null) {
+
+                val updatedCrop = order.crop.copyOfBuilder()
+                    .quantityAvailable(order.crop.quantityAvailable - order.quantity)
+                    .build()
+
+                val newDelivery = if (isPersonal) {
                     Delivery.builder()
                         .deliveryAddress(order.deliveryAddress)
                         .deliveryStatus(DeliveryStatus.PENDING)
                         .createdAt(Temporal.DateTime(OffsetDateTime.now().toString()))
                         .updatedAt(Temporal.DateTime(OffsetDateTime.now().toString()))
-                        .agent(agent)
-                        .farmer(order.farmer)
-                        .purchase(newPurchase)
+                        .personalAgentName(personalDetails!!.name)
+                        .personalAgentPhone(personalDetails.phone)
+                        .personalAgentEmail(personalDetails.email)
                         .id(UUID.randomUUID().toString())
+                        .farmer(newPurchase.farmer)
+                        .purchase(newPurchase)
+                        .buyer(newPurchase.buyer)
                         .build()
-                } else null
-            }
+                } else {
+                    val agent = queryAgentByEmail(deliveryAgentEmail!!)
+                    if (agent != null) {
+                        Delivery.builder()
+                            .deliveryAddress(order.deliveryAddress)
+                            .deliveryStatus(DeliveryStatus.PENDING)
+                            .createdAt(Temporal.DateTime(OffsetDateTime.now().toString()))
+                            .updatedAt(Temporal.DateTime(OffsetDateTime.now().toString()))
+                            .agent(agent)
+                            .farmer(order.farmer)
+                            .purchase(newPurchase)
+                            .buyer(newPurchase.buyer)
+                            .id(UUID.randomUUID().toString())
+                            .build()
+                    } else {
+                        Log.e("FarmerOrdersViewModel", "Agent not found for email: $deliveryAgentEmail")
+                        null
+                    }
 
-            if (newDelivery != null) {
+                }
 
-                Amplify.API.mutate(
-                    ModelMutation.update(updatedOrder),
-                    { response ->
-                        if (response.hasData()) {
-                            Log.i(
-                                "FarmerOrdersViewModel",
-                                "Order accepted successfully, response: ${response.data}"
-                            )
-                            Amplify.API.mutate(
-                                ModelMutation.create(newDelivery),
-                                { response ->
-                                    if (response.hasData()) {
-                                        Log.i(
-                                            "FarmerOrdersViewModel",
-                                            "Delivery created successfully, response: ${response.data}"
-                                        )
-                                        Amplify.API.mutate(
-                                            ModelMutation.create(newPurchase),
-                                            { response ->
-                                                if (response.hasData()) {
-                                                    Log.i(
-                                                        "FarmerOrdersViewModel",
-                                                        "Purchase created successfully, response: ${response.data}"
-                                                    )
-                                                } else if (response.hasErrors()) {
+                if (newDelivery != null) {
+
+                    Amplify.API.mutate(
+                        ModelMutation.update(updatedOrder),
+                        { response ->
+                            if (response.hasData()) {
+                                Log.i(
+                                    "FarmerOrdersViewModel",
+                                    "Order accepted successfully, response: ${response.data}"
+                                )
+                                Amplify.API.mutate(
+                                    ModelMutation.create(newDelivery),
+                                    { response ->
+                                        if (response.hasData()) {
+                                            Log.i(
+                                                "FarmerOrdersViewModel",
+                                                "Delivery created successfully, response: ${response.data}"
+                                            )
+                                            Amplify.API.mutate(
+                                                ModelMutation.create(newPurchase),
+                                                { response ->
+                                                    if (response.hasData()) {
+                                                        Log.i(
+                                                            "FarmerOrdersViewModel",
+                                                            "Purchase created successfully, response: ${response.data}"
+                                                        )
+                                                        Amplify.API.mutate(
+                                                            ModelMutation.update(updatedCrop),
+                                                            { response ->
+                                                                if (response.hasData()) {
+                                                                    Log.i(
+                                                                        "FarmerOrdersViewModel",
+                                                                        "Crop updated successfully, response: ${response.data}"
+                                                                    )
+                                                                } else if (response.hasErrors()) {
+                                                                    Log.e(
+                                                                        "FarmerOrdersViewModel",
+                                                                        "Failed to update crop, errors: ${response.errors}"
+                                                                    )
+                                                                }
+                                                            }, {
+                                                                Log.e(
+                                                                    "FarmerOrdersViewModel",
+                                                                    "API error while updating crop: ${it.message}"
+                                                                )
+                                                            }
+                                                        )
+                                                    } else if (response.hasErrors()) {
+                                                        Log.e(
+                                                            "FarmerOrdersViewModel",
+                                                            "Failed to create purchase, errors: ${response.errors}"
+                                                        )
+                                                    }
+                                                }, { apiError ->
                                                     Log.e(
                                                         "FarmerOrdersViewModel",
-                                                        "Failed to create purchase, errors: ${response.errors}"
+                                                        "API error: ${apiError.message}"
                                                     )
                                                 }
-                                            }, { apiError ->
-                                                Log.e(
-                                                    "FarmerOrdersViewModel",
-                                                    "API error: ${apiError.message}"
-                                                )
-                                            }
-                                        )
-                                    } else if (response.hasErrors()) {
+                                            )
+                                        } else if (response.hasErrors()) {
+                                            Log.e(
+                                                "FarmerOrdersViewModel",
+                                                "Failed to create delivery, errors: ${response.errors}"
+                                            )
+                                        }
+                                    }, { apiError ->
                                         Log.e(
                                             "FarmerOrdersViewModel",
-                                            "Failed to create delivery, errors: ${response.errors}"
+                                            "API error: ${apiError.message}"
                                         )
                                     }
-                                }, { apiError ->
-                                    Log.e("FarmerOrdersViewModel", "API error: ${apiError.message}")
-                                }
-                            )
-                        } else if (response.hasErrors()) {
-                            Log.e(
-                                "FarmerOrdersViewModel",
-                                "Failed to accept order, errors: ${response.errors}"
-                            )
+                                )
+                            } else if (response.hasErrors()) {
+                                Log.e(
+                                    "FarmerOrdersViewModel",
+                                    "Failed to accept order, errors: ${response.errors}"
+                                )
+                            }
+                        }, { apiError ->
+                            Log.e("FarmerOrdersViewModel", "API error: ${apiError.message}")
                         }
-                    }, { apiError ->
-                        Log.e("FarmerOrdersViewModel", "API error: ${apiError.message}")
-                    }
-                )
+                    )
+                }
+                fetchOrders(authRepository.getCurrUserID())
             }
-            fetchOrders(authRepository.getCurrUserID())
         }
     }
 

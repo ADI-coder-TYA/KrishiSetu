@@ -4,7 +4,6 @@ package com.amplifyframework.datastore.generated.model;
 public enum OrderStatus {
   PENDING,
   ACCEPTED,
-  IN_DELIVERY,
-  CANCELLED,
-  REJECTED
+  REJECTED,
+  CANCELLED
 }

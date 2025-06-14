@@ -30,11 +30,13 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 })
 @Index(name = "deliveriesByPurchase", fields = {"purchaseID"})
 @Index(name = "deliveriesByFarmer", fields = {"farmerID"})
+@Index(name = "deliveriesByBuyer", fields = {"buyerID"})
 @Index(name = "deliveriesByAgent", fields = {"agentID","createdAt"})
 public final class Delivery implements Model {
   public static final QueryField ID = field("Delivery", "id");
   public static final QueryField PURCHASE = field("Delivery", "purchaseID");
   public static final QueryField FARMER = field("Delivery", "farmerID");
+  public static final QueryField BUYER = field("Delivery", "buyerID");
   public static final QueryField AGENT = field("Delivery", "agentID");
   public static final QueryField PERSONAL_AGENT_NAME = field("Delivery", "personalAgentName");
   public static final QueryField PERSONAL_AGENT_PHONE = field("Delivery", "personalAgentPhone");
@@ -46,6 +48,7 @@ public final class Delivery implements Model {
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="Purchase") @BelongsTo(targetName = "purchaseID", targetNames = {"purchaseID"}, type = Purchase.class) Purchase purchase;
   private final @ModelField(targetType="User") @BelongsTo(targetName = "farmerID", targetNames = {"farmerID"}, type = User.class) User farmer;
+  private final @ModelField(targetType="User") @BelongsTo(targetName = "buyerID", targetNames = {"buyerID"}, type = User.class) User buyer;
   private final @ModelField(targetType="User") @BelongsTo(targetName = "agentID", targetNames = {"agentID"}, type = User.class) User agent;
   private final @ModelField(targetType="String") String personalAgentName;
   private final @ModelField(targetType="AWSPhone") String personalAgentPhone;
@@ -70,6 +73,10 @@ public final class Delivery implements Model {
   
   public User getFarmer() {
       return farmer;
+  }
+  
+  public User getBuyer() {
+      return buyer;
   }
   
   public User getAgent() {
@@ -104,10 +111,11 @@ public final class Delivery implements Model {
       return updatedAt;
   }
   
-  private Delivery(String id, Purchase purchase, User farmer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+  private Delivery(String id, Purchase purchase, User farmer, User buyer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
     this.id = id;
     this.purchase = purchase;
     this.farmer = farmer;
+    this.buyer = buyer;
     this.agent = agent;
     this.personalAgentName = personalAgentName;
     this.personalAgentPhone = personalAgentPhone;
@@ -129,6 +137,7 @@ public final class Delivery implements Model {
       return ObjectsCompat.equals(getId(), delivery.getId()) &&
               ObjectsCompat.equals(getPurchase(), delivery.getPurchase()) &&
               ObjectsCompat.equals(getFarmer(), delivery.getFarmer()) &&
+              ObjectsCompat.equals(getBuyer(), delivery.getBuyer()) &&
               ObjectsCompat.equals(getAgent(), delivery.getAgent()) &&
               ObjectsCompat.equals(getPersonalAgentName(), delivery.getPersonalAgentName()) &&
               ObjectsCompat.equals(getPersonalAgentPhone(), delivery.getPersonalAgentPhone()) &&
@@ -146,6 +155,7 @@ public final class Delivery implements Model {
       .append(getId())
       .append(getPurchase())
       .append(getFarmer())
+      .append(getBuyer())
       .append(getAgent())
       .append(getPersonalAgentName())
       .append(getPersonalAgentPhone())
@@ -165,6 +175,7 @@ public final class Delivery implements Model {
       .append("id=" + String.valueOf(getId()) + ", ")
       .append("purchase=" + String.valueOf(getPurchase()) + ", ")
       .append("farmer=" + String.valueOf(getFarmer()) + ", ")
+      .append("buyer=" + String.valueOf(getBuyer()) + ", ")
       .append("agent=" + String.valueOf(getAgent()) + ", ")
       .append("personalAgentName=" + String.valueOf(getPersonalAgentName()) + ", ")
       .append("personalAgentPhone=" + String.valueOf(getPersonalAgentPhone()) + ", ")
@@ -201,6 +212,7 @@ public final class Delivery implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
@@ -209,6 +221,7 @@ public final class Delivery implements Model {
     return new CopyOfBuilder(id,
       purchase,
       farmer,
+      buyer,
       agent,
       personalAgentName,
       personalAgentPhone,
@@ -243,6 +256,7 @@ public final class Delivery implements Model {
     BuildStep id(String id);
     BuildStep purchase(Purchase purchase);
     BuildStep farmer(User farmer);
+    BuildStep buyer(User buyer);
     BuildStep agent(User agent);
     BuildStep personalAgentName(String personalAgentName);
     BuildStep personalAgentPhone(String personalAgentPhone);
@@ -258,6 +272,7 @@ public final class Delivery implements Model {
     private Temporal.DateTime updatedAt;
     private Purchase purchase;
     private User farmer;
+    private User buyer;
     private User agent;
     private String personalAgentName;
     private String personalAgentPhone;
@@ -266,10 +281,11 @@ public final class Delivery implements Model {
       
     }
     
-    private Builder(String id, Purchase purchase, User farmer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+    private Builder(String id, Purchase purchase, User farmer, User buyer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
       this.id = id;
       this.purchase = purchase;
       this.farmer = farmer;
+      this.buyer = buyer;
       this.agent = agent;
       this.personalAgentName = personalAgentName;
       this.personalAgentPhone = personalAgentPhone;
@@ -288,6 +304,7 @@ public final class Delivery implements Model {
           id,
           purchase,
           farmer,
+          buyer,
           agent,
           personalAgentName,
           personalAgentPhone,
@@ -339,6 +356,12 @@ public final class Delivery implements Model {
     }
     
     @Override
+     public BuildStep buyer(User buyer) {
+        this.buyer = buyer;
+        return this;
+    }
+    
+    @Override
      public BuildStep agent(User agent) {
         this.agent = agent;
         return this;
@@ -374,8 +397,8 @@ public final class Delivery implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, Purchase purchase, User farmer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
-      super(id, purchase, farmer, agent, personalAgentName, personalAgentPhone, personalAgentEmail, deliveryAddress, deliveryStatus, createdAt, updatedAt);
+    private CopyOfBuilder(String id, Purchase purchase, User farmer, User buyer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+      super(id, purchase, farmer, buyer, agent, personalAgentName, personalAgentPhone, personalAgentEmail, deliveryAddress, deliveryStatus, createdAt, updatedAt);
       Objects.requireNonNull(deliveryAddress);
       Objects.requireNonNull(deliveryStatus);
       Objects.requireNonNull(createdAt);
@@ -410,6 +433,11 @@ public final class Delivery implements Model {
     @Override
      public CopyOfBuilder farmer(User farmer) {
       return (CopyOfBuilder) super.farmer(farmer);
+    }
+    
+    @Override
+     public CopyOfBuilder buyer(User buyer) {
+      return (CopyOfBuilder) super.buyer(buyer);
     }
     
     @Override

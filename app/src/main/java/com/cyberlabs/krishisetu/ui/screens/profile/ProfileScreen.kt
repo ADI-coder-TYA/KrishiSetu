@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,8 +34,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.cyberlabs.krishisetu.R
+import com.cyberlabs.krishisetu.authentication.AuthViewModel
 import com.cyberlabs.krishisetu.profile.ProfileViewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -42,6 +46,8 @@ import java.io.FileOutputStream
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel(),
+    navController: NavController,
     onImagePicked: (File) -> Unit = {} // Pass this from Activity/Fragment after picking image
 ) {
     val userId by viewModel.userId
@@ -117,6 +123,22 @@ fun ProfileScreen(
             )
 
             Spacer(Modifier.height(16.dp))
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Sign Out Button
+            OutlinedButton(
+                onClick = {
+                    authViewModel.signOut()
+                    navController.navigate("signIn")
+                },
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(16.dp),
+                border = BorderStroke(1.dp, Color.Red)
+            ) {
+                Text("Sign Out", color = Color.Red)
+            }
         }
     }
 }

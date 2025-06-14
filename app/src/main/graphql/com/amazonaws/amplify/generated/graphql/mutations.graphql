@@ -635,6 +635,7 @@ mutation CreatePurchase(
       id
       purchaseID
       farmerID
+      buyerID
       agentID
       personalAgentName
       personalAgentPhone
@@ -703,6 +704,7 @@ mutation UpdatePurchase(
       id
       purchaseID
       farmerID
+      buyerID
       agentID
       personalAgentName
       personalAgentPhone
@@ -771,6 +773,7 @@ mutation DeletePurchase(
       id
       purchaseID
       farmerID
+      buyerID
       agentID
       personalAgentName
       personalAgentPhone
@@ -809,6 +812,19 @@ mutation CreateDelivery(
     }
     farmerID
     farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    buyerID
+    buyer {
       id
       name
       email
@@ -875,6 +891,19 @@ mutation UpdateDelivery(
       updatedAt
       __typename
     }
+    buyerID
+    buyer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
     agentID
     agent {
       id
@@ -919,6 +948,19 @@ mutation DeleteDelivery(
     }
     farmerID
     farmer {
+      id
+      name
+      email
+      phone
+      ownerID
+      profilePicture
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+    buyerID
+    buyer {
       id
       name
       email

@@ -1,15 +1,22 @@
 package com.cyberlabs.krishisetu.ui.screens.shopping.cropListing
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,6 +29,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -37,8 +45,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -48,6 +58,7 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.cyberlabs.krishisetu.R
 import com.cyberlabs.krishisetu.shopping.cropListing.cropSearch.SearchViewModel
+import com.cyberlabs.krishisetu.util.navigation.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +72,7 @@ fun CropSearchListScreen(
     var active by remember { mutableStateOf(false) }
     val isSearching by vm.isSearching.collectAsState()
 
-    var listState = rememberLazyListState()
+    var listState = rememberLazyGridState()
     // Detect when scrolled to the end
     val shouldLoadMore = remember {
         derivedStateOf {
@@ -80,22 +91,7 @@ fun CropSearchListScreen(
     Scaffold(
         containerColor = Color.White,
         topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            vm.clearSearchResults()
-                            navController.navigateUp()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                }
-            )
+            TopBar("Search Results", navController)
         }
     ) { innerPadding ->
 
@@ -106,6 +102,7 @@ fun CropSearchListScreen(
                 colors = SearchBarDefaults.colors(
                     containerColor = Color.White
                 ),
+                windowInsets = WindowInsets(0),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -183,34 +180,22 @@ fun CropSearchListScreen(
                 }
             }
 
-            LazyColumn(
+            LazyVerticalGrid(
                 modifier = Modifier.padding(vertical = 16.dp),
-                state = listState
+                state = listState,
+                columns = GridCells.Fixed(2)
             ) {
-                searchResults.value.chunked(2).forEach { crop ->
+                searchResults.value.forEach { crop ->
                     item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            SearchCropCard(
-                                modifier = Modifier.weight(1f).clickable {
-                                    navController.navigate("cropShop/${crop[0].id}")
+                        SearchCropCard(
+                            modifier = Modifier
+                                .clickable {
+                                    navController.navigate("cropShop/${crop.id}")
                                 },
-                                title = crop[0].title,
-                                price = crop[0].price,
-                                imageUrl = crop[0].imageUrl
-                            )
-                            if (crop.size > 1) {
-                                SearchCropCard(
-                                    modifier = Modifier.weight(1f).clickable {
-                                        navController.navigate("cropShop/${crop[1].id}")
-                                    },
-                                    title = crop[1].title,
-                                    price = crop[1].price,
-                                    imageUrl = crop[1].imageUrl
-                                )
-                            }
-                        }
+                            title = crop.title,
+                            price = crop.price,
+                            imageUrl = crop.imageUrl
+                        )
                     }
                 }
                 if (isSearching) {
@@ -233,36 +218,56 @@ private fun SearchCropCard(
     price: Int = 50
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RectangleShape,
-        colors = CardDefaults.cardColors().copy(
-            containerColor = Color.White
-        )
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(6.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp)
         ) {
             AsyncImage(
                 model = imageUrl,
                 contentDescription = "Crop Image",
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.app_logo),
+                error = painterResource(R.drawable.app_logo),
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .padding(horizontal = 8.dp),
-                placeholder = painterResource(R.drawable.app_logo),
-                error = painterResource(R.drawable.app_logo)
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .background(Color(0xFFF3F3F3))
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
                 text = title,
-                color = Color(0xFF2E7D32),
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = Color(0xFF2E7D32),
+                    fontWeight = FontWeight.SemiBold
+                ),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
             )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
             Text(
                 text = "₹$price/kg",
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF424242)
+                ),
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
     }
 }
+
