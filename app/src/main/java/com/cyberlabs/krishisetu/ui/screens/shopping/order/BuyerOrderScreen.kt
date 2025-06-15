@@ -53,6 +53,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.amplifyframework.datastore.generated.model.Order
 import com.cyberlabs.krishisetu.shopping.order.OrdersViewModel
+import com.cyberlabs.krishisetu.util.navigation.TopBar
 import java.time.OffsetDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,21 +69,7 @@ fun BuyerOrderScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("My Orders") },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navController.navigateUp()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                }
-            )
+            TopBar("My Orders", navController, true)
         },
         content = { padding ->
             Column(

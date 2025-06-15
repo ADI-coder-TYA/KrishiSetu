@@ -92,7 +92,7 @@ fun FarmerBottomBar(navController: NavController, selectedIndex: Int = 0) {
                     selected = selectedOption == item.first
                 ) { route ->
                     if (route.lowercase() == "chat") navController.navigate("chat/farmer")
-                    else if (route.lowercase() == "delivery") navController.navigate("farmer_delivery")
+                    else if (route.lowercase() == "delivery") navController.navigate("farmer_delivery/true")
                     else navController.navigate(route.lowercase())
                     selectedOption = route
                 }

@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amplifyframework.core.model.temporal.Temporal
 import com.amplifyframework.datastore.generated.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -42,7 +43,8 @@ class CropViewModel @Inject constructor(
                         quantityAvailable = entity.quantityAvailable,
                         imageUrl = imageUrl,
                         location = entity.location,
-                        farmer = entity.farmer
+                        farmer = entity.farmer,
+                        createdAt = entity.createdAt
                     )
                 }
                 _crops.value = cropDataList
@@ -64,5 +66,6 @@ data class CropData(
     val quantityAvailable: Int,
     val imageUrl: String,
     val location: String,
-    val farmer: User
+    val farmer: User,
+    val createdAt: Temporal.DateTime? = null
 )

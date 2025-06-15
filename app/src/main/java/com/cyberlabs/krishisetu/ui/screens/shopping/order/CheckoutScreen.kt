@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,6 +33,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -58,6 +60,7 @@ import com.amplifyframework.datastore.generated.model.CartItem
 import com.cyberlabs.krishisetu.R
 import com.cyberlabs.krishisetu.shopping.cart.CartViewModel
 import com.cyberlabs.krishisetu.shopping.order.CheckoutViewModel
+import com.cyberlabs.krishisetu.util.navigation.TopBar
 import com.cyberlabs.krishisetu.util.users.userNameFlow
 
 @Composable
@@ -98,84 +101,116 @@ fun CheckoutScreen(
     var isExpandedOrder by remember { mutableStateOf(false) }
     var isExpandedAmount by remember { mutableStateOf(true) }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
-        ) {
-            AddressCard(
-                isExpanded = isExpandedAddress,
-                onExpandedClick = {
-                    isExpandedAddress = !isExpandedAddress
-                    isExpandedOrder = false
-                    isExpandedAmount = false
-                },
-                name = userName ?: "",
-                onAddressChange = { address, pincode, phone ->
-                    deliveryAddress = address
-                    deliveryPincode = pincode
-                    deliveryPhone = phone
-                },
-                initialDeliveryAddress = deliveryAddress,
-                initialDeliveryPincode = deliveryPincode,
-                initialDeliveryPhone = deliveryPhone
-            )
-
-            OrderSummaryCard(
-                isExpanded = isExpandedOrder,
-                onExpandedClick = {
-                    isExpandedOrder = !isExpandedOrder
-                    isExpandedAddress = false
-                    isExpandedAmount = false
-                },
-                cartItems = cartItems,
-                imageUrls = imageUrls,
-                modifier = Modifier.padding(top = 4.dp),
-                cartViewModel = cartViewModel,
-                bargainInputs = bargainInputs
-            ) { cropId, bargainPrice ->
-                bargainedPrices[cropId] = bargainPrice
-                bargainInputs[cropId] = bargainPrice.toString()
-            }
-
-            AmountCard(
-                isExpanded = isExpandedAmount,
-                onExpandedClick = {
-                    isExpandedAmount = !isExpandedAmount
-                    isExpandedAddress = false
-                    isExpandedOrder = false
-                },
-                totalPrice = totalPrice,
-                totalQuantity = totalQuantity
-            )
-
-            Spacer(Modifier.height(12.dp))
-
+    Scaffold(
+        containerColor = Color.White,
+        topBar = {
+            TopBar("Checkout", navController, true)
         }
-        OrderButton(
-            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 12.dp)
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier.fillMaxSize().padding(innerPadding)
         ) {
-            if (deliveryAddress.isBlank() || deliveryPincode.isBlank() || deliveryPhone.isBlank()) {
-                Toast.makeText(context, "Please complete your delivery address", Toast.LENGTH_SHORT)
-                    .show()
-                return@OrderButton
-            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFFF5F5F5))
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        tint = Color.Gray,
+                        contentDescription = null
+                    )
+                    Text(
+                        text = "Please note that only cash on delivery is the accepted mode of payment. You may pay the farmer directly through banking or UPI or handover the cash to the delivery agent.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
 
-            // Pair cart items with their final bargained price
-            val finalOrder = cartItems.map {
-                val price = bargainedPrices[it.crop.id] ?: (it.priceAtAdd * it.quantity).toInt()
-                it to price
-            }
+                AddressCard(
+                    isExpanded = isExpandedAddress,
+                    onExpandedClick = {
+                        isExpandedAddress = !isExpandedAddress
+                        isExpandedOrder = false
+                        isExpandedAmount = false
+                    },
+                    name = userName ?: "",
+                    onAddressChange = { address, pincode, phone ->
+                        deliveryAddress = address
+                        deliveryPincode = pincode
+                        deliveryPhone = phone
+                    },
+                    initialDeliveryAddress = deliveryAddress,
+                    initialDeliveryPincode = deliveryPincode,
+                    initialDeliveryPhone = deliveryPhone
+                )
 
-            checkoutViewModel.placeOrder(
-                finalOrder,
-                deliveryAddress,
-                deliveryPincode,
-                deliveryPhone
-            )
+                OrderSummaryCard(
+                    isExpanded = isExpandedOrder,
+                    onExpandedClick = {
+                        isExpandedOrder = !isExpandedOrder
+                        isExpandedAddress = false
+                        isExpandedAmount = false
+                    },
+                    cartItems = cartItems,
+                    imageUrls = imageUrls,
+                    modifier = Modifier.padding(top = 4.dp),
+                    cartViewModel = cartViewModel,
+                    bargainInputs = bargainInputs
+                ) { cropId, bargainPrice ->
+                    bargainedPrices[cropId] = bargainPrice
+                    bargainInputs[cropId] = bargainPrice.toString()
+                }
+
+                AmountCard(
+                    isExpanded = isExpandedAmount,
+                    onExpandedClick = {
+                        isExpandedAmount = !isExpandedAmount
+                        isExpandedAddress = false
+                        isExpandedOrder = false
+                    },
+                    totalPrice = totalPrice,
+                    totalQuantity = totalQuantity
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+            }
+            OrderButton(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 12.dp)
+            ) {
+                if (deliveryAddress.isBlank() || deliveryPincode.isBlank() || deliveryPhone.isBlank()) {
+                    Toast.makeText(
+                        context,
+                        "Please complete your delivery address",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                    return@OrderButton
+                }
+
+                // Pair cart items with their final bargained price
+                val finalOrder = cartItems.map {
+                    val price = bargainedPrices[it.crop.id] ?: (it.priceAtAdd * it.quantity).toInt()
+                    it to price
+                }
+
+                checkoutViewModel.placeOrder(
+                    finalOrder,
+                    deliveryAddress,
+                    deliveryPincode,
+                    deliveryPhone
+                )
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -35,7 +36,7 @@ import com.cyberlabs.krishisetu.R
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TopBar(label: String, navController: NavController) {
+fun TopBar(label: String, navController: NavController, isBackArrow: Boolean = false) {
     var expanded by remember { mutableStateOf(false) }
     TopAppBar(
         title = { Text(label) },
@@ -44,71 +45,85 @@ fun TopBar(label: String, navController: NavController) {
             titleContentColor = Color.White
         ),
         navigationIcon = {
-            Image(
-                painter = painterResource(R.drawable.app_logo),
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .size(36.dp)
-                    .clip(CircleShape),
-                contentDescription = "App Logo"
-            )
+            if (!isBackArrow) {
+                Image(
+                    painter = painterResource(R.drawable.app_logo),
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .size(36.dp)
+                        .clip(CircleShape),
+                    contentDescription = "App Logo"
+                )
+            } else {
+                IconButton(
+                    onClick = { navController.navigateUp() }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.White
+                    )
+                }
+            }
         },
         actions = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box {
-                    IconButton(onClick = { expanded = true }) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = "More options",
-                            tint = Color.White
-                        )
-                    }
+            if (!isBackArrow) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box {
+                        IconButton(onClick = { expanded = true }) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = "More options",
+                                tint = Color.White
+                            )
+                        }
 
-                    DropdownMenu(
-                        expanded = expanded,
-                        containerColor = Color.White,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                                ) {
-                                    Icon(
-                                        contentDescription = "Profile Icon",
-                                        imageVector = Icons.Default.Person,
-                                        tint = Color.Black
-                                    )
-                                    Text("Profile")
+                        DropdownMenu(
+                            expanded = expanded,
+                            containerColor = Color.White,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        Icon(
+                                            contentDescription = "Profile Icon",
+                                            imageVector = Icons.Default.Person,
+                                            tint = Color.Black
+                                        )
+                                        Text("Profile")
+                                    }
+                                },
+                                onClick = {
+                                    expanded = false
+                                    navController.navigate("profile")
                                 }
-                            },
-                            onClick = {
-                                expanded = false
-                                navController.navigate("profile")
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                                ) {
-                                    Icon(
-                                        contentDescription = "Settings Icon",
-                                        imageVector = Icons.Default.Settings,
-                                        tint = Color.Black
-                                    )
-                                    Text("Settings")
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        Icon(
+                                            contentDescription = "Settings Icon",
+                                            imageVector = Icons.Default.Settings,
+                                            tint = Color.Black
+                                        )
+                                        Text("Settings")
+                                    }
+                                },
+                                onClick = {
+                                    expanded = false
+                                    navController.navigate("settings")
                                 }
-                            },
-                            onClick = {
-                                expanded = false
-                                navController.navigate("settings")
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }

@@ -68,7 +68,9 @@ fun BuyerDeliveryScreen(
                 Button(
                     onClick = { navController.navigate("buyer_orders") },
                     shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFFB8C00)
+                    ),
                     modifier = Modifier
                         .align(Alignment.End)
                         .padding(bottom = 12.dp)

@@ -1,6 +1,5 @@
 package com.cyberlabs.krishisetu.ui.screens.shopping.cropListing
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,21 +14,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,6 +48,7 @@ import com.cyberlabs.krishisetu.R
 import com.cyberlabs.krishisetu.authentication.AuthViewModel
 import com.cyberlabs.krishisetu.shopping.cart.CartViewModel
 import com.cyberlabs.krishisetu.shopping.cropListing.cropShop.CropShopViewModel
+import com.cyberlabs.krishisetu.util.navigation.TopBar
 import com.cyberlabs.krishisetu.util.users.userRoleFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,21 +68,7 @@ fun CropShopScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navController.navigateUp()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                },
-                title = {},
-            )
+            TopBar("", navController, true)
         }
     ) { innerPadding ->
         when {

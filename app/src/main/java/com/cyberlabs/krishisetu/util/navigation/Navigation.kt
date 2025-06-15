@@ -21,6 +21,7 @@ import com.cyberlabs.krishisetu.shopping.cropListing.cropShop.CropShopViewModel
 import com.cyberlabs.krishisetu.shopping.order.CheckoutViewModel
 import com.cyberlabs.krishisetu.shopping.order.FarmerOrdersViewModel
 import com.cyberlabs.krishisetu.shopping.order.OrdersViewModel
+import com.cyberlabs.krishisetu.shopping.order.delivery.DeliveriesViewModel
 import com.cyberlabs.krishisetu.ui.screens.authentication.ConfirmScreen
 import com.cyberlabs.krishisetu.ui.screens.authentication.SignInScreen
 import com.cyberlabs.krishisetu.ui.screens.authentication.SignUpScreen
@@ -96,14 +97,21 @@ fun AppNavHost(vm: AuthViewModel, nav: NavHostController, startDestination: Stri
             CheckoutScreen(nav, buyerId ?: "", viewModel, checkoutViewModel)
         }
         composable("buyer_delivery") {
-            BuyerDeliveryScreen(nav)
+            val deliveriesViewModel: DeliveriesViewModel = hiltViewModel()
+            BuyerDeliveryScreen(nav, deliveriesViewModel)
         }
         composable("buyer_orders") {
             val ordersViewModel: OrdersViewModel = hiltViewModel()
             BuyerOrderScreen(nav, ordersViewModel)
         }
-        composable("farmer_delivery") {
-            FarmerDeliveryScreen(nav)
+        composable(
+            route = "farmer_delivery/{isFarmer}",
+            arguments = listOf(
+                navArgument("isFarmer") { type = NavType.BoolType }
+            )
+        ) {
+            val deliveriesViewModel: DeliveriesViewModel = hiltViewModel()
+            FarmerDeliveryScreen(nav, deliveriesViewModel)
         }
         composable("farmer_orders") {
             val farmerOrdersViewModel: FarmerOrdersViewModel = hiltViewModel()
