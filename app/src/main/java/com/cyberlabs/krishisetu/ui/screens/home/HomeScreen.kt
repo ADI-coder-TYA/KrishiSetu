@@ -1,5 +1,6 @@
 package com.cyberlabs.krishisetu.ui.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,10 +23,11 @@ fun HomeScreen(vm: AuthViewModel, navController: NavController) {
         UserRole.BUYER -> { BuyerHomeScreen(navController = navController)
         }
 
-        UserRole.DELIVERY_AGENT -> { /* DeliveryAgentHomeScreen(navController) */
+        UserRole.DELIVERY_AGENT -> { DeliveryHomeScreen(navController = navController)
         }
 
         null -> {
+            Log.e("HomeScreen", "User role is ${userRole?.name}")
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }

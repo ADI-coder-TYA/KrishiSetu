@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.cyberlabs.krishisetu.shopping.order.delivery.DeliveriesViewModel
-import com.cyberlabs.krishisetu.util.navigation.BuyerBottomBar
+import com.cyberlabs.krishisetu.util.navigation.FarmerBottomBar
 import com.cyberlabs.krishisetu.util.navigation.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +39,7 @@ fun FarmerDeliveryScreen(
             TopBar("Your Deliveries", navController)
         },
         bottomBar = {
-            BuyerBottomBar(navController, 3)
+            FarmerBottomBar(navController, 3)
         },
         content = { padding ->
             Column(
@@ -69,7 +69,9 @@ fun FarmerDeliveryScreen(
                     LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         items(deliveries.size) { index ->
                             val delivery = deliveries[index]
-                            DeliveryCard(delivery = delivery)
+                            DeliveryCard(delivery = delivery, isFarmer = true) { newStatus ->
+                                viewModel.updateDeliveryStatus(delivery, newStatus)
+                            }
                         }
                     }
                 }

@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Place
@@ -214,6 +215,7 @@ private fun OrderCard(
             ) {
                 Text(
                     text = order.crop.title,
+                    modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -277,6 +279,16 @@ private fun OrderCard(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(order.deliveryPhone, fontSize = 14.sp)
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Default.Info,
+                    contentDescription = "Quantity",
+                    tint = Color(0xFF4CAF50),
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text("Quantity: ${order.quantity}", fontSize = 14.sp)
             }
 
             if (order.orderStatus.name == "PENDING") {

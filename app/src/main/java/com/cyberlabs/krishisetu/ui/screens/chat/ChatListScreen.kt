@@ -41,6 +41,7 @@ import coil3.compose.AsyncImage
 import com.cyberlabs.krishisetu.R
 import com.cyberlabs.krishisetu.chat.ChatListViewModel
 import com.cyberlabs.krishisetu.util.navigation.BuyerBottomBar
+import com.cyberlabs.krishisetu.util.navigation.DeliveryBottomBar
 import com.cyberlabs.krishisetu.util.navigation.FarmerBottomBar
 import com.cyberlabs.krishisetu.util.navigation.TopBar
 
@@ -114,10 +115,16 @@ fun ChatListScreen(
             TopBar("Your Chats", navController)
         },
         bottomBar = {
-            if (role == "farmer") {
-                FarmerBottomBar(navController, selectedIndex = 1)
-            } else if (role == "buyer") {
-                BuyerBottomBar(navController, selectedIndex = 1)
+            when (role) {
+                "farmer" -> {
+                    FarmerBottomBar(navController, selectedIndex = 1)
+                }
+                "buyer" -> {
+                    BuyerBottomBar(navController, selectedIndex = 1)
+                }
+                "delivery" -> {
+                    DeliveryBottomBar(navController, selectedIndex = 1)
+                }
             }
         }
     ) { innerPadding ->
@@ -130,7 +137,7 @@ fun ChatListScreen(
                 //TODO: Replace avatar icon with Profile Picture
                 val context = LocalContext.current
                 ChatListItem(
-                    role = partner.role.name,
+                    role = partner.role.name.lowercase().replace('_', ' ').capitalize(),
                     name = partner.name,
                     profilePicUrl = partner.profilePicUrl,
                     onClick = {

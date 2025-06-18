@@ -25,6 +25,7 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 /** This is an auto generated class representing the Purchase type in your schema. */
 @SuppressWarnings("all")
 @ModelConfig(pluralName = "Purchases", type = Model.Type.USER, version = 1, authRules = {
+  @AuthRule(allow = AuthStrategy.GROUPS, groupClaim = "cognito:groups", groups = { "DeliveryGroup" }, provider = "userPools", operations = { ModelOperation.READ }),
   @AuthRule(allow = AuthStrategy.OWNER, ownerField = "buyerID", identityClaim = "sub", provider = "userPools", operations = { ModelOperation.READ, ModelOperation.CREATE }),
   @AuthRule(allow = AuthStrategy.GROUPS, groupClaim = "cognito:groups", groups = { "FarmerGroup" }, provider = "userPools", operations = { ModelOperation.READ, ModelOperation.CREATE })
 })

@@ -35,7 +35,7 @@ class OrdersViewModel @Inject constructor(
             ModelQuery.list(Order::class.java, Order.BUYER.eq(currentUserId)),
             { response ->
                 if (response.hasData()) {
-                    _orders.value = response.data.items.filterNotNull()
+                    _orders.value = response.data.items.filterNotNull().sortedBy { it.createdAt }
                 } else if (response.hasErrors()) {
                     Log.e("OrdersViewModel", "GraphQL errors: ${response.errors}")
                 }

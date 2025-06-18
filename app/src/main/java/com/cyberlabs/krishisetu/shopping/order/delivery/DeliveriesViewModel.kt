@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amplifyframework.api.graphql.model.ModelMutation
 import com.amplifyframework.api.graphql.model.ModelQuery
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.datastore.generated.model.Delivery
+import com.amplifyframework.datastore.generated.model.DeliveryStatus
 import com.cyberlabs.krishisetu.authentication.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,19 +40,55 @@ class DeliveriesViewModel @Inject constructor(
                 ModelQuery.list(Delivery::class.java, Delivery.FARMER.eq(currentUserId)),
                 { response ->
                     if (response.hasData()) _deliveries.value = response.data.items.filterNotNull()
-                    else if (response.hasErrors()) Log.e("DeliveriesViewModel", "GraphQL errors: ${response.errors}")
+                    else if (response.hasErrors()) Log.e(
+                        "DeliveriesViewModel",
+                        "GraphQL errors: ${response.errors}"
+                    )
                 }, { apiError ->
-                    Log.e("DeliveriesViewModel", "API error while fetching deliveries for farmer: ${apiError.message}")
+                    Log.e(
+                        "DeliveriesViewModel",
+                        "API error while fetching deliveries for farmer: ${apiError.message}"
+                    )
                 }
             )
         } else {
             Amplify.API.query(
                 ModelQuery.list(Delivery::class.java, Delivery.BUYER.eq(currentUserId)),
-                {response ->
+                { response ->
                     if (response.hasData()) _deliveries.value = response.data.items.filterNotNull()
-                    else if (response.hasErrors()) Log.e("DeliveriesViewModel", "GraphQL errors: ${response.errors}")
+                    else if (response.hasErrors()) Log.e(
+                        "DeliveriesViewModel",
+                        "GraphQL errors: ${response.errors}"
+                    )
                 }, { apiError ->
-                    Log.e("DeliveriesViewModel", "API error while fetching deliveries for buyer: ${apiError.message}")
+                    Log.e(
+                        "DeliveriesViewModel",
+                        "API error while fetching deliveries for buyer: ${apiError.message}"
+                    )
+                }
+            )
+        }
+    }
+
+    fun updateDeliveryStatus(delivery: Delivery, newStatus: DeliveryStatus) {
+        viewModelScope.launch {
+            val updatedDelivery = delivery.copyOfBuilder()
+                .deliveryStatus(newStatus)
+                .build()
+
+            Amplify.API.mutate(
+                ModelMutation.update(updatedDelivery),
+                { response ->
+                    if (response.hasData()) {
+                        Log.i("DeliveriesViewModel", "Delivery status updated successfully")
+                    } else if (response.hasErrors()) {
+                        Log.e("DeliveriesViewModel", "GraphQL errors: ${response.errors}")
+                    }
+                }, { apiError ->
+                    Log.e(
+                        "DeliveriesViewModel",
+                        "API error while updating delivery status: ${apiError.message}"
+                    )
                 }
             )
         }

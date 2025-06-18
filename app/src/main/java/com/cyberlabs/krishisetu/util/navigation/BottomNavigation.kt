@@ -36,7 +36,7 @@ fun BuyerBottomBar(navController: NavController, selectedIndex: Int = 0) {
 
     var selectedOption by remember { mutableStateOf(bottomItemList[selectedIndex].first) }
 
-    BottomAppBar (
+    BottomAppBar(
         containerColor = Color(0xFFF5F5F5)
     ) {
         Row(
@@ -99,6 +99,42 @@ fun FarmerBottomBar(navController: NavController, selectedIndex: Int = 0) {
             }
         }
     }
+}
+
+@Composable
+fun DeliveryBottomBar(navController: NavController, selectedIndex: Int = 0) {
+    val bottomItemList = listOf(
+        Pair("Home", R.drawable.baseline_home_24),
+        Pair("Chat", R.drawable.rounded_chat_bubble_24)
+    )
+
+    var selectedOption by remember { mutableStateOf(bottomItemList[selectedIndex].first) }
+
+    BottomAppBar(
+        containerColor = Color(0xFFF5F5F5)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            for (item in bottomItemList) {
+                BottomNavItem(
+                    icon = item.second,
+                    title = item.first,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                        .weight(1f),
+                    selected = selectedOption == item.first
+                ) {
+                    if (it.lowercase() == "chat") navController.navigate("chat/delivery")
+                    else navController.navigate(it.lowercase())
+                    selectedOption = it
+                }
+            }
+        }
+    }
+
 }
 
 @Composable

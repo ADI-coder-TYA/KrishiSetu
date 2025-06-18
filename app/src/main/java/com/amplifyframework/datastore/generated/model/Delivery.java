@@ -25,8 +25,8 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 @SuppressWarnings("all")
 @ModelConfig(pluralName = "Deliveries", type = Model.Type.USER, version = 1, authRules = {
   @AuthRule(allow = AuthStrategy.OWNER, ownerField = "farmerID", identityClaim = "sub", provider = "userPools", operations = { ModelOperation.CREATE, ModelOperation.READ, ModelOperation.UPDATE }),
-  @AuthRule(allow = AuthStrategy.GROUPS, groupClaim = "cognito:groups", groups = { "BuyerGroup" }, provider = "userPools", operations = { ModelOperation.READ, ModelOperation.UPDATE }),
-  @AuthRule(allow = AuthStrategy.GROUPS, groupClaim = "cognito:groups", groups = { "FarmerGroup", "DeliveryGroup" }, provider = "userPools", operations = { ModelOperation.READ })
+  @AuthRule(allow = AuthStrategy.GROUPS, groupClaim = "cognito:groups", groups = { "FarmerGroup", "BuyerGroup" }, provider = "userPools", operations = { ModelOperation.CREATE, ModelOperation.READ, ModelOperation.UPDATE }),
+  @AuthRule(allow = AuthStrategy.GROUPS, groupClaim = "cognito:groups", groups = { "DeliveryGroup" }, provider = "userPools", operations = { ModelOperation.READ })
 })
 @Index(name = "deliveriesByPurchase", fields = {"purchaseID"})
 @Index(name = "deliveriesByFarmer", fields = {"farmerID"})
@@ -43,6 +43,9 @@ public final class Delivery implements Model {
   public static final QueryField PERSONAL_AGENT_EMAIL = field("Delivery", "personalAgentEmail");
   public static final QueryField DELIVERY_ADDRESS = field("Delivery", "deliveryAddress");
   public static final QueryField DELIVERY_STATUS = field("Delivery", "deliveryStatus");
+  public static final QueryField DELIVERY_PHONE = field("Delivery", "deliveryPhone");
+  public static final QueryField DELIVERY_PINCODE = field("Delivery", "deliveryPincode");
+  public static final QueryField DELIVERY_QUANTITY = field("Delivery", "deliveryQuantity");
   public static final QueryField CREATED_AT = field("Delivery", "createdAt");
   public static final QueryField UPDATED_AT = field("Delivery", "updatedAt");
   private final @ModelField(targetType="ID", isRequired = true) String id;
@@ -55,6 +58,9 @@ public final class Delivery implements Model {
   private final @ModelField(targetType="AWSEmail") String personalAgentEmail;
   private final @ModelField(targetType="String", isRequired = true) String deliveryAddress;
   private final @ModelField(targetType="DeliveryStatus", isRequired = true) DeliveryStatus deliveryStatus;
+  private final @ModelField(targetType="AWSPhone", isRequired = true) String deliveryPhone;
+  private final @ModelField(targetType="String", isRequired = true) String deliveryPincode;
+  private final @ModelField(targetType="Int", isRequired = true) Integer deliveryQuantity;
   private final @ModelField(targetType="AWSDateTime", isRequired = true) Temporal.DateTime createdAt;
   private final @ModelField(targetType="AWSDateTime", isRequired = true) Temporal.DateTime updatedAt;
   /** @deprecated This API is internal to Amplify and should not be used. */
@@ -103,6 +109,18 @@ public final class Delivery implements Model {
       return deliveryStatus;
   }
   
+  public String getDeliveryPhone() {
+      return deliveryPhone;
+  }
+  
+  public String getDeliveryPincode() {
+      return deliveryPincode;
+  }
+  
+  public Integer getDeliveryQuantity() {
+      return deliveryQuantity;
+  }
+  
   public Temporal.DateTime getCreatedAt() {
       return createdAt;
   }
@@ -111,7 +129,7 @@ public final class Delivery implements Model {
       return updatedAt;
   }
   
-  private Delivery(String id, Purchase purchase, User farmer, User buyer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+  private Delivery(String id, Purchase purchase, User farmer, User buyer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, String deliveryPhone, String deliveryPincode, Integer deliveryQuantity, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
     this.id = id;
     this.purchase = purchase;
     this.farmer = farmer;
@@ -122,6 +140,9 @@ public final class Delivery implements Model {
     this.personalAgentEmail = personalAgentEmail;
     this.deliveryAddress = deliveryAddress;
     this.deliveryStatus = deliveryStatus;
+    this.deliveryPhone = deliveryPhone;
+    this.deliveryPincode = deliveryPincode;
+    this.deliveryQuantity = deliveryQuantity;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -144,6 +165,9 @@ public final class Delivery implements Model {
               ObjectsCompat.equals(getPersonalAgentEmail(), delivery.getPersonalAgentEmail()) &&
               ObjectsCompat.equals(getDeliveryAddress(), delivery.getDeliveryAddress()) &&
               ObjectsCompat.equals(getDeliveryStatus(), delivery.getDeliveryStatus()) &&
+              ObjectsCompat.equals(getDeliveryPhone(), delivery.getDeliveryPhone()) &&
+              ObjectsCompat.equals(getDeliveryPincode(), delivery.getDeliveryPincode()) &&
+              ObjectsCompat.equals(getDeliveryQuantity(), delivery.getDeliveryQuantity()) &&
               ObjectsCompat.equals(getCreatedAt(), delivery.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), delivery.getUpdatedAt());
       }
@@ -162,6 +186,9 @@ public final class Delivery implements Model {
       .append(getPersonalAgentEmail())
       .append(getDeliveryAddress())
       .append(getDeliveryStatus())
+      .append(getDeliveryPhone())
+      .append(getDeliveryPincode())
+      .append(getDeliveryQuantity())
       .append(getCreatedAt())
       .append(getUpdatedAt())
       .toString()
@@ -182,6 +209,9 @@ public final class Delivery implements Model {
       .append("personalAgentEmail=" + String.valueOf(getPersonalAgentEmail()) + ", ")
       .append("deliveryAddress=" + String.valueOf(getDeliveryAddress()) + ", ")
       .append("deliveryStatus=" + String.valueOf(getDeliveryStatus()) + ", ")
+      .append("deliveryPhone=" + String.valueOf(getDeliveryPhone()) + ", ")
+      .append("deliveryPincode=" + String.valueOf(getDeliveryPincode()) + ", ")
+      .append("deliveryQuantity=" + String.valueOf(getDeliveryQuantity()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
       .append("}")
@@ -213,6 +243,9 @@ public final class Delivery implements Model {
       null,
       null,
       null,
+      null,
+      null,
+      null,
       null
     );
   }
@@ -228,6 +261,9 @@ public final class Delivery implements Model {
       personalAgentEmail,
       deliveryAddress,
       deliveryStatus,
+      deliveryPhone,
+      deliveryPincode,
+      deliveryQuantity,
       createdAt,
       updatedAt);
   }
@@ -237,7 +273,22 @@ public final class Delivery implements Model {
   
 
   public interface DeliveryStatusStep {
-    CreatedAtStep deliveryStatus(DeliveryStatus deliveryStatus);
+    DeliveryPhoneStep deliveryStatus(DeliveryStatus deliveryStatus);
+  }
+  
+
+  public interface DeliveryPhoneStep {
+    DeliveryPincodeStep deliveryPhone(String deliveryPhone);
+  }
+  
+
+  public interface DeliveryPincodeStep {
+    DeliveryQuantityStep deliveryPincode(String deliveryPincode);
+  }
+  
+
+  public interface DeliveryQuantityStep {
+    CreatedAtStep deliveryQuantity(Integer deliveryQuantity);
   }
   
 
@@ -264,10 +315,13 @@ public final class Delivery implements Model {
   }
   
 
-  public static class Builder implements DeliveryAddressStep, DeliveryStatusStep, CreatedAtStep, UpdatedAtStep, BuildStep {
+  public static class Builder implements DeliveryAddressStep, DeliveryStatusStep, DeliveryPhoneStep, DeliveryPincodeStep, DeliveryQuantityStep, CreatedAtStep, UpdatedAtStep, BuildStep {
     private String id;
     private String deliveryAddress;
     private DeliveryStatus deliveryStatus;
+    private String deliveryPhone;
+    private String deliveryPincode;
+    private Integer deliveryQuantity;
     private Temporal.DateTime createdAt;
     private Temporal.DateTime updatedAt;
     private Purchase purchase;
@@ -281,7 +335,7 @@ public final class Delivery implements Model {
       
     }
     
-    private Builder(String id, Purchase purchase, User farmer, User buyer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+    private Builder(String id, Purchase purchase, User farmer, User buyer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, String deliveryPhone, String deliveryPincode, Integer deliveryQuantity, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
       this.id = id;
       this.purchase = purchase;
       this.farmer = farmer;
@@ -292,6 +346,9 @@ public final class Delivery implements Model {
       this.personalAgentEmail = personalAgentEmail;
       this.deliveryAddress = deliveryAddress;
       this.deliveryStatus = deliveryStatus;
+      this.deliveryPhone = deliveryPhone;
+      this.deliveryPincode = deliveryPincode;
+      this.deliveryQuantity = deliveryQuantity;
       this.createdAt = createdAt;
       this.updatedAt = updatedAt;
     }
@@ -311,6 +368,9 @@ public final class Delivery implements Model {
           personalAgentEmail,
           deliveryAddress,
           deliveryStatus,
+          deliveryPhone,
+          deliveryPincode,
+          deliveryQuantity,
           createdAt,
           updatedAt);
     }
@@ -323,9 +383,30 @@ public final class Delivery implements Model {
     }
     
     @Override
-     public CreatedAtStep deliveryStatus(DeliveryStatus deliveryStatus) {
+     public DeliveryPhoneStep deliveryStatus(DeliveryStatus deliveryStatus) {
         Objects.requireNonNull(deliveryStatus);
         this.deliveryStatus = deliveryStatus;
+        return this;
+    }
+    
+    @Override
+     public DeliveryPincodeStep deliveryPhone(String deliveryPhone) {
+        Objects.requireNonNull(deliveryPhone);
+        this.deliveryPhone = deliveryPhone;
+        return this;
+    }
+    
+    @Override
+     public DeliveryQuantityStep deliveryPincode(String deliveryPincode) {
+        Objects.requireNonNull(deliveryPincode);
+        this.deliveryPincode = deliveryPincode;
+        return this;
+    }
+    
+    @Override
+     public CreatedAtStep deliveryQuantity(Integer deliveryQuantity) {
+        Objects.requireNonNull(deliveryQuantity);
+        this.deliveryQuantity = deliveryQuantity;
         return this;
     }
     
@@ -397,10 +478,13 @@ public final class Delivery implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, Purchase purchase, User farmer, User buyer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
-      super(id, purchase, farmer, buyer, agent, personalAgentName, personalAgentPhone, personalAgentEmail, deliveryAddress, deliveryStatus, createdAt, updatedAt);
+    private CopyOfBuilder(String id, Purchase purchase, User farmer, User buyer, User agent, String personalAgentName, String personalAgentPhone, String personalAgentEmail, String deliveryAddress, DeliveryStatus deliveryStatus, String deliveryPhone, String deliveryPincode, Integer deliveryQuantity, Temporal.DateTime createdAt, Temporal.DateTime updatedAt) {
+      super(id, purchase, farmer, buyer, agent, personalAgentName, personalAgentPhone, personalAgentEmail, deliveryAddress, deliveryStatus, deliveryPhone, deliveryPincode, deliveryQuantity, createdAt, updatedAt);
       Objects.requireNonNull(deliveryAddress);
       Objects.requireNonNull(deliveryStatus);
+      Objects.requireNonNull(deliveryPhone);
+      Objects.requireNonNull(deliveryPincode);
+      Objects.requireNonNull(deliveryQuantity);
       Objects.requireNonNull(createdAt);
       Objects.requireNonNull(updatedAt);
     }
@@ -413,6 +497,21 @@ public final class Delivery implements Model {
     @Override
      public CopyOfBuilder deliveryStatus(DeliveryStatus deliveryStatus) {
       return (CopyOfBuilder) super.deliveryStatus(deliveryStatus);
+    }
+    
+    @Override
+     public CopyOfBuilder deliveryPhone(String deliveryPhone) {
+      return (CopyOfBuilder) super.deliveryPhone(deliveryPhone);
+    }
+    
+    @Override
+     public CopyOfBuilder deliveryPincode(String deliveryPincode) {
+      return (CopyOfBuilder) super.deliveryPincode(deliveryPincode);
+    }
+    
+    @Override
+     public CopyOfBuilder deliveryQuantity(Integer deliveryQuantity) {
+      return (CopyOfBuilder) super.deliveryQuantity(deliveryQuantity);
     }
     
     @Override

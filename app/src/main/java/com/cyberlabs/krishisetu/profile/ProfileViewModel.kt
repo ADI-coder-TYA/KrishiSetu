@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amplifyframework.api.graphql.model.ModelMutation
 import com.amplifyframework.api.graphql.model.ModelQuery
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.datastore.generated.model.User
@@ -108,4 +109,20 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
+    fun updatePhone(newPhone: String) {
+        val currentUser = _user.value ?: return
+        val updatedUser = currentUser.copyOfBuilder()
+            .phone(newPhone)
+            .build()
+
+        viewModelScope.launch {
+            Amplify.API.mutate(
+                ModelMutation.update(updatedUser),
+                { response -> Log.i("ProfileVM", "Phone updated") },
+                { error -> Log.e("ProfileVM", "Failed to update phone", error) }
+            )
+        }
+    }
+
 }

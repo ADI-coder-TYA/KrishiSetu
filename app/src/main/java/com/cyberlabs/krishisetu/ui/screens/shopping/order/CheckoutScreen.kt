@@ -208,7 +208,15 @@ fun CheckoutScreen(
                     finalOrder,
                     deliveryAddress,
                     deliveryPincode,
-                    deliveryPhone
+                    deliveryPhone,
+                    onSuccess = {
+                        Toast.makeText(context, "Order placed successfully", Toast.LENGTH_LONG).show()
+                        navController.navigate("buyer_orders")
+                    },
+                    onFail = {
+                        Toast.makeText(context, "Failed to place order", Toast.LENGTH_LONG).show()
+                        navController.navigateUp()
+                    }
                 )
             }
         }

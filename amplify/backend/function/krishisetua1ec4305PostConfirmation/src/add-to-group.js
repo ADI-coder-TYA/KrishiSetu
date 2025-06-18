@@ -33,7 +33,7 @@ exports.handler = async (event) => { // CommonJS export style
     case "buyer":
       groupName = "BuyerGroup";
       break;
-    case "delivery":
+    case "delivery_agent":
       groupName = "DeliveryGroup";
       break;
     default:

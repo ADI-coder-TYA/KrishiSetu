@@ -642,6 +642,9 @@ subscription OnCreatePurchase(
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
@@ -711,6 +714,9 @@ subscription OnUpdatePurchase(
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
@@ -780,6 +786,9 @@ subscription OnDeletePurchase(
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
@@ -854,6 +863,9 @@ subscription OnCreateDelivery(
     personalAgentEmail
     deliveryAddress
     deliveryStatus
+    deliveryPhone
+    deliveryPincode
+    deliveryQuantity
     createdAt
     updatedAt
     __typename
@@ -922,6 +934,9 @@ subscription OnUpdateDelivery(
     personalAgentEmail
     deliveryAddress
     deliveryStatus
+    deliveryPhone
+    deliveryPincode
+    deliveryQuantity
     createdAt
     updatedAt
     __typename
@@ -990,6 +1005,9 @@ subscription OnDeleteDelivery(
     personalAgentEmail
     deliveryAddress
     deliveryStatus
+    deliveryPhone
+    deliveryPincode
+    deliveryQuantity
     createdAt
     updatedAt
     __typename

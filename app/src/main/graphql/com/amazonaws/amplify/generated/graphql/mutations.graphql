@@ -642,6 +642,9 @@ mutation CreatePurchase(
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
@@ -711,6 +714,9 @@ mutation UpdatePurchase(
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
@@ -780,6 +786,9 @@ mutation DeletePurchase(
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
@@ -854,6 +863,9 @@ mutation CreateDelivery(
     personalAgentEmail
     deliveryAddress
     deliveryStatus
+    deliveryPhone
+    deliveryPincode
+    deliveryQuantity
     createdAt
     updatedAt
     __typename
@@ -922,6 +934,9 @@ mutation UpdateDelivery(
     personalAgentEmail
     deliveryAddress
     deliveryStatus
+    deliveryPhone
+    deliveryPincode
+    deliveryQuantity
     createdAt
     updatedAt
     __typename
@@ -990,6 +1005,9 @@ mutation DeleteDelivery(
     personalAgentEmail
     deliveryAddress
     deliveryStatus
+    deliveryPhone
+    deliveryPincode
+    deliveryQuantity
     createdAt
     updatedAt
     __typename

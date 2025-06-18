@@ -25,7 +25,7 @@ fun userRoleFlow(vm: AuthViewModel): Flow<UserRole?> =
         when (role) {
             "FARMER" -> UserRole.FARMER
             "BUYER" -> UserRole.BUYER
-            "DELIVERY" -> UserRole.DELIVERY_AGENT
+            "DELIVERY_AGENT" -> UserRole.DELIVERY_AGENT
             else -> null
         }
     }

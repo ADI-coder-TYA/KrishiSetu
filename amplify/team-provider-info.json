@@ -27,7 +27,7 @@
         "krishisetua1ec4305PostConfirmation": {
           "GROUP": "FarmerGroup",
           "deploymentBucketName": "amplify-krishisetu-dev-b2611-deployment",
-          "s3Key": "amplify-builds/krishisetua1ec4305PostConfirmation-6a762b6e414f44686271-build.zip"
+          "s3Key": "amplify-builds/krishisetua1ec4305PostConfirmation-2f72706e447474394479-build.zip"
         }
       }
     }

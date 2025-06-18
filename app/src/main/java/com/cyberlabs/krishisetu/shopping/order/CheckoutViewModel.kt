@@ -1,6 +1,8 @@
 package com.cyberlabs.krishisetu.shopping.order
 
+import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,8 +15,10 @@ import com.amplifyframework.datastore.generated.model.CartItem
 import com.amplifyframework.datastore.generated.model.Order
 import com.amplifyframework.datastore.generated.model.OrderStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.OffsetDateTime
 import java.util.UUID
 import javax.inject.Inject
@@ -36,7 +40,9 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
         finalOrder: List<Pair<CartItem, Int>>,
         deliveryAddress: String,
         deliveryPincode: String,
-        deliveryPhone: String
+        deliveryPhone: String,
+        onSuccess: () -> Unit = {},
+        onFail: () -> Unit = {}
     ) {
         viewModelScope.launch {
             try {
@@ -89,6 +95,11 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
             } catch (e: Exception) {
                 errorMessage = "Failed to place order: ${e.message}"
             } finally {
+                if (orderPlacedSuccessfully) {
+                    onSuccess()
+                } else {
+                    onFail()
+                }
                 isPlacingOrder = false
                 delay(1000)
                 resetOrderState()

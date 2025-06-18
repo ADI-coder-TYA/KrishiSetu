@@ -15,20 +15,27 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -96,7 +103,14 @@ fun BuyerDeliveryScreen(
 }
 
 @Composable
-fun DeliveryCard(delivery: Delivery) {
+fun DeliveryCard(
+    delivery: Delivery,
+    isFarmer: Boolean = false,
+    onSelectedStatus: (DeliveryStatus) -> Unit = {}
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedStatus by remember { mutableStateOf(delivery.deliveryStatus) }
+
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -116,6 +130,7 @@ fun DeliveryCard(delivery: Delivery) {
             ) {
                 Text(
                     text = delivery.purchase.crop.title,
+                    modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                     color = Color(0xFF2E7D32)
                 )
@@ -142,9 +157,10 @@ fun DeliveryCard(delivery: Delivery) {
             Spacer(modifier = Modifier.height(8.dp))
 
             // Delivery Details
+            DeliveryDetailRow(label = "Quantity", value = (delivery.deliveryQuantity ?: "N/A").toString())
             DeliveryDetailRow(label = "Address", value = delivery.deliveryAddress)
-            DeliveryDetailRow(label = "Pincode", value = /*delivery.pincode ?:*/ "N/A")
-            DeliveryDetailRow(label = "Phone", value = /*delivery.deliveryPhone ?:*/ "N/A")
+            DeliveryDetailRow(label = "Pincode", value = delivery.deliveryPincode ?:"N/A")
+            DeliveryDetailRow(label = "Phone", value = delivery.deliveryPhone ?: "N/A")
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -163,14 +179,56 @@ fun DeliveryCard(delivery: Delivery) {
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            delivery.agent?.let {
-                DeliveryDetailRow(label = "Name", value = it.name)
-                DeliveryDetailRow(label = "Email", value = it.email)
-                DeliveryDetailRow(label = "Phone", value = it.phone)
-            } ?: run {
+            val agent = delivery.agent
+            if (agent == null || agent.id == "DUMMY" || agent.id == delivery.farmer.id) {
                 DeliveryDetailRow(label = "Name", value = delivery.personalAgentName ?: "N/A")
                 DeliveryDetailRow(label = "Email", value = delivery.personalAgentEmail ?: "N/A")
                 DeliveryDetailRow(label = "Phone", value = delivery.personalAgentPhone ?: "N/A")
+            } else {
+                agent.let {
+                    DeliveryDetailRow(label = "Name", value = it.name)
+                    DeliveryDetailRow(label = "Email", value = it.email)
+                    DeliveryDetailRow(label = "Phone", value = it.phone)
+                }
+            }
+
+            if (isFarmer) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    "Update Delivery Status",
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Gray
+                    )
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Box {
+                    OutlinedButton(
+                        onClick = { expanded = true },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = selectedStatus.name.replace("_", " ").capitalize())
+                        Spacer(Modifier.weight(1f))
+                        Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        DeliveryStatus.values().forEach { status ->
+                            DropdownMenuItem(
+                                text = { Text(status.name.replace("_", " ").capitalize()) },
+                                onClick = {
+                                    expanded = false
+                                    selectedStatus = status
+                                    onSelectedStatus(status)
+                                }
+                            )
+                        }
+                    }
+                }
             }
         }
     }

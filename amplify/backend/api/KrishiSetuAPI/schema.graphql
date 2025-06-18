@@ -143,6 +143,7 @@ type CartItem @model
 
 type Purchase @model
   @auth(rules: [
+    { allow: groups, groups: ["DeliveryGroup"], operations: [read] },
     { allow: owner, ownerField: "buyerID", identityClaim: "sub", operations: [read, create] },
     { allow: groups, groups: ["FarmerGroup"], operations: [read, create] }
   ]) {
@@ -169,12 +170,9 @@ type Purchase @model
 
 type Delivery @model
   @auth(rules: [
-    # Farmer is the owner (can create, read, update, delete)
     { allow: owner, ownerField: "farmerID", identityClaim: "sub", operations: [create, read, update] },
-    # Buyer groups can read and edit (cancel delivery)
-    { allow: groups, groups:["BuyerGroup"], operations: [read, update] }
-    # Delivery, Farmer groups can read
-    { allow: groups, groups: ["FarmerGroup", "DeliveryGroup"], operations: [read] }
+    { allow: groups, groups: ["FarmerGroup", "BuyerGroup"], operations: [create, read, update] },
+    { allow: groups, groups: ["DeliveryGroup"], operations: [read] }
   ]) {
   id: ID!
   purchaseID: ID!
@@ -203,6 +201,9 @@ type Delivery @model
 
   deliveryAddress: String!
   deliveryStatus: DeliveryStatus!
+  deliveryPhone: AWSPhone!
+  deliveryPincode: String!
+  deliveryQuantity: Int!
 
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!

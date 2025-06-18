@@ -385,6 +385,9 @@ query GetPurchase($id: ID!) {
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
@@ -478,6 +481,9 @@ query GetDelivery($id: ID!) {
     personalAgentEmail
     deliveryAddress
     deliveryStatus
+    deliveryPhone
+    deliveryPincode
+    deliveryQuantity
     createdAt
     updatedAt
     __typename
@@ -501,6 +507,9 @@ query ListDeliveries(
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
@@ -926,6 +935,9 @@ query DeliveriesByPurchase(
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
@@ -960,6 +972,9 @@ query DeliveriesByFarmer(
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
@@ -994,6 +1009,9 @@ query DeliveriesByBuyer(
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
@@ -1030,6 +1048,9 @@ query DeliveriesByAgent(
       personalAgentEmail
       deliveryAddress
       deliveryStatus
+      deliveryPhone
+      deliveryPincode
+      deliveryQuantity
       createdAt
       updatedAt
       __typename
