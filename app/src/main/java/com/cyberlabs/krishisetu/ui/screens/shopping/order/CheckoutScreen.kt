@@ -1,7 +1,8 @@
 package com.cyberlabs.krishisetu.ui.screens.shopping.order
 
 import android.app.Activity
-import android.util.Log
+import android.content.Context
+import android.content.ContextWrapper
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -42,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -62,21 +64,23 @@ import com.cyberlabs.krishisetu.R
 import com.cyberlabs.krishisetu.shopping.cart.CartViewModel
 import com.cyberlabs.krishisetu.shopping.order.CheckoutViewModel
 import com.cyberlabs.krishisetu.util.navigation.TopBar
-import com.cyberlabs.krishisetu.util.navigation.findActivity
 import com.cyberlabs.krishisetu.util.users.userNameFlow
 import com.razorpay.Checkout
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 @Composable
 fun CheckoutScreen(
     navController: NavController,
     buyerId: String,
-    paymentMode: String, // "COD" or "ONLINE" passed from Cart
+    paymentMode: String, // "COD" or "ONLINE"
     cartViewModel: CartViewModel,
     checkoutViewModel: CheckoutViewModel
 ) {
     val context = LocalContext.current
+    // FIX: Safely retrieve the Activity using the extension function defined below
     val activity = context.findActivity()
+    val scope = rememberCoroutineScope() // Scope for launching Lambda calls
 
     val cartItems by cartViewModel.cartItems.collectAsState()
     val imageUrls by cartViewModel.imageUrls.collectAsState()
@@ -87,15 +91,13 @@ fun CheckoutScreen(
     var deliveryPincode by remember { mutableStateOf("") }
     var deliveryPhone by remember { mutableStateOf("") }
 
-    // Bargain Inputs
+    // Bargain Inputs & Prices
     val bargainInputs = remember { mutableStateMapOf<String, String>() }
-    // Bargained prices mapped to item IDs
     val bargainedPrices = remember { mutableStateMapOf<String, Int>() }
 
-    // Compute totals using either bargained or actual price
+    // Compute totals
     val totalPrice = cartItems.sumOf {
-        val finalPrice = (bargainedPrices[it.crop.id]) ?: (it.crop.price.toInt().times(it.quantity))
-        finalPrice
+        (bargainedPrices[it.crop.id]) ?: (it.crop.price.toInt().times(it.quantity))
     }
     val totalQuantity = cartItems.sumOf { it.quantity }
 
@@ -128,7 +130,7 @@ fun CheckoutScreen(
                     Icon(Icons.Outlined.Info, tint = Color.Gray, contentDescription = null)
                     Text(
                         text = if (paymentMode == "COD")
-                            "Mode: Cash on Delivery. Pay the farmer or agent upon delivery."
+                            "Mode: Cash on Delivery. Pay upon delivery."
                         else "Mode: Online Payment via Razorpay.",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.Gray,
@@ -139,8 +141,9 @@ fun CheckoutScreen(
                 AddressCard(
                     isExpanded = isExpandedAddress,
                     onExpandedClick = {
-                        isExpandedAddress = !isExpandedAddress; isExpandedOrder =
-                        false; isExpandedAmount = false
+                        isExpandedAddress = !isExpandedAddress
+                        isExpandedOrder = false
+                        isExpandedAmount = false
                     },
                     name = userName ?: "",
                     onAddressChange = { address, pincode, phone ->
@@ -156,8 +159,9 @@ fun CheckoutScreen(
                 OrderSummaryCard(
                     isExpanded = isExpandedOrder,
                     onExpandedClick = {
-                        isExpandedOrder = !isExpandedOrder; isExpandedAddress =
-                        false; isExpandedAmount = false
+                        isExpandedOrder = !isExpandedOrder
+                        isExpandedAddress = false
+                        isExpandedAmount = false
                     },
                     cartItems = cartItems,
                     imageUrls = imageUrls,
@@ -172,8 +176,9 @@ fun CheckoutScreen(
                 AmountCard(
                     isExpanded = isExpandedAmount,
                     onExpandedClick = {
-                        isExpandedAmount = !isExpandedAmount; isExpandedAddress =
-                        false; isExpandedOrder = false
+                        isExpandedAmount = !isExpandedAmount
+                        isExpandedAddress = false
+                        isExpandedOrder = false
                     },
                     totalPrice = totalPrice,
                     totalQuantity = totalQuantity
@@ -188,6 +193,7 @@ fun CheckoutScreen(
                     .padding(bottom = 12.dp),
                 paymentMode = paymentMode
             ) {
+                // 1. Validation
                 if (deliveryAddress.isBlank() || deliveryPincode.isBlank() || deliveryPhone.isBlank()) {
                     Toast.makeText(
                         context,
@@ -202,29 +208,44 @@ fun CheckoutScreen(
                     it to price
                 }
 
+                // 2. Logic based on Payment Mode
                 if (paymentMode == "ONLINE") {
-                    // Trigger Razorpay
                     if (activity != null) {
-                        startRazorpayPayment(
-                            activity = activity,
-                            amountInRupees = totalPrice,
-                            email = "buyer@example.com", // You should fetch actual email
-                            contact = deliveryPhone,
-                            onStart = {
-                                // Save order details in ViewModel temporarily
-                                // so MainActivity can access them on PaymentSuccess
+                        scope.launch {
+                            Toast.makeText(context, "Contacting Server...", Toast.LENGTH_SHORT)
+                                .show()
+
+                            // A. Fetch secure Order ID from AWS Lambda
+                            val orderId = checkoutViewModel.fetchRazorpayOrderId(totalPrice)
+
+                            if (orderId != null) {
+                                // B. Prepare ViewModel state for the callback
                                 checkoutViewModel.prepareOnlineOrder(
                                     finalOrderList,
                                     deliveryAddress,
                                     deliveryPincode,
                                     deliveryPhone
                                 )
+                                // C. Launch Razorpay with the secure ID
+                                startRazorpayPayment(
+                                    activity = activity,
+                                    orderId = orderId, // Pass the ID from Lambda
+                                    amountInRupees = totalPrice,
+                                    email = "buyer@example.com",
+                                    contact = deliveryPhone
+                                )
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Server Error: Could not create order.",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
-                        )
+                        }
                     } else {
                         Toast.makeText(
                             context,
-                            "Error: Activity context missing",
+                            "Error: Could not find Activity",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -235,7 +256,7 @@ fun CheckoutScreen(
                         deliveryAddress,
                         deliveryPincode,
                         deliveryPhone,
-                        paymentMode = "COD", // Pass Payment Mode
+                        paymentMode = "COD",
                         onSuccess = {
                             Toast.makeText(context, "Order placed successfully", Toast.LENGTH_LONG)
                                 .show()
@@ -244,7 +265,6 @@ fun CheckoutScreen(
                         onFail = {
                             Toast.makeText(context, "Failed to place order", Toast.LENGTH_LONG)
                                 .show()
-                            navController.navigateUp()
                         }
                     )
                 }
@@ -253,24 +273,28 @@ fun CheckoutScreen(
     }
 }
 
+// --- Razorpay Launcher ---
 private fun startRazorpayPayment(
     activity: Activity,
+    orderId: String,
     amountInRupees: Int,
     email: String,
-    contact: String,
-    onStart: () -> Unit
+    contact: String
 ) {
-    onStart()
     val checkout = Checkout()
-    checkout.setKeyID("rzp_test_S9Qm1itADSltJb") // Replace with actual Key
+    checkout.setKeyID("rzp_test_S9Qm1itADSltJb") // Your Test Key
 
     try {
         val options = JSONObject()
         options.put("name", "KrishiSetu")
         options.put("description", "Purchase of Crops")
         options.put("currency", "INR")
-        // Razorpay takes amount in paise (100 paise = 1 INR)
-        options.put("amount", (amountInRupees * 100).toString())
+        options.put("amount", (amountInRupees * 100).toString()) // Amount in paise
+
+        //
+        // Important: Pass the Order ID generated by Lambda
+        options.put("order_id", orderId)
+
         options.put("prefill.email", email)
         options.put("prefill.contact", contact)
         options.put("theme.color", "#3399cc")
@@ -281,6 +305,18 @@ private fun startRazorpayPayment(
         e.printStackTrace()
     }
 }
+
+// --- Context Extension Helper ---
+fun Context.findActivity(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+    return null
+}
+
+// --- UI Components ---
 
 @Composable
 fun OrderButton(
@@ -315,11 +351,7 @@ fun AddressCard(
     initialDeliveryAddress: String,
     initialDeliveryPincode: String,
     initialDeliveryPhone: String,
-    onAddressChange: (
-        addressLine: String,
-        pincode: String,
-        phone: String
-    ) -> Unit = { _, _, _ -> }
+    onAddressChange: (String, String, String) -> Unit = { _, _, _ -> }
 ) {
     var address by rememberSaveable(initialDeliveryAddress) { mutableStateOf(initialDeliveryAddress) }
     var pincode by remember(initialDeliveryPincode) { mutableStateOf(initialDeliveryPincode) }
@@ -336,13 +368,7 @@ fun AddressCard(
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-
-            // Header Row
+        Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -351,42 +377,34 @@ fun AddressCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Delivery Address",
+                        "Delivery Address",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF424242)
                     )
                     Text(
-                        text = name,
+                        name,
                         style = MaterialTheme.typography.titleMedium,
                         color = Color(0xFF616161)
                     )
                 }
                 Icon(
-                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = if (isExpanded) "Collapse" else "Expand"
+                    if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    if (isExpanded) "Collapse" else "Expand"
                 )
             }
-
-            // Expandable Content
             AnimatedVisibility(visible = isExpanded) {
                 Column {
                     Spacer(Modifier.height(12.dp))
-
                     OutlinedTextField(
                         value = address,
-                        onValueChange = {
-                            address = it
-                            onAddressChange(address, pincode, phone)
-                        },
+                        onValueChange = { address = it; onAddressChange(address, pincode, phone) },
                         label = { Text("Address") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp)
                     )
-
                     Spacer(Modifier.height(8.dp))
-
                     OutlinedTextField(
                         value = phone,
                         onValueChange = {
@@ -402,17 +420,13 @@ fun AddressCard(
                         modifier = Modifier.fillMaxWidth(0.75f),
                         shape = RoundedCornerShape(8.dp)
                     )
-                    if (isPhoneError) {
-                        Text(
-                            text = "Enter a valid phone number",
-                            color = Color.Red,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(start = 4.dp, top = 2.dp)
-                        )
-                    }
+                    if (isPhoneError) Text(
+                        "Enter valid phone",
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodySmall
+                    )
 
                     Spacer(Modifier.height(8.dp))
-
                     OutlinedTextField(
                         value = pincode,
                         onValueChange = {
@@ -428,14 +442,11 @@ fun AddressCard(
                         modifier = Modifier.fillMaxWidth(0.5f),
                         shape = RoundedCornerShape(8.dp)
                     )
-                    if (isPincodeError) {
-                        Text(
-                            text = "Enter a valid 6-digit pincode",
-                            color = Color.Red,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(start = 4.dp, top = 2.dp)
-                        )
-                    }
+                    if (isPincodeError) Text(
+                        "Enter valid 6-digit pincode",
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
         }
@@ -461,12 +472,7 @@ fun OrderSummaryCard(
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            // Header Row
+        Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -475,29 +481,24 @@ fun OrderSummaryCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Order Summary",
+                        "Order Summary",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF424242)
                     )
                 }
                 Icon(
-                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = if (isExpanded) "Collapse" else "Expand"
+                    if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    if (isExpanded) "Collapse" else "Expand"
                 )
             }
-
             AnimatedVisibility(visible = isExpanded) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .verticalScroll(rememberScrollState())
-                ) {
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())) {
                     cartItems.forEach { cartItem ->
                         val imageUrl = imageUrls[cartItem.crop.id]
-                        if (imageUrl == null) {
-                            cartViewModel.loadImage(cartItem.crop)
-                        }
+                        if (imageUrl == null) cartViewModel.loadImage(cartItem.crop)
                         OrderSummaryItem(
                             title = cartItem.crop.title,
                             quantity = cartItem.quantity,
@@ -537,79 +538,51 @@ fun OrderSummaryItem(
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Row(modifier = Modifier.padding(12.dp)) {
-
             AsyncImage(
-                model = imageUrl,
-                contentDescription = title,
+                model = imageUrl, contentDescription = title,
                 modifier = Modifier
                     .size(100.dp)
                     .clip(RoundedCornerShape(10.dp)),
                 contentScale = ContentScale.Crop,
                 placeholder = painterResource(id = R.drawable.app_logo),
-                error = painterResource(id = R.drawable.app_logo),
-                onError = {
-                    Log.e(
-                        "OrderSummaryItem",
-                        "Error loading image: ${it.result.throwable.cause?.message}",
-                        it.result.throwable
-                    )
-                }
+                error = painterResource(id = R.drawable.app_logo)
             )
-
             Spacer(Modifier.width(12.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = title,
+                    title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     color = Color(0xFF333333)
                 )
-
                 Spacer(Modifier.height(6.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Qty: ",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
-                    )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Qty: ", style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
                     Box(
                         modifier = Modifier
                             .border(1.dp, Color.LightGray, RoundedCornerShape(6.dp))
                             .padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
-                        Text(
-                            text = "$quantity",
-                            style = MaterialTheme.typography.bodySmall
-                        )
+                        Text("$quantity", style = MaterialTheme.typography.bodySmall)
                     }
                 }
-
                 Spacer(Modifier.height(6.dp))
-
                 Text(
-                    text = "Farmer: $farmer",
+                    "Farmer: $farmer",
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF757575)
                 )
-
                 Spacer(Modifier.height(10.dp))
-
                 Text(
-                    text = "Price: ₹${price * quantity}",
+                    "Price: ₹${price * quantity}",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium,
                     color = Color(0xFF388E3C)
                 )
-
                 Spacer(Modifier.height(8.dp))
-
                 OutlinedTextField(
                     value = bargainInput,
                     onValueChange = {
@@ -630,15 +603,11 @@ fun OrderSummaryItem(
                     singleLine = true,
                     shape = RoundedCornerShape(8.dp)
                 )
-
-                if (bargainError) {
-                    Text(
-                        text = "Enter a valid price (less than or equal to actual)",
-                        color = Color.Red,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = 4.dp, top = 2.dp)
-                    )
-                }
+                if (bargainError) Text(
+                    "Invalid Price",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
     }
@@ -660,12 +629,7 @@ fun AmountCard(
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            // Header Row
+        Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -674,18 +638,17 @@ fun AmountCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Amount Details",
+                        "Amount Details",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF424242)
                     )
                 }
                 Icon(
-                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = if (isExpanded) "Collapse" else "Expand"
+                    if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    if (isExpanded) "Collapse" else "Expand"
                 )
             }
-
             AnimatedVisibility(visible = isExpanded) {
                 Box(
                     modifier = Modifier
@@ -699,18 +662,14 @@ fun AmountCard(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                        ) {
+                        Row(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Total Price: ",
+                                "Total Price: ",
                                 fontWeight = FontWeight.Bold,
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Text(
-                                text = "₹$totalPrice",
+                                "₹$totalPrice",
                                 fontWeight = FontWeight.Bold,
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color(0xFF388E3C)
@@ -718,17 +677,15 @@ fun AmountCard(
                         }
                         Row(
                             horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
+                            modifier = Modifier.weight(1f)
                         ) {
                             Text(
-                                text = "Total Quantity: ",
+                                "Total Quantity: ",
                                 fontWeight = FontWeight.Bold,
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Text(
-                                text = "$totalQuantity",
+                                "$totalQuantity",
                                 fontWeight = FontWeight.Bold,
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color(0xFF734A19)
