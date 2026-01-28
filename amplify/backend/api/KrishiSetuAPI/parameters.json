@@ -2,6 +2,7 @@
   "AppSyncApiName": "KrishiSetuAPI",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
+  "CreateAPIKey": 0,
   "AuthCognitoUserPoolId": {
     "Fn::GetAtt": [
       "authkrishisetua1ec4305",

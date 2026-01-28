@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -104,7 +103,7 @@ fun TopBar(label: String, navController: NavController, isBackArrow: Boolean = f
                                     navController.navigate("profile")
                                 }
                             )
-                            DropdownMenuItem(
+                            /*DropdownMenuItem(
                                 text = {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
@@ -123,6 +122,7 @@ fun TopBar(label: String, navController: NavController, isBackArrow: Boolean = f
                                     navController.navigate("settings")
                                 }
                             )
+                        */
                         }
                     }
                 }

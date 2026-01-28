@@ -1,5 +1,6 @@
 package com.cyberlabs.krishisetu.ui.screens.shopping.cart
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,11 +30,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,13 +68,12 @@ fun CartScreen(
     val isLoading by vm.isLoading
     val buyerId by vm.buyerId.collectAsState()
 
+    // State for Payment Selection
+    var selectedPaymentMode by remember { mutableStateOf("COD") } // "COD" or "ONLINE"
+
     Scaffold(
-        topBar = {
-            TopBar("Your Cart", navController)
-        },
-        bottomBar = {
-            BuyerBottomBar(navController, 2)
-        }
+        topBar = { TopBar("Your Cart", navController) },
+        bottomBar = { BuyerBottomBar(navController, 2) }
     ) { innerPadding ->
         when {
             isLoading -> {
@@ -102,6 +106,7 @@ fun CartScreen(
                         .fillMaxSize()
                         .padding(innerPadding)
                 ) {
+                    // Info Banner
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
@@ -120,6 +125,8 @@ fun CartScreen(
                             modifier = Modifier.padding(start = 8.dp)
                         )
                     }
+
+                    // Cart Items List
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -136,31 +143,89 @@ fun CartScreen(
                                 description = item.crop.description,
                                 quantity = item.quantity,
                                 price = item.priceAtAdd.toInt(),
-                                onClick = {
-                                    navController.navigate("cropShop/${item.crop.id}")
-                                },
+                                onClick = { navController.navigate("cropShop/${item.crop.id}") },
                                 imageUrl = imageUrl,
-                                onIncrease = {
-                                    vm.increaseQuantity(item)
-                                },
-                                onDecrease = {
-                                    vm.decreaseQuantity(item)
-                                },
-                                onDelete = {
-                                    vm.removeItemFromCart(item)
-                                },
+                                onIncrease = { vm.increaseQuantity(item) },
+                                onDecrease = { vm.decreaseQuantity(item) },
+                                onDelete = { vm.removeItemFromCart(item) },
                                 location = item.crop.location
                             )
                         }
                     }
+
+                    // Payment Mode Selection Section
+                    PaymentSelectionCard(
+                        selectedMode = selectedPaymentMode,
+                        onModeSelected = { selectedPaymentMode = it }
+                    )
+
+                    // Checkout Button Section
                     TotalPriceCard(totalPrice) {
-                        navController.navigate("checkout/${buyerId}")
+                        // Pass the payment mode to Checkout Screen
+                        // Ensure your NavHost route accepts this argument: "checkout/{buyerId}/{paymentMode}"
+                        navController.navigate("checkout/${buyerId}/$selectedPaymentMode")
                     }
                 }
             }
         }
     }
 }
+
+@Composable
+fun PaymentSelectionCard(
+    selectedMode: String,
+    onModeSelected: (String) -> Unit
+) {
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "Payment Method",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // COD Option
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onModeSelected("COD") }
+            ) {
+                RadioButton(
+                    selected = selectedMode == "COD",
+                    onClick = { onModeSelected("COD") }
+                )
+                Text(text = "Cash on Delivery", style = MaterialTheme.typography.bodyMedium)
+            }
+
+            // Online Option
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onModeSelected("ONLINE") }
+            ) {
+                RadioButton(
+                    selected = selectedMode == "ONLINE",
+                    onClick = { onModeSelected("ONLINE") }
+                )
+                Text(
+                    text = "Online Payment (Razorpay)",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+// ... (CartItemCard and TotalPriceCard remain mostly the same, standard imports apply)
 
 @Composable
 fun CartItemCard(
@@ -178,22 +243,12 @@ fun CartItemCard(
     Card(
         onClick = onClick,
         shape = RectangleShape,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-            contentColor = Color.Black
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp,
-            pressedElevation = 24.dp
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
+        colors = CardDefaults.cardColors(containerColor = Color.White, contentColor = Color.Black),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        modifier = Modifier.fillMaxWidth()
     ) {
         Spacer(Modifier.height(12.dp))
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 12.dp)
-        ) {
+        Row(modifier = Modifier.padding(horizontal = 12.dp)) {
             Column {
                 AsyncImage(
                     model = imageUrl,
@@ -205,38 +260,20 @@ fun CartItemCard(
                     placeholder = painterResource(id = R.drawable.app_logo),
                     error = painterResource(id = R.drawable.app_logo)
                 )
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = onDecrease) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                            contentDescription = "Decrease"
-                        )
+                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, "Decrease")
                     }
-
-                    Text(
-                        text = quantity.toString(),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-
+                    Text(text = quantity.toString(), style = MaterialTheme.typography.bodyMedium)
                     IconButton(onClick = onIncrease) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = "Increase"
-                        )
+                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "Increase")
                     }
                 }
             }
-
             Spacer(modifier = Modifier.width(12.dp))
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -248,22 +285,15 @@ fun CartItemCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-
-                    IconButton(
-                        onClick = onDelete,
-                        modifier = Modifier
-                            .size(18.dp)
-                    ) {
+                    IconButton(onClick = onDelete, modifier = Modifier.size(18.dp)) {
                         Icon(
-                            imageVector = Icons.Default.Delete,
+                            Icons.Default.Delete,
                             tint = Color.DarkGray,
                             contentDescription = "Delete"
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(4.dp))
-
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodySmall,
@@ -271,16 +301,11 @@ fun CartItemCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Outlined.LocationOn,
-                        contentDescription = "Location",
+                        Icons.Outlined.LocationOn,
+                        "Location",
                         tint = Color.Gray,
                         modifier = Modifier.size(18.dp)
                     )
@@ -292,9 +317,7 @@ fun CartItemCard(
                         color = Color.Gray
                     )
                 }
-
                 Spacer(Modifier.height(28.dp))
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End,
@@ -304,7 +327,7 @@ fun CartItemCard(
                         text = "₹${price * quantity}",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF388E3C) // Flipkart-style green
+                        color = Color(0xFF388E3C)
                     )
                 }
             }
@@ -313,16 +336,11 @@ fun CartItemCard(
 }
 
 @Composable
-private fun TotalPriceCard(
-    totalPrice: Int,
-    onCheckout: () -> Unit = {}
-) {
+private fun TotalPriceCard(totalPrice: Int, onCheckout: () -> Unit = {}) {
     ElevatedCard(
         shape = RectangleShape,
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = 4.dp
-        )
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             modifier = Modifier
@@ -344,15 +362,13 @@ private fun TotalPriceCard(
                     text = "₹$totalPrice",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF388E3C) // Flipkart-style green
+                    color = Color(0xFF388E3C)
                 )
             }
             ElevatedButton(
                 onClick = onCheckout,
-                colors = ButtonDefaults.elevatedButtonColors().copy(
-                    containerColor = Color(0xFFF9631B),
-                    contentColor = Color.White
-                )
+                colors = ButtonDefaults.elevatedButtonColors()
+                    .copy(containerColor = Color(0xFFF9631B), contentColor = Color.White)
             ) {
                 Text(
                     text = "Checkout",

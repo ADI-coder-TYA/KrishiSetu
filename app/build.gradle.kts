@@ -75,10 +75,17 @@ dependencies {
     // Lottie Animations
     implementation("com.airbnb.android:lottie-compose:6.1.0")
 
+    // Razorpay
+    implementation("com.razorpay:checkout:1.6.41")
+
+    // Retrofit and JSON Converter
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+
     //Coil-Compose
     implementation("io.coil-kt.coil3:coil-compose:3.2.0")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.2.0")
-
+    implementation("com.razorpay:checkout:1.6.40")
     //Navigation-Compose
     implementation("androidx.navigation:navigation-compose:2.9.0")
 

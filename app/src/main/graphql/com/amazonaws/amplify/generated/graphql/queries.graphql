@@ -104,6 +104,9 @@ query GetOrder($id: ID!) {
     createdAt
     updatedAt
     expiresAt
+    paymentMode
+    paymentStatus
+    paymentID
     __typename
   }
 }
@@ -129,6 +132,9 @@ query ListOrders(
       createdAt
       updatedAt
       expiresAt
+      paymentMode
+      paymentStatus
+      paymentID
       __typename
     }
     nextToken
@@ -608,6 +614,9 @@ query OrdersByBuyer(
       createdAt
       updatedAt
       expiresAt
+      paymentMode
+      paymentStatus
+      paymentID
       __typename
     }
     nextToken
@@ -646,6 +655,9 @@ query OrdersByFarmer(
       createdAt
       updatedAt
       expiresAt
+      paymentMode
+      paymentStatus
+      paymentID
       __typename
     }
     nextToken
@@ -682,6 +694,9 @@ query OrdersByCrop(
       createdAt
       updatedAt
       expiresAt
+      paymentMode
+      paymentStatus
+      paymentID
       __typename
     }
     nextToken

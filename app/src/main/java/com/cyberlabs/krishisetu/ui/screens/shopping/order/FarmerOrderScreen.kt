@@ -110,32 +110,30 @@ fun FarmerOrderScreen(
                                 navController.navigate("cropShop/${it.crop.id}")
                             },
                             onChangeStatus = {
-                                // Handle order status change here, open alert dialog box
                                 dialogBoxState = true
                                 dialogBoxOrder = it
                             }
                         )
                     }
                 }
+
+                // --- Dialogs ---
+
                 if (dialogBoxState) {
                     AcceptOrRejectOrderDialog(
                         order = dialogBoxOrder!!,
                         onAccept = {
                             dialogBoxState = false
-                            // Ask for confirmation before accepting
                             confirmationBoxOrder = dialogBoxOrder
                             isRejecting = false
                             confirmationBoxState = true
-
                             dialogBoxOrder = null
                         },
                         onReject = {
                             dialogBoxState = false
-                            //Ask for confirmation before rejecting
                             confirmationBoxOrder = dialogBoxOrder
                             isRejecting = true
                             confirmationBoxState = true
-
                             dialogBoxOrder = null
                         },
                         onClose = {
@@ -149,10 +147,9 @@ fun FarmerOrderScreen(
                         actionType = if (isRejecting!!) "reject" else "accept",
                         onConfirm = {
                             confirmationBoxState = false
-                            //Run acceptation or rejection flow
                             if (isRejecting!!) ordersViewModel.rejectOrder(confirmationBoxOrder!!)
                             else {
-                                if (confirmationBoxOrder!!.crop.quantityAvailable - confirmationBoxOrder!!.quantity > 0) {
+                                if (confirmationBoxOrder!!.crop.quantityAvailable - confirmationBoxOrder!!.quantity >= 0) {
                                     deliveryAgentDialogBoxOrder = confirmationBoxOrder!!
                                     deliveryAgentDialogBoxState = true
                                 } else {
@@ -208,7 +205,7 @@ private fun OrderCard(
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
 
-            // Crop Name and Status Badge
+            // 1. Header: Crop Name and Status
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
@@ -222,11 +219,28 @@ private fun OrderCard(
                 StatusBadge(status = order.orderStatus.name)
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-            Divider()
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // Price Section
+            // 2. Payment Mode Display (NEW)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Payment Mode: ",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray
+                )
+                Text(
+                    text = order.paymentMode ?: "COD", // Default to COD if field is null
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = if (order.paymentMode == "ONLINE") Color(0xFF1976D2) else Color(0xFF795548)
+                )
+            }
+
             Spacer(modifier = Modifier.height(12.dp))
+            Divider(color = Color.LightGray.copy(alpha = 0.5f))
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // 3. Price Section
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -247,50 +261,16 @@ private fun OrderCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Delivery Info
+            // 4. Delivery Info
             Text("Delivery Details", fontWeight = FontWeight.Bold, fontSize = 16.sp)
             Spacer(modifier = Modifier.height(6.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Default.Place,
-                    contentDescription = "Address",
-                    tint = Color(0xFF4CAF50),
-                    modifier = Modifier.size(18.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(order.deliveryAddress, fontSize = 14.sp)
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Default.LocationOn,
-                    contentDescription = "Pincode",
-                    tint = Color(0xFF4CAF50),
-                    modifier = Modifier.size(18.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("Pincode: ${order.deliveryPincode}", fontSize = 14.sp)
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Default.Phone,
-                    contentDescription = "Phone",
-                    tint = Color(0xFF4CAF50),
-                    modifier = Modifier.size(18.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(order.deliveryPhone, fontSize = 14.sp)
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Default.Info,
-                    contentDescription = "Quantity",
-                    tint = Color(0xFF4CAF50),
-                    modifier = Modifier.size(18.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("Quantity: ${order.quantity}", fontSize = 14.sp)
-            }
 
+            DeliveryInfoRow(icon = Icons.Default.Place, text = order.deliveryAddress)
+            DeliveryInfoRow(icon = Icons.Default.LocationOn, text = "Pincode: ${order.deliveryPincode}")
+            DeliveryInfoRow(icon = Icons.Default.Phone, text = order.deliveryPhone)
+            DeliveryInfoRow(icon = Icons.Default.Info, text = "Quantity: ${order.quantity}")
+
+            // 5. Action Buttons (Pending vs Others)
             if (order.orderStatus.name == "PENDING") {
                 Spacer(Modifier.height(16.dp))
 
@@ -300,32 +280,22 @@ private fun OrderCard(
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     ElevatedButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        onClick = {
-                            onVisitCrop(order)
-                        },
+                        modifier = Modifier.weight(1f),
+                        onClick = { onVisitCrop(order) },
                         colors = ButtonDefaults.elevatedButtonColors().copy(
                             containerColor = Color(0xFFFFB300),
                             contentColor = Color.White
                         )
                     ) {
-                        Text(
-                            text = "Visit Crop"
-                        )
+                        Text(text = "Visit Crop")
                     }
                     VerticalDivider(
                         thickness = 1.dp,
-                        modifier = Modifier.padding(horizontal = 4.dp)
+                        modifier = Modifier.padding(horizontal = 4.dp).height(24.dp)
                     )
                     ElevatedButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        onClick = {
-                            onChangeStatus(order)
-                        },
+                        modifier = Modifier.weight(1f),
+                        onClick = { onChangeStatus(order) },
                         colors = ButtonDefaults.elevatedButtonColors().copy(
                             containerColor = Color(0xFF0861AF),
                             contentColor = Color.White
@@ -337,41 +307,80 @@ private fun OrderCard(
 
             } else {
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Row (
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     ElevatedButton(
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f),
-                        onClick = {
-                            onVisitCrop(order)
-                        },
+                        modifier = Modifier.fillMaxWidth(0.6f),
+                        onClick = { onVisitCrop(order) },
                         colors = ButtonDefaults.elevatedButtonColors().copy(
                             containerColor = Color(0xFFFFB300),
                             contentColor = Color.White
                         )
                     ) {
-                        Text(
-                            text = "Visit Crop"
-                        )
+                        Text(text = "Visit Crop")
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Order Time
+            // 6. Order Time
             Text(
                 text = "Ordered at: ${
-                    OffsetDateTime.parse(order.createdAt.format()).toLocalDateTime()
+                    try {
+                        OffsetDateTime.parse(order.createdAt.format()).toLocalDateTime().toString().replace("T", " ")
+                    } catch (e: Exception) {
+                        "Unknown Date"
+                    }
                 }",
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.Gray
             )
         }
+    }
+}
+
+// Helper composable for cleaner code
+@Composable
+fun DeliveryInfoRow(icon: androidx.compose.ui.graphics.vector.ImageVector, text: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(vertical = 2.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = Color(0xFF4CAF50),
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(text = text, fontSize = 14.sp, color = Color.DarkGray)
+    }
+}
+
+@Composable
+fun StatusBadge(status: String) {
+    val (backgroundColor, label) = when (status.uppercase()) {
+        "PENDING" -> Color(0xFFFF9800) to "Pending"
+        "ACCEPTED" -> Color(0xFF4CAF50) to "Accepted"
+        "REJECTED" -> Color(0xFFF44336) to "Rejected"
+        "CANCELLED" -> Color(0xFFD32F2F) to "Cancelled"
+        else -> Color.Gray to status
+    }
+
+    Box(
+        modifier = Modifier
+            .background(backgroundColor, RoundedCornerShape(50))
+            .padding(horizontal = 12.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = label,
+            color = Color.White,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
@@ -393,9 +402,7 @@ private fun AcceptOrRejectOrderDialog(
             shape = RoundedCornerShape(16.dp),
             tonalElevation = 4.dp,
             shadowElevation = 6.dp,
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .wrapContentHeight()
+            modifier = Modifier.fillMaxWidth(0.9f).wrapContentHeight()
         ) {
             Column(
                 modifier = Modifier
@@ -403,83 +410,37 @@ private fun AcceptOrRejectOrderDialog(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.TopEnd
-                ) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopEnd) {
                     IconButton(onClick = onClose) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Close dialog",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Icon(Icons.Default.Close, "Close dialog", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = "Confirm Order",
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.SemiBold
-                    ),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center
-                )
-
+                Text("Confirm Order", style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.SemiBold))
                 Spacer(modifier = Modifier.height(12.dp))
-
-                Divider(
-                    thickness = 1.dp,
-                    color = MaterialTheme.colorScheme.surfaceVariant
-                )
-
+                Divider()
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Text(
-                    text = "Would you like to accept this order?\nYou can assign a delivery agent after accepting.",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        lineHeight = 22.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center
+                    "Would you like to accept this order?\nYou can assign a delivery agent after accepting.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Spacer(modifier = Modifier.height(28.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     Button(
                         onClick = { onReject(order) },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFF57C00), // Deep amber
-                            contentColor = Color.White
-                        ),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF57C00)),
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Reject")
-                    }
-
+                    ) { Text("Reject") }
                     Spacer(modifier = Modifier.width(16.dp))
-
                     Button(
                         onClick = { onAccept(order) },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF1976D2), // Deep blue
-                            contentColor = Color.White
-                        ),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Accept")
-                    }
+                    ) { Text("Accept") }
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
@@ -487,79 +448,39 @@ private fun AcceptOrRejectOrderDialog(
 
 @Composable
 private fun ConfirmFinalDecisionDialog(
-    actionType: String, // "accept" or "reject"
+    actionType: String,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.5f)),
+        modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f)),
         contentAlignment = Alignment.Center
     ) {
         Surface(
             shape = RoundedCornerShape(16.dp),
             tonalElevation = 4.dp,
             shadowElevation = 8.dp,
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .wrapContentHeight()
+            modifier = Modifier.fillMaxWidth(0.85f).wrapContentHeight()
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 20.dp, vertical = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Text(
-                    text = "Are you sure?",
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center
-                )
-
+            Column(modifier = Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Are you sure?", style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold))
                 Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = "You CANNOT change this decision later.\nPlease confirm you want to ${actionType.uppercase()} this order.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center
-                )
-
+                Text("You CANNOT change this decision later.\nPlease confirm you want to ${actionType.uppercase()} this order.", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
                 Spacer(modifier = Modifier.height(24.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     Button(
                         onClick = onDismiss,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF9E9E9E), // Grey
-                            contentColor = Color.White
-                        ),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9E9E9E)),
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Cancel")
-                    }
-
+                    ) { Text("Cancel") }
                     Spacer(modifier = Modifier.width(16.dp))
-
                     Button(
                         onClick = onConfirm,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (actionType == "accept") Color(0xFF1976D2) else Color(0xFFD32F2F),
-                            contentColor = Color.White
-                        ),
+                        colors = ButtonDefaults.buttonColors(containerColor = if (actionType == "accept") Color(0xFF1976D2) else Color(0xFFD32F2F)),
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Confirm")
-                    }
+                    ) { Text("Confirm") }
                 }
             }
         }
@@ -578,140 +499,38 @@ fun ChooseDeliveryAgentDialog(
     var krishiEmail by remember { mutableStateOf("") }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.6f))
-            .padding(32.dp),
+        modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.6f)).padding(32.dp),
         contentAlignment = Alignment.Center
     ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .wrapContentHeight(),
-            shape = RoundedCornerShape(20.dp),
-            tonalElevation = 6.dp,
-            shadowElevation = 12.dp,
-            color = MaterialTheme.colorScheme.surface
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Header
-                Text(
-                    text = "Choose Delivery Agent",
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = MaterialTheme.colorScheme.primary
-                )
-
+        Surface(modifier = Modifier.fillMaxWidth(0.9f).wrapContentHeight(), shape = RoundedCornerShape(20.dp)) {
+            Column(modifier = Modifier.padding(24.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Choose Delivery Agent", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold), color = MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Radio Choices
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    DeliveryAgentChoice(
-                        title = "KrishiSetu",
-                        selected = !isPersonalAgent,
-                        onClick = { isPersonalAgent = false }
-                    )
-                    DeliveryAgentChoice(
-                        title = "Personal",
-                        selected = isPersonalAgent,
-                        onClick = { isPersonalAgent = true }
-                    )
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                    DeliveryAgentChoice("KrishiSetu", !isPersonalAgent) { isPersonalAgent = false }
+                    DeliveryAgentChoice("Personal", isPersonalAgent) { isPersonalAgent = true }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Dynamic Fields
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     if (isPersonalAgent) {
-                        OutlinedTextField(
-                            value = personalName,
-                            onValueChange = { personalName = it },
-                            label = { Text("Agent Name") },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        OutlinedTextField(
-                            value = personalPhone,
-                            onValueChange = { personalPhone = it },
-                            label = { Text("Phone Number") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        OutlinedTextField(
-                            value = personalEmail,
-                            onValueChange = { personalEmail = it },
-                            label = { Text("Email") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        OutlinedTextField(value = personalName, onValueChange = { personalName = it }, label = { Text("Agent Name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                        OutlinedTextField(value = personalPhone, onValueChange = { personalPhone = it }, label = { Text("Phone Number") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone), singleLine = true, modifier = Modifier.fillMaxWidth())
+                        OutlinedTextField(value = personalEmail, onValueChange = { personalEmail = it }, label = { Text("Email") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), singleLine = true, modifier = Modifier.fillMaxWidth())
                     } else {
-                        OutlinedTextField(
-                            value = krishiEmail,
-                            onValueChange = { krishiEmail = it },
-                            label = { Text("KrishiSetu Agent Email") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        OutlinedTextField(value = krishiEmail, onValueChange = { krishiEmail = it }, label = { Text("KrishiSetu Agent Email") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), singleLine = true, modifier = Modifier.fillMaxWidth())
                     }
                 }
-
                 Spacer(modifier = Modifier.height(24.dp))
-
-                // Action Buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    TextButton(
-                        onClick = onDismiss,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 8.dp)
-                            .height(48.dp),
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = MaterialTheme.colorScheme.error
-                        )
-                    ) {
-                        Text("Cancel")
-                    }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                    TextButton(onClick = onDismiss, modifier = Modifier.weight(1f)) { Text("Cancel", color = MaterialTheme.colorScheme.error) }
                     Button(
                         onClick = {
-                            if (isPersonalAgent) {
-                                val details = PersonalDeliveryAgentDetails(
-                                    name = personalName.trim(),
-                                    phone = personalPhone.trim(),
-                                    email = personalEmail.trim()
-                                )
-                                onConfirm(true, details, null)
-                            } else {
-                                onConfirm(false, null, krishiEmail.trim())
-                            }
+                            if (isPersonalAgent) onConfirm(true, PersonalDeliveryAgentDetails(personalName.trim(), personalPhone.trim(), personalEmail.trim()), null)
+                            else onConfirm(false, null, krishiEmail.trim())
                         },
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 8.dp)
-                            .height(48.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF43A047),
-                            contentColor = Color.White
-                        )
-                    ) {
-                        Text("Continue")
-                    }
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF43A047))
+                    ) { Text("Continue") }
                 }
             }
         }
@@ -719,35 +538,16 @@ fun ChooseDeliveryAgentDialog(
 }
 
 @Composable
-fun DeliveryAgentChoice(
-    title: String,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
+fun DeliveryAgentChoice(title: String, selected: Boolean, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(10.dp),
-        color = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
-        else MaterialTheme.colorScheme.surfaceVariant,
-        tonalElevation = if (selected) 4.dp else 0.dp,
-        border = BorderStroke(
-            1.dp,
-            if (selected) MaterialTheme.colorScheme.primary else Color.LightGray
-        ),
-        modifier = Modifier
-            .width(140.dp)
-            .height(50.dp)
-            .clip(RoundedCornerShape(10.dp))
+        color = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant,
+        border = BorderStroke(1.dp, if (selected) MaterialTheme.colorScheme.primary else Color.LightGray),
+        modifier = Modifier.width(140.dp).height(50.dp).clip(RoundedCornerShape(10.dp))
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (selected) MaterialTheme.colorScheme.primary else Color.DarkGray
-            )
+        Box(contentAlignment = Alignment.Center) {
+            Text(title, style = MaterialTheme.typography.bodyMedium, color = if (selected) MaterialTheme.colorScheme.primary else Color.DarkGray)
         }
     }
 }

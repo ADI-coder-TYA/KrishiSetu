@@ -1,8 +1,13 @@
 package com.cyberlabs.krishisetu.util.navigation
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -86,15 +91,24 @@ fun AppNavHost(vm: AuthViewModel, nav: NavHostController, startDestination: Stri
             CartScreen(nav, viewModel)
         }
         composable(
-            route = "checkout/{buyerId}",
+            route = "checkout/{buyerId}/{paymentMode}",
             arguments = listOf(
-                navArgument("buyerId") { type = NavType.StringType }
+                navArgument("buyerId") { type = NavType.StringType },
+                navArgument("paymentMode") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val viewModel: CartViewModel = hiltViewModel()
+            val activity = LocalContext.current.findActivity() as ComponentActivity
+            val viewModel: CartViewModel = hiltViewModel(activity)
             val buyerId = backStackEntry.arguments?.getString("buyerId")
-            val checkoutViewModel: CheckoutViewModel = hiltViewModel()
-            CheckoutScreen(nav, buyerId ?: "", viewModel, checkoutViewModel)
+            val checkoutViewModel: CheckoutViewModel = hiltViewModel(activity)
+            val paymentMode = backStackEntry.arguments?.getString("paymentMode")
+            CheckoutScreen(
+                nav,
+                buyerId = buyerId ?: "",
+                cartViewModel = viewModel,
+                checkoutViewModel = checkoutViewModel,
+                paymentMode = paymentMode ?: "COD"
+            )
         }
         composable("buyer_delivery") {
             val deliveriesViewModel: DeliveriesViewModel = hiltViewModel()
@@ -158,4 +172,13 @@ fun AppNavHost(vm: AuthViewModel, nav: NavHostController, startDestination: Stri
             CropSearchListScreen(nav, viewModel)
         }
     }
+}
+
+fun Context.findActivity(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+    return null
 }

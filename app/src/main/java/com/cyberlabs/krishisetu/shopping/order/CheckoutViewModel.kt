@@ -1,8 +1,6 @@
 package com.cyberlabs.krishisetu.shopping.order
 
-import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,100 +14,184 @@ import com.amplifyframework.datastore.generated.model.Order
 import com.amplifyframework.datastore.generated.model.OrderStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.time.OffsetDateTime
 import java.util.UUID
 import javax.inject.Inject
+import kotlin.coroutines.resume
 
 @HiltViewModel
 class CheckoutViewModel @Inject constructor() : ViewModel() {
 
-    var buyerName by mutableStateOf("")
-    var phoneNumber by mutableStateOf("")
-    var address by mutableStateOf("")
-
-    var paymentMethod by mutableStateOf("COD") // Options: "COD", "UPI"
-
     var isPlacingOrder by mutableStateOf(false)
-    var orderPlacedSuccessfully by mutableStateOf(false)
-    var errorMessage by mutableStateOf<String?>(null)
 
+    // Temporary state to hold order details during Razorpay flow
+    private var pendingCartItems: List<Pair<CartItem, Int>>? = null
+    private var pendingAddress: String? = null
+    private var pendingPincode: String? = null
+    private var pendingPhone: String? = null
+
+    // -------------------------
+    // FLOW 1: Cash on Delivery
+    // -------------------------
     fun placeOrder(
         finalOrder: List<Pair<CartItem, Int>>,
         deliveryAddress: String,
         deliveryPincode: String,
         deliveryPhone: String,
-        onSuccess: () -> Unit = {},
-        onFail: () -> Unit = {}
+        paymentMode: String,
+        onSuccess: () -> Unit,
+        onFail: () -> Unit
     ) {
         viewModelScope.launch {
-            try {
-                isPlacingOrder = true
-                errorMessage = null
-                finalOrder.forEach { pair ->
-                    val item = pair.first
-                    val bargainedPrice = pair.second
-                    val currentTime = Temporal.DateTime(OffsetDateTime.now().toString())
-                    val expiresAt = Temporal.DateTime(OffsetDateTime.now().plusDays(1).toString())
+            isPlacingOrder = true
+            val success = processBatchOrders(
+                finalOrder,
+                deliveryAddress,
+                deliveryPincode,
+                deliveryPhone,
+                paymentMode,
+                paymentStatus = "PENDING",
+                paymentId = null
+            )
+            isPlacingOrder = false
+            if (success) onSuccess() else onFail()
+        }
+    }
 
-                    val newOrder = Order.builder()
-                        .quantity(item.quantity)
-                        .bargainedPrice(bargainedPrice)
-                        .realPrice(item.crop.price.toInt())
-                        .deliveryAddress(deliveryAddress)
-                        .deliveryPhone(deliveryPhone)
-                        .deliveryPincode(deliveryPincode)
-                        .orderStatus(OrderStatus.PENDING)
-                        .createdAt(currentTime)
-                        .updatedAt(currentTime)
-                        .expiresAt(expiresAt)
-                        .id(UUID.randomUUID().toString())
-                        .crop(item.crop)
-                        .farmer(item.crop.farmer)
-                        .buyer(item.user)
-                        .build()
+    // -------------------------
+    // FLOW 2: Online Payment
+    // -------------------------
 
-                    Amplify.API.mutate(
-                        ModelMutation.create(newOrder),
-                        { response ->
-                            if (response.hasData()) {
-                                Log.i(
-                                    "CheckoutViewModel",
-                                    "Order placed successfully: ${response.data}"
-                                )
-                            } else if (response.hasErrors()) {
-                                Log.e(
-                                    "CheckoutViewModel",
-                                    "Failed to place order: ${response.errors}"
-                                )
-                            }
-                        }, { apiError ->
-                            Log.e("CheckoutViewModel", "Failed to place order: ${apiError.message}")
-                        }
-                    )
+    // Step 1: Called BEFORE Razorpay opens
+    fun prepareOnlineOrder(
+        finalOrder: List<Pair<CartItem, Int>>,
+        deliveryAddress: String,
+        deliveryPincode: String,
+        deliveryPhone: String
+    ) {
+        pendingCartItems = finalOrder
+        pendingAddress = deliveryAddress
+        pendingPincode = deliveryPincode
+        pendingPhone = deliveryPhone
+    }
 
-                    orderPlacedSuccessfully = true
-                }
-            } catch (e: Exception) {
-                errorMessage = "Failed to place order: ${e.message}"
-            } finally {
-                if (orderPlacedSuccessfully) {
-                    onSuccess()
-                } else {
-                    onFail()
-                }
+    // Step 2: Called AFTER Razorpay returns success
+    fun confirmOnlineOrder(razorpayPaymentID: String, onSuccess: () -> Unit, onFail: () -> Unit) {
+        viewModelScope.launch {
+            isPlacingOrder = true
+            if (pendingCartItems != null) {
+                val success = processBatchOrders(
+                    pendingCartItems!!,
+                    pendingAddress!!,
+                    pendingPincode!!,
+                    pendingPhone!!,
+                    paymentMode = "ONLINE",
+                    paymentStatus = "PAID",
+                    paymentId = razorpayPaymentID
+                )
+
+                // Clear temp state
+                pendingCartItems = null
+                pendingAddress = null
+
                 isPlacingOrder = false
-                delay(1000)
-                resetOrderState()
+                if (success) onSuccess() else onFail()
+            } else {
+                isPlacingOrder = false
+                onFail()
             }
         }
     }
 
-    fun resetOrderState() {
-        orderPlacedSuccessfully = false
-        errorMessage = null
-        isPlacingOrder = false
+    // -------------------------
+    // Shared Logic
+    // -------------------------
+    private suspend fun processBatchOrders(
+        items: List<Pair<CartItem, Int>>,
+        address: String,
+        pincode: String,
+        phone: String,
+        paymentMode: String,
+        paymentStatus: String,
+        paymentId: String?
+    ): Boolean {
+        return try {
+            // Process all items in parallel
+            val jobs = items.map { pair ->
+                viewModelScope.async(Dispatchers.IO) {
+                    createOrderInBackend(
+                        pair,
+                        address,
+                        pincode,
+                        phone,
+                        paymentMode,
+                        paymentStatus,
+                        paymentId
+                    )
+                }
+            }
+            // Wait for all to finish and check if all were successful
+            jobs.awaitAll().all { it }
+        } catch (e: Exception) {
+            Log.e("CheckoutViewModel", "Batch processing error", e)
+            false
+        }
+    }
+
+    private suspend fun createOrderInBackend(
+        pair: Pair<CartItem, Int>,
+        address: String,
+        pincode: String,
+        phone: String,
+        paymentMode: String,
+        paymentStatus: String,
+        paymentId: String?
+    ): Boolean = suspendCancellableCoroutine { continuation ->
+
+        val item = pair.first
+        val bargainedPrice = pair.second
+        val currentTime = Temporal.DateTime(OffsetDateTime.now().toString())
+        val expiresAt = Temporal.DateTime(OffsetDateTime.now().plusDays(1).toString())
+
+        val newOrder = Order.builder()
+            .quantity(item.quantity)
+            .bargainedPrice(bargainedPrice)
+            .realPrice(item.crop.price.toInt())
+            .deliveryAddress(address)
+            .deliveryPhone(phone)
+            .deliveryPincode(pincode)
+            .orderStatus(OrderStatus.PENDING)
+            .createdAt(currentTime)
+            .updatedAt(currentTime)
+            .expiresAt(expiresAt)
+            .id(UUID.randomUUID().toString())
+            .crop(item.crop)
+            .farmer(item.crop.farmer)
+            .buyer(item.user)
+            // NEW FIELDS (Ensure these exist in your Schema)
+            .paymentMode(paymentMode)
+            .paymentStatus(paymentStatus)
+            .paymentId(paymentId)
+            .build()
+
+        Amplify.API.mutate(
+            ModelMutation.create(newOrder),
+            { response ->
+                if (response.hasData()) {
+                    continuation.resume(true)
+                } else {
+                    Log.e("CheckoutVM", "Error: ${response.errors}")
+                    continuation.resume(false)
+                }
+            },
+            { error ->
+                Log.e("CheckoutVM", "API Fail: ${error.message}")
+                continuation.resume(false)
+            }
+        )
     }
 }

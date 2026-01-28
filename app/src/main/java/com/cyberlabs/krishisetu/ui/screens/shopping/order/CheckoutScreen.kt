@@ -1,5 +1,6 @@
 package com.cyberlabs.krishisetu.ui.screens.shopping.order
 
+import android.app.Activity
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -61,21 +62,24 @@ import com.cyberlabs.krishisetu.R
 import com.cyberlabs.krishisetu.shopping.cart.CartViewModel
 import com.cyberlabs.krishisetu.shopping.order.CheckoutViewModel
 import com.cyberlabs.krishisetu.util.navigation.TopBar
+import com.cyberlabs.krishisetu.util.navigation.findActivity
 import com.cyberlabs.krishisetu.util.users.userNameFlow
+import com.razorpay.Checkout
+import org.json.JSONObject
 
 @Composable
 fun CheckoutScreen(
     navController: NavController,
-    buyerId: String, // Replace with actual user name source
+    buyerId: String,
+    paymentMode: String, // "COD" or "ONLINE" passed from Cart
     cartViewModel: CartViewModel,
     checkoutViewModel: CheckoutViewModel
 ) {
     val context = LocalContext.current
+    val activity = context.findActivity()
+
     val cartItems by cartViewModel.cartItems.collectAsState()
     val imageUrls by cartViewModel.imageUrls.collectAsState()
-    val bargainInputs = remember { mutableStateMapOf<String, String>() }
-    Log.d("CheckoutScreen", "cartItems: $cartItems")
-    Log.d("CheckoutScreen", "imageUrls: $imageUrls")
     val userName by userNameFlow(buyerId).collectAsState(initial = null)
 
     // Address state
@@ -83,51 +87,49 @@ fun CheckoutScreen(
     var deliveryPincode by remember { mutableStateOf("") }
     var deliveryPhone by remember { mutableStateOf("") }
 
+    // Bargain Inputs
+    val bargainInputs = remember { mutableStateMapOf<String, String>() }
     // Bargained prices mapped to item IDs
     val bargainedPrices = remember { mutableStateMapOf<String, Int>() }
 
     // Compute totals using either bargained or actual price
     val totalPrice = cartItems.sumOf {
         val finalPrice = (bargainedPrices[it.crop.id]) ?: (it.crop.price.toInt().times(it.quantity))
-        Log.d("CheckoutScreen", "it.quantity: ${it.quantity}")
-        Log.d("CheckoutScreen", "crop: ${it.crop.title}")
-        Log.d("CheckoutScreen", "finalPrice: $finalPrice")
         finalPrice
     }
     val totalQuantity = cartItems.sumOf { it.quantity }
 
-    //Expansion states
+    // UI Expansion states
     var isExpandedAddress by remember { mutableStateOf(true) }
     var isExpandedOrder by remember { mutableStateOf(false) }
     var isExpandedAmount by remember { mutableStateOf(true) }
 
     Scaffold(
         containerColor = Color.White,
-        topBar = {
-            TopBar("Checkout", navController, true)
-        }
+        topBar = { TopBar("Checkout", navController, true) }
     ) { innerPadding ->
         Box(
-            modifier = Modifier.fillMaxSize().padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xFFF5F5F5))
             ) {
+                // Info Banner
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Info,
-                        tint = Color.Gray,
-                        contentDescription = null
-                    )
+                    Icon(Icons.Outlined.Info, tint = Color.Gray, contentDescription = null)
                     Text(
-                        text = "Please note that only cash on delivery is the accepted mode of payment. You may pay the farmer directly through banking or UPI or handover the cash to the delivery agent.",
+                        text = if (paymentMode == "COD")
+                            "Mode: Cash on Delivery. Pay the farmer or agent upon delivery."
+                        else "Mode: Online Payment via Razorpay.",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.Gray,
                         modifier = Modifier.padding(start = 8.dp)
@@ -137,9 +139,8 @@ fun CheckoutScreen(
                 AddressCard(
                     isExpanded = isExpandedAddress,
                     onExpandedClick = {
-                        isExpandedAddress = !isExpandedAddress
-                        isExpandedOrder = false
-                        isExpandedAmount = false
+                        isExpandedAddress = !isExpandedAddress; isExpandedOrder =
+                        false; isExpandedAmount = false
                     },
                     name = userName ?: "",
                     onAddressChange = { address, pincode, phone ->
@@ -155,9 +156,8 @@ fun CheckoutScreen(
                 OrderSummaryCard(
                     isExpanded = isExpandedOrder,
                     onExpandedClick = {
-                        isExpandedOrder = !isExpandedOrder
-                        isExpandedAddress = false
-                        isExpandedAmount = false
+                        isExpandedOrder = !isExpandedOrder; isExpandedAddress =
+                        false; isExpandedAmount = false
                     },
                     cartItems = cartItems,
                     imageUrls = imageUrls,
@@ -172,60 +172,120 @@ fun CheckoutScreen(
                 AmountCard(
                     isExpanded = isExpandedAmount,
                     onExpandedClick = {
-                        isExpandedAmount = !isExpandedAmount
-                        isExpandedAddress = false
-                        isExpandedOrder = false
+                        isExpandedAmount = !isExpandedAmount; isExpandedAddress =
+                        false; isExpandedOrder = false
                     },
                     totalPrice = totalPrice,
                     totalQuantity = totalQuantity
                 )
 
                 Spacer(Modifier.height(12.dp))
-
             }
+
             OrderButton(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 12.dp)
+                    .padding(bottom = 12.dp),
+                paymentMode = paymentMode
             ) {
                 if (deliveryAddress.isBlank() || deliveryPincode.isBlank() || deliveryPhone.isBlank()) {
                     Toast.makeText(
                         context,
                         "Please complete your delivery address",
                         Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    ).show()
                     return@OrderButton
                 }
 
-                // Pair cart items with their final bargained price
-                val finalOrder = cartItems.map {
+                val finalOrderList = cartItems.map {
                     val price = bargainedPrices[it.crop.id] ?: (it.priceAtAdd * it.quantity).toInt()
                     it to price
                 }
 
-                checkoutViewModel.placeOrder(
-                    finalOrder,
-                    deliveryAddress,
-                    deliveryPincode,
-                    deliveryPhone,
-                    onSuccess = {
-                        Toast.makeText(context, "Order placed successfully", Toast.LENGTH_LONG).show()
-                        navController.navigate("buyer_orders")
-                    },
-                    onFail = {
-                        Toast.makeText(context, "Failed to place order", Toast.LENGTH_LONG).show()
-                        navController.navigateUp()
+                if (paymentMode == "ONLINE") {
+                    // Trigger Razorpay
+                    if (activity != null) {
+                        startRazorpayPayment(
+                            activity = activity,
+                            amountInRupees = totalPrice,
+                            email = "buyer@example.com", // You should fetch actual email
+                            contact = deliveryPhone,
+                            onStart = {
+                                // Save order details in ViewModel temporarily
+                                // so MainActivity can access them on PaymentSuccess
+                                checkoutViewModel.prepareOnlineOrder(
+                                    finalOrderList,
+                                    deliveryAddress,
+                                    deliveryPincode,
+                                    deliveryPhone
+                                )
+                            }
+                        )
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Error: Activity context missing",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                )
+                } else {
+                    // Place COD Order directly
+                    checkoutViewModel.placeOrder(
+                        finalOrderList,
+                        deliveryAddress,
+                        deliveryPincode,
+                        deliveryPhone,
+                        paymentMode = "COD", // Pass Payment Mode
+                        onSuccess = {
+                            Toast.makeText(context, "Order placed successfully", Toast.LENGTH_LONG)
+                                .show()
+                            navController.navigate("buyer_orders")
+                        },
+                        onFail = {
+                            Toast.makeText(context, "Failed to place order", Toast.LENGTH_LONG)
+                                .show()
+                            navController.navigateUp()
+                        }
+                    )
+                }
             }
         }
+    }
+}
+
+private fun startRazorpayPayment(
+    activity: Activity,
+    amountInRupees: Int,
+    email: String,
+    contact: String,
+    onStart: () -> Unit
+) {
+    onStart()
+    val checkout = Checkout()
+    checkout.setKeyID("rzp_test_S9Qm1itADSltJb") // Replace with actual Key
+
+    try {
+        val options = JSONObject()
+        options.put("name", "KrishiSetu")
+        options.put("description", "Purchase of Crops")
+        options.put("currency", "INR")
+        // Razorpay takes amount in paise (100 paise = 1 INR)
+        options.put("amount", (amountInRupees * 100).toString())
+        options.put("prefill.email", email)
+        options.put("prefill.contact", contact)
+        options.put("theme.color", "#3399cc")
+
+        checkout.open(activity, options)
+    } catch (e: Exception) {
+        Toast.makeText(activity, "Error in payment: " + e.message, Toast.LENGTH_LONG).show()
+        e.printStackTrace()
     }
 }
 
 @Composable
 fun OrderButton(
     modifier: Modifier = Modifier,
+    paymentMode: String,
     onClick: () -> Unit = {}
 ) {
     ElevatedButton(
@@ -239,7 +299,7 @@ fun OrderButton(
         )
     ) {
         Text(
-            text = "Place Order",
+            text = if (paymentMode == "ONLINE") "Pay Now" else "Place Order",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )

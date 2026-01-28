@@ -46,6 +46,9 @@ type Order @model
     updatedAt: AWSDateTime!
     # 24 hours more than createdAt, if not accepted it expires.
     expiresAt: AWSDateTime!
+    paymentMode: String
+    paymentStatus: String
+    paymentID: String
   }
 
 type User @model

@@ -45,6 +45,9 @@ public final class Order implements Model {
   public static final QueryField CREATED_AT = field("Order", "createdAt");
   public static final QueryField UPDATED_AT = field("Order", "updatedAt");
   public static final QueryField EXPIRES_AT = field("Order", "expiresAt");
+  public static final QueryField PAYMENT_MODE = field("Order", "paymentMode");
+  public static final QueryField PAYMENT_STATUS = field("Order", "paymentStatus");
+  public static final QueryField PAYMENT_ID = field("Order", "paymentID");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="User") @BelongsTo(targetName = "buyerID", targetNames = {"buyerID"}, type = User.class) User buyer;
   private final @ModelField(targetType="User") @BelongsTo(targetName = "farmerID", targetNames = {"farmerID"}, type = User.class) User farmer;
@@ -59,6 +62,9 @@ public final class Order implements Model {
   private final @ModelField(targetType="AWSDateTime", isRequired = true) Temporal.DateTime createdAt;
   private final @ModelField(targetType="AWSDateTime", isRequired = true) Temporal.DateTime updatedAt;
   private final @ModelField(targetType="AWSDateTime", isRequired = true) Temporal.DateTime expiresAt;
+  private final @ModelField(targetType="String") String paymentMode;
+  private final @ModelField(targetType="String") String paymentStatus;
+  private final @ModelField(targetType="String") String paymentID;
   /** @deprecated This API is internal to Amplify and should not be used. */
   @Deprecated
    public String resolveIdentifier() {
@@ -121,7 +127,19 @@ public final class Order implements Model {
       return expiresAt;
   }
   
-  private Order(String id, User buyer, User farmer, Crop crop, Integer quantity, Integer bargainedPrice, Integer realPrice, String deliveryAddress, String deliveryPhone, String deliveryPincode, OrderStatus orderStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt, Temporal.DateTime expiresAt) {
+  public String getPaymentMode() {
+      return paymentMode;
+  }
+  
+  public String getPaymentStatus() {
+      return paymentStatus;
+  }
+  
+  public String getPaymentId() {
+      return paymentID;
+  }
+  
+  private Order(String id, User buyer, User farmer, Crop crop, Integer quantity, Integer bargainedPrice, Integer realPrice, String deliveryAddress, String deliveryPhone, String deliveryPincode, OrderStatus orderStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt, Temporal.DateTime expiresAt, String paymentMode, String paymentStatus, String paymentID) {
     this.id = id;
     this.buyer = buyer;
     this.farmer = farmer;
@@ -136,6 +154,9 @@ public final class Order implements Model {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.expiresAt = expiresAt;
+    this.paymentMode = paymentMode;
+    this.paymentStatus = paymentStatus;
+    this.paymentID = paymentID;
   }
   
   @Override
@@ -159,7 +180,10 @@ public final class Order implements Model {
               ObjectsCompat.equals(getOrderStatus(), order.getOrderStatus()) &&
               ObjectsCompat.equals(getCreatedAt(), order.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), order.getUpdatedAt()) &&
-              ObjectsCompat.equals(getExpiresAt(), order.getExpiresAt());
+              ObjectsCompat.equals(getExpiresAt(), order.getExpiresAt()) &&
+              ObjectsCompat.equals(getPaymentMode(), order.getPaymentMode()) &&
+              ObjectsCompat.equals(getPaymentStatus(), order.getPaymentStatus()) &&
+              ObjectsCompat.equals(getPaymentId(), order.getPaymentId());
       }
   }
   
@@ -180,6 +204,9 @@ public final class Order implements Model {
       .append(getCreatedAt())
       .append(getUpdatedAt())
       .append(getExpiresAt())
+      .append(getPaymentMode())
+      .append(getPaymentStatus())
+      .append(getPaymentId())
       .toString()
       .hashCode();
   }
@@ -201,7 +228,10 @@ public final class Order implements Model {
       .append("orderStatus=" + String.valueOf(getOrderStatus()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()) + ", ")
-      .append("expiresAt=" + String.valueOf(getExpiresAt()))
+      .append("expiresAt=" + String.valueOf(getExpiresAt()) + ", ")
+      .append("paymentMode=" + String.valueOf(getPaymentMode()) + ", ")
+      .append("paymentStatus=" + String.valueOf(getPaymentStatus()) + ", ")
+      .append("paymentID=" + String.valueOf(getPaymentId()))
       .append("}")
       .toString();
   }
@@ -233,6 +263,9 @@ public final class Order implements Model {
       null,
       null,
       null,
+      null,
+      null,
+      null,
       null
     );
   }
@@ -251,7 +284,10 @@ public final class Order implements Model {
       orderStatus,
       createdAt,
       updatedAt,
-      expiresAt);
+      expiresAt,
+      paymentMode,
+      paymentStatus,
+      paymentID);
   }
   public interface QuantityStep {
     BargainedPriceStep quantity(Integer quantity);
@@ -309,6 +345,9 @@ public final class Order implements Model {
     BuildStep buyer(User buyer);
     BuildStep farmer(User farmer);
     BuildStep crop(Crop crop);
+    BuildStep paymentMode(String paymentMode);
+    BuildStep paymentStatus(String paymentStatus);
+    BuildStep paymentId(String paymentId);
   }
   
 
@@ -327,11 +366,14 @@ public final class Order implements Model {
     private User buyer;
     private User farmer;
     private Crop crop;
+    private String paymentMode;
+    private String paymentStatus;
+    private String paymentID;
     public Builder() {
       
     }
     
-    private Builder(String id, User buyer, User farmer, Crop crop, Integer quantity, Integer bargainedPrice, Integer realPrice, String deliveryAddress, String deliveryPhone, String deliveryPincode, OrderStatus orderStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt, Temporal.DateTime expiresAt) {
+    private Builder(String id, User buyer, User farmer, Crop crop, Integer quantity, Integer bargainedPrice, Integer realPrice, String deliveryAddress, String deliveryPhone, String deliveryPincode, OrderStatus orderStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt, Temporal.DateTime expiresAt, String paymentMode, String paymentStatus, String paymentID) {
       this.id = id;
       this.buyer = buyer;
       this.farmer = farmer;
@@ -346,6 +388,9 @@ public final class Order implements Model {
       this.createdAt = createdAt;
       this.updatedAt = updatedAt;
       this.expiresAt = expiresAt;
+      this.paymentMode = paymentMode;
+      this.paymentStatus = paymentStatus;
+      this.paymentID = paymentID;
     }
     
     @Override
@@ -366,7 +411,10 @@ public final class Order implements Model {
           orderStatus,
           createdAt,
           updatedAt,
-          expiresAt);
+          expiresAt,
+          paymentMode,
+          paymentStatus,
+          paymentID);
     }
     
     @Override
@@ -457,6 +505,24 @@ public final class Order implements Model {
         return this;
     }
     
+    @Override
+     public BuildStep paymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
+        return this;
+    }
+    
+    @Override
+     public BuildStep paymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+        return this;
+    }
+    
+    @Override
+     public BuildStep paymentId(String paymentId) {
+        this.paymentID = paymentId;
+        return this;
+    }
+    
     /**
      * @param id id
      * @return Current Builder instance, for fluent method chaining
@@ -469,8 +535,8 @@ public final class Order implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, User buyer, User farmer, Crop crop, Integer quantity, Integer bargainedPrice, Integer realPrice, String deliveryAddress, String deliveryPhone, String deliveryPincode, OrderStatus orderStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt, Temporal.DateTime expiresAt) {
-      super(id, buyer, farmer, crop, quantity, bargainedPrice, realPrice, deliveryAddress, deliveryPhone, deliveryPincode, orderStatus, createdAt, updatedAt, expiresAt);
+    private CopyOfBuilder(String id, User buyer, User farmer, Crop crop, Integer quantity, Integer bargainedPrice, Integer realPrice, String deliveryAddress, String deliveryPhone, String deliveryPincode, OrderStatus orderStatus, Temporal.DateTime createdAt, Temporal.DateTime updatedAt, Temporal.DateTime expiresAt, String paymentMode, String paymentStatus, String paymentId) {
+      super(id, buyer, farmer, crop, quantity, bargainedPrice, realPrice, deliveryAddress, deliveryPhone, deliveryPincode, orderStatus, createdAt, updatedAt, expiresAt, paymentMode, paymentStatus, paymentID);
       Objects.requireNonNull(quantity);
       Objects.requireNonNull(bargainedPrice);
       Objects.requireNonNull(realPrice);
@@ -546,6 +612,21 @@ public final class Order implements Model {
     @Override
      public CopyOfBuilder crop(Crop crop) {
       return (CopyOfBuilder) super.crop(crop);
+    }
+    
+    @Override
+     public CopyOfBuilder paymentMode(String paymentMode) {
+      return (CopyOfBuilder) super.paymentMode(paymentMode);
+    }
+    
+    @Override
+     public CopyOfBuilder paymentStatus(String paymentStatus) {
+      return (CopyOfBuilder) super.paymentStatus(paymentStatus);
+    }
+    
+    @Override
+     public CopyOfBuilder paymentId(String paymentId) {
+      return (CopyOfBuilder) super.paymentId(paymentId);
     }
   }
   

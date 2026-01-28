@@ -56,6 +56,9 @@ mutation CreateOrder(
     createdAt
     updatedAt
     expiresAt
+    paymentMode
+    paymentStatus
+    paymentID
     __typename
   }
 }
@@ -116,6 +119,9 @@ mutation UpdateOrder(
     createdAt
     updatedAt
     expiresAt
+    paymentMode
+    paymentStatus
+    paymentID
     __typename
   }
 }
@@ -176,6 +182,9 @@ mutation DeleteOrder(
     createdAt
     updatedAt
     expiresAt
+    paymentMode
+    paymentStatus
+    paymentID
     __typename
   }
 }

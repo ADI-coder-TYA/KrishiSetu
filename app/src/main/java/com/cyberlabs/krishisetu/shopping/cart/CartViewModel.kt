@@ -86,11 +86,16 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun clearCart(buyerId: String) {
-        viewModelScope.launch {
-            _isLoading.value = true
-            cartRepository.clearCart(buyerId)
-            _isLoading.value = false
+    fun clearCart() {
+        val currentId = _buyerId.value
+        if (currentId != null) {
+            viewModelScope.launch {
+                _isLoading.value = true
+                cartRepository.clearCart(currentId)
+                _isLoading.value = false
+            }
+        } else {
+            Log.e("CartViewModel", "Cannot clear cart: Buyer ID is null")
         }
     }
 
